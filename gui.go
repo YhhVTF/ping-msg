@@ -10,7 +10,7 @@ import (
     "image/color"
 )
 
-// all containers to be used by Ping
+// All containers to be used by Ping
 type ContainerTable struct {
     // Highest level container that contains all other objects in the window
     Base *fyne.Container
@@ -20,21 +20,26 @@ type ContainerTable struct {
     Chat Chat
 }
 
-// all dialogs to be used by Ping
+// All dialogs to be used by Ping
 type DialogTable struct {
     // Informs the user that there are issues with connecting to the server
     ConnectionIssues *dialog.CustomDialog
 }
 
+// A collection of all GUI elements to be used
 type GUI struct {
+    // The main window
     Window fyne.Window
+    // All containers
     Containers ContainerTable
+    // All dialogs
     Dialogs DialogTable
     Siphon chan int
+    // All widgets
     Widgets WidgetTable
 }
 
-// all widget to be used by Ping
+// All widget to be used by Ping
 type WidgetTable struct {
     // Button in the bottom bar that sends the contents of BottomBarEntry when pressed
     BottomBarButtonSend *widget.Button
@@ -73,6 +78,12 @@ func (g *GUI) DialogConnectionIssues(err error) {
     g.Dialogs.ConnectionIssues = dialog
 }
 
+// InitGUI: Initializes the main window and all objects in it, closes the loading window and then shows the main window
+// Parameters:
+//  a (fyne.App) - The fyne application the window will be initialized in
+//  loadingWindow (fyne.Window) - The loading window
+// Returns:
+//  *GUI - The main window and all its objects
 func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
     g := &GUI{}
     g.Window = a.NewWindow("Ping")
