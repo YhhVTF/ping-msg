@@ -73,7 +73,7 @@ func (g *GUI) DialogConnectionIssues(err error) {
     g.Dialogs.ConnectionIssues = dialog
 }
 
-func InitGUI(a fyne.App) *GUI {
+func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
     g := &GUI{}
     g.Window = a.NewWindow("Ping")
 
@@ -119,6 +119,12 @@ func InitGUI(a fyne.App) *GUI {
     )
     // Set window content as the base container
     g.Window.SetContent(g.Containers.Base)
+
+    // Close loading window, set the main window as master window and show it
+    loadingWindow.Close()
+    g.Window.SetMaster()
+    g.Window.Show()
+
     return g
 }
 

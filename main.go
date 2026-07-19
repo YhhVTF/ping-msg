@@ -9,6 +9,10 @@ import (
 
 var PingQuit = false
 
+func StartPing(a fyne.App, loadingWindow fyne.Window) {
+    StartNet(InitGUI(a, loadingWindow))
+}
+
 func main() {
     a := app.New()
 

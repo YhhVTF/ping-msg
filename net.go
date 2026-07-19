@@ -1,19 +1,11 @@
 package main
 
 import (
-    "fyne.io/fyne/v2"
-
     "net"
     "time"
 )
 
-func StartPing(a fyne.App, loadingWindow fyne.Window) {
-    gui := InitGUI(a)
-
-    loadingWindow.Close()
-    gui.Window.SetMaster()
-    gui.Window.Show()
-
+func StartNet(gui *GUI) {
     for !PingQuit {
         _, err := net.Dial("tcp", "127.0.0.1:5555")
         if err != nil {
