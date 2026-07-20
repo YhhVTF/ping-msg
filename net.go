@@ -31,7 +31,7 @@ func StartNet(gui *GUI) {
 		go HandleServerCommunication(conn, gui, connDone)
 
 		<-connDone
-		Info.Printf("Connection lost. Reconnecting in 5 seconds...\n")
+		Error.Printf("Connection lost. Reconnecting in 5 seconds...\n")
 		time.Sleep(5 * time.Second)
 	}
 }
