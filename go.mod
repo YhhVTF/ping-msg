@@ -2,8 +2,9 @@ module ping
 
 go 1.24.3
 
+require fyne.io/fyne/v2 v2.8.0
+
 require (
-	fyne.io/fyne/v2 v2.8.0 // indirect
 	fyne.io/systray v1.12.2 // indirect
 	github.com/BurntSushi/toml v1.6.0 // indirect
 	github.com/FyshOS/fancyfs v0.0.1 // indirect
