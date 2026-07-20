@@ -51,6 +51,8 @@ type WidgetTable struct {
 // Parameters:
 //  err (error) - The error that occurred. This will be used as the technical error message
 func (g *GUI) DialogConnectionIssues(err error) {
+    Info.Printf("Creating Dialog ConnectionIssues\n")
+
     // Create the user friendly error message as a label
     uxErrMsg := widget.NewLabel("Failed to connect to server. The server may be down or your internet connection could be unstable")
     // Create the technical error message as a label, make it selectable and a low importance widget
@@ -65,6 +67,7 @@ func (g *GUI) DialogConnectionIssues(err error) {
     // add an ok button
     dialog.SetButtons([]fyne.CanvasObject{
         widget.NewButton("Ok", func(){
+            Info.Printf("Dialog ConnectionsIssues dismissed\n")
             // Dismiss the dialog and set it to nil in the dialog table
             dialog.Dismiss()
             g.Dialogs.ConnectionIssues = nil
@@ -85,6 +88,8 @@ func (g *GUI) DialogConnectionIssues(err error) {
 // Returns:
 //  *GUI - The main window and all its objects
 func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
+    Info.Printf("Creating GUI\n")
+
     g := &GUI{}
     g.Window = a.NewWindow("Ping")
 
@@ -92,6 +97,7 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
     g.Widgets.BottomBarEntry = widget.NewEntry()
     g.Widgets.BottomBarEntry.PlaceHolder = "Type a message..."
     g.Widgets.BottomBarEntry.OnSubmitted = func(text string) {
+        Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
         if text == "" {
             return
         }
@@ -103,6 +109,7 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 
     // Initialize send button
     g.Widgets.BottomBarButtonSend = widget.NewButton("Send", func(){
+        Info.Printf("Widget BottomBarButtonSend pressed\n")
         if g.Widgets.BottomBarEntry.Text == "" {
             return
         }

@@ -5,12 +5,14 @@ import (
     "fyne.io/fyne/v2/app"
     "fyne.io/fyne/v2/container"
     "fyne.io/fyne/v2/widget"
+
+    "os"
 )
 
 // Whether or not the user has quit Ping
 var PingQuit = false
 
-// StartPing: Wrapper function that initializes the main window and gui and then connects to the server be calling InitGUI and StartNet respectively
+// StartPing: Wrapper function that initializes the main window and gui and then connects to the server by calling InitGUI and StartNet respectively
 // Parameters:
 //  a (fyne.App) - argument for InitGUI
 //  loadingWindow (fyne.Window) - argument for InitGUI
@@ -19,6 +21,9 @@ func StartPing(a fyne.App, loadingWindow fyne.Window) {
 }
 
 func main() {
+    InitLog(os.Stderr, os.Stdout, os.Stdout)
+    Info.Printf("Starting Ping\n")
+
     a := app.New()
 
     // Create a loading window
