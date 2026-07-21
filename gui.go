@@ -194,6 +194,10 @@ func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
 // UNUSED BUT EXPANDABLE LATER??
 
 // oopie - dash
+
+// huh? Twt
+
+// oopie :P - entie
 func (g *GUI) SendMessage() {
 	Info.Printf("Sending message\n")
 
