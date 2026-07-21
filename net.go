@@ -121,7 +121,12 @@ func serverSend(conn net.Conn, gui *GUI, done chan bool) {
 	for {
 		select {
 		case msg := <-gui.OutgoingMessages:
-			_, err := conn.Write(msg)
+            msgBytes, err := json.Marshal(msg)
+            if err != nil {
+                Error.Printf("Failed to marshal outgoing request\n")
+                continue
+            }
+			_, err = conn.Write(msgBytes)
 			if err != nil {
 				done <- true
 				return

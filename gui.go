@@ -5,6 +5,9 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+
+    "fmt"
+	"image/color"
 )
 
 // All containers to be used by Ping
@@ -31,10 +34,9 @@ type GUI struct {
 	Containers ContainerTable
 	// All dialogs
 	Dialogs DialogTable
-	Siphon  chan int
 	// All widgets
 	Widgets          WidgetTable
-	OutgoingMessages chan []byte // Connects to net.go
+	OutgoingMessages chan ChatRequest // Connects to net.go
 }
 
 // All widget to be used by Ping
@@ -93,7 +95,7 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 	Info.Printf("Creating GUI\n")
 
 	g := &GUI{}
-	g.OutgoingMessages = make(chan []byte, 10)
+	g.OutgoingMessages = make(chan ChatRequest)
 	g.Window = a.NewWindow("Ping")
 
 	// Initialize message entry
@@ -128,11 +130,11 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 		if reqBytes != nil {
 			g.OutgoingMessages <- reqBytes
 		}
+        g.SendMessage()
 
 		msgCard := NewMessage(text, "TestUser")
 		g.Containers.Chat.VBox.Add(msgCard)
 		g.Widgets.BottomBarEntry.SetText("")
-		g.Containers.Chat.VScroll.ScrollToBottom()
 	})
 
 	// Initialize chat containers
@@ -174,4 +176,28 @@ func (g *GUI) NewDialog(title, content string) *dialog.CustomDialog {
 	dialog.Resize(fyne.NewSize(350, 200))
 	dialog.Show()
 	return dialog
+}
+
+func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
+    Info.Printf("Received message\n")
+
+    msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
+
+	msg := canvas.NewText(msgText, color.NRGBA{255, 255, 255, 255})
+	g.Containers.Chat.VBox.Add(msg)
+	g.Containers.Chat.VScroll.ScrollToBottom()
+}
+
+func (g *GUI) SendMessage() {
+    Info.Printf("Sending message\n")
+
+    req := ChatRequest{
+        ChatID: 0,
+        MessageContent: g.Widgets.BottomBarEntry.Text,
+        MessageID: -1,
+        Type: REQ_ADD,
+        Username: "buh",
+    }
+
+    g.OutgoingMessages <- req
 }
