@@ -8,42 +8,6 @@ import (
 	"fyne.io/fyne/v2"
 )
 
-type RequestWhat int
-
-const (
-	REQ_ADD  RequestWhat = 0
-	REQ_DEL  RequestWhat = 1
-	REQ_EDIT RequestWhat = 2
-	REQ_GET  RequestWhat = 3
-)
-
-type ChatRequest struct {
-	ChatID         int         `json:"chat_id"`
-	MessageContent string      `json:"content"`
-	MessageID      int         `json:"message_id"`
-	Type           RequestWhat `json:"chat_request_type"`
-	Username       string      `json:"username"`
-}
-
-type MessageRaw struct {
-	Content  string `json:"content"`
-	ID       int    `json:"id"`
-	Time     int64  `json:"time"`
-	Username string `json:"username"`
-}
-
-type ChatRaw struct {
-	Version  string       `json:"version"`
-	Messages []MessageRaw `json:"messages"`
-}
-
-type ChatResponse struct {
-	ChatID   int         `json:"chat_id"`
-	Error    string      `json:"error"`
-	Messages ChatRaw     `json:"messages"`
-	Type     RequestWhat `json:"chat_response_type"`
-}
-
 // StartNet: Connect to the server and show an error dialog if it fails
 // Parameters:
 //
@@ -121,11 +85,13 @@ func serverSend(conn net.Conn, gui *GUI, done chan bool) {
 	for {
 		select {
 		case msg := <-gui.OutgoingMessages:
-            msgBytes, err := json.Marshal(msg)
-            if err != nil {
-                Error.Printf("Failed to marshal outgoing request\n")
-                continue
-            }
+			msgBytes, err := json.Marshal(msg)
+			if err != nil {
+				Error.Printf("Failed to marshal outgoing request\n")
+				continue
+			}
+			msgBytes = append(msgBytes, '\n')
+
 			_, err = conn.Write(msgBytes)
 			if err != nil {
 				done <- true

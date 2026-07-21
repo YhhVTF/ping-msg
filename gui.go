@@ -2,11 +2,12 @@ package main
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
-    "fmt"
+	"fmt"
 	"image/color"
 )
 
@@ -107,15 +108,16 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 			return
 		}
 
-		reqBytes := CreateChatRequest(1, REQ_ADD, "TestUser", text, -1)
-		if reqBytes != nil {
-			g.OutgoingMessages <- reqBytes
+		req := ChatRequest{
+			ChatID:         1,
+			MessageContent: text,
+			MessageID:      -1,
+			Type:           REQ_ADD,
+			Username:       "TestUser",
 		}
+		g.OutgoingMessages <- req
 
-		msgCard := NewMessage(text, "TestUser")
-		g.Containers.Chat.VBox.Add(msgCard)
 		g.Widgets.BottomBarEntry.SetText("")
-		g.Containers.Chat.VScroll.ScrollToBottom()
 	}
 
 	// Initialize send button
@@ -126,14 +128,15 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 			return
 		}
 
-		reqBytes := CreateChatRequest(1, REQ_ADD, "TestUser", text, -1)
-		if reqBytes != nil {
-			g.OutgoingMessages <- reqBytes
+		req := ChatRequest{
+			ChatID:         1,
+			MessageContent: text,
+			MessageID:      -1,
+			Type:           REQ_ADD,
+			Username:       "TestUser",
 		}
-        g.SendMessage()
+		g.OutgoingMessages <- req
 
-		msgCard := NewMessage(text, "TestUser")
-		g.Containers.Chat.VBox.Add(msgCard)
 		g.Widgets.BottomBarEntry.SetText("")
 	})
 
@@ -179,25 +182,28 @@ func (g *GUI) NewDialog(title, content string) *dialog.CustomDialog {
 }
 
 func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
-    Info.Printf("Received message\n")
+	Info.Printf("Received message\n")
 
-    msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
+	msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
 
 	msg := canvas.NewText(msgText, color.NRGBA{255, 255, 255, 255})
 	g.Containers.Chat.VBox.Add(msg)
 	g.Containers.Chat.VScroll.ScrollToBottom()
 }
 
+// UNUSED BUT EXPANDABLE LATER??
+
+// oopie - dash
 func (g *GUI) SendMessage() {
-    Info.Printf("Sending message\n")
+	Info.Printf("Sending message\n")
 
-    req := ChatRequest{
-        ChatID: 0,
-        MessageContent: g.Widgets.BottomBarEntry.Text,
-        MessageID: -1,
-        Type: REQ_ADD,
-        Username: "buh",
-    }
+	req := ChatRequest{
+		ChatID:         0,
+		MessageContent: g.Widgets.BottomBarEntry.Text,
+		MessageID:      -1,
+		Type:           REQ_ADD,
+		Username:       "buh",
+	}
 
-    g.OutgoingMessages <- req
+	g.OutgoingMessages <- req
 }
