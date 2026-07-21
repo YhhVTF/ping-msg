@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 
+    "fmt"
 	"image/color"
 )
 
@@ -34,7 +35,6 @@ type GUI struct {
 	Containers ContainerTable
 	// All dialogs
 	Dialogs DialogTable
-	Siphon  chan int
 	// All widgets
 	Widgets          WidgetTable
 	OutgoingMessages chan []byte // Connects to net.go
@@ -170,4 +170,17 @@ func (g *GUI) NewDialog(title, content string) *dialog.CustomDialog {
 	dialog.Resize(fyne.NewSize(350, 200))
 	dialog.Show()
 	return dialog
+}
+
+func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
+    Info.Printf("Adding message to chat\n")
+
+    msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
+
+	msg := canvas.NewText(msgText, color.NRGBA{255, 255, 255, 255})
+	g.Containers.Chat.VBox.Add(msg)
+	g.Containers.Chat.VScroll.ScrollToBottom()
+}
+
+func (g *GUI) SendMessage() {
 }

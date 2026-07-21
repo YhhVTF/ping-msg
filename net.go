@@ -1,6 +1,7 @@
 package main
 
 import (
+    "encoding/json"
 	"net"
 	"time"
 )
@@ -59,6 +60,15 @@ func serverRecieve(conn net.Conn, gui *GUI, done chan bool) {
 		}
 
 		Info.Printf("Recieved %d bytes from server\n", n)
+
+        response := ChatResponse{}
+        err = json.Unmarshal(buffer, &response)
+        if err != nil {
+            Error.Printf("Failed to parse incoming data from server: %s\n", err)
+            continue
+        }
+
+        gui.AddMessage(response.Messages.Messages[0])
 	}
 }
 
