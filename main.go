@@ -27,8 +27,10 @@ func main() {
 
 	a := app.New()
 
+    Info.Printf("Loading assets\n")
 	iconData, err := os.ReadFile("assets/icon.png")
 	if err == nil {
+        Error.Printf("Failed to load asset assets/icon.png: %s\n", err)
 		a.SetIcon(fyne.NewStaticResource("icon.png", iconData))
 	}
 
