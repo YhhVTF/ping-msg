@@ -2,12 +2,9 @@ package main
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
-
-	"image/color"
 )
 
 // All containers to be used by Ping
@@ -107,8 +104,14 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 		if text == "" {
 			return
 		}
-		msg := canvas.NewText(text, color.NRGBA{255, 255, 255, 255})
-		g.Containers.Chat.VBox.Add(msg)
+
+		reqBytes := CreateChatRequest(1, REQ_ADD, "TestUser", text, -1)
+		if reqBytes != nil {
+			g.OutgoingMessages <- reqBytes
+		}
+
+		msgCard := NewMessage(text, "TestUser")
+		g.Containers.Chat.VBox.Add(msgCard)
 		g.Widgets.BottomBarEntry.SetText("")
 		g.Containers.Chat.VScroll.ScrollToBottom()
 	}
@@ -121,12 +124,13 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 			return
 		}
 
-		g.OutgoingMessages <- []byte(text)
+		reqBytes := CreateChatRequest(1, REQ_ADD, "TestUser", text, -1)
+		if reqBytes != nil {
+			g.OutgoingMessages <- reqBytes
+		}
 
-		msg := canvas.NewText(
-			g.Widgets.BottomBarEntry.Text, color.NRGBA{255, 255, 255, 255},
-		)
-		g.Containers.Chat.VBox.Add(msg)
+		msgCard := NewMessage(text, "TestUser")
+		g.Containers.Chat.VBox.Add(msgCard)
 		g.Widgets.BottomBarEntry.SetText("")
 		g.Containers.Chat.VScroll.ScrollToBottom()
 	})

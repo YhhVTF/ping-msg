@@ -1,9 +1,48 @@
 package main
 
 import (
+	"encoding/json"
 	"net"
 	"time"
+
+	"fyne.io/fyne/v2"
 )
+
+type RequestWhat int
+
+const (
+	REQ_ADD  RequestWhat = 0
+	REQ_DEL  RequestWhat = 1
+	REQ_EDIT RequestWhat = 2
+	REQ_GET  RequestWhat = 3
+)
+
+type ChatRequest struct {
+	ChatID         int         `json:"chat_id"`
+	MessageContent string      `json:"content"`
+	MessageID      int         `json:"message_id"`
+	Type           RequestWhat `json:"chat_request_type"`
+	Username       string      `json:"username"`
+}
+
+type MessageRaw struct {
+	Content  string `json:"content"`
+	ID       int    `json:"id"`
+	Time     int64  `json:"time"`
+	Username string `json:"username"`
+}
+
+type ChatRaw struct {
+	Version  string       `json:"version"`
+	Messages []MessageRaw `json:"messages"`
+}
+
+type ChatResponse struct {
+	ChatID   int         `json:"chat_id"`
+	Error    string      `json:"error"`
+	Messages ChatRaw     `json:"messages"`
+	Type     RequestWhat `json:"chat_response_type"`
+}
 
 // StartNet: Connect to the server and show an error dialog if it fails
 // Parameters:
@@ -50,15 +89,31 @@ func HandleServerCommunication(conn net.Conn, gui *GUI, connDone chan bool) {
 }
 
 func serverRecieve(conn net.Conn, gui *GUI, done chan bool) {
+	decoder := json.NewDecoder(conn)
 	for {
-		buffer := make([]byte, 1024)
-		n, err := conn.Read(buffer)
+		var resp ChatResponse
+		err := decoder.Decode(&resp)
 		if err != nil {
 			done <- true
 			return
 		}
 
-		Info.Printf("Recieved %d bytes from server\n", n)
+		if resp.Error != "" {
+			Error.Printf("Server returned error: %s\n", resp.Error)
+			continue
+		}
+
+		Info.Printf("Successfully recieved chat update for Chat ID %d. Total messages: %d\n", resp.ChatID, len(resp.Messages.Messages))
+
+		fyne.Do(func() {
+			gui.Containers.Chat.VBox.Objects = nil // Clear current list to redraw
+			for _, msg := range resp.Messages.Messages {
+				card := NewMessage(msg.Content, msg.Username)
+				gui.Containers.Chat.VBox.Add(card)
+			}
+			gui.Containers.Chat.VBox.Refresh()
+			gui.Containers.Chat.VScroll.ScrollToBottom()
+		})
 	}
 }
 
@@ -75,4 +130,20 @@ func serverSend(conn net.Conn, gui *GUI, done chan bool) {
 			return
 		}
 	}
+}
+
+func CreateChatRequest(chatID int, reqType RequestWhat, username string, messageContent string, messageID int) []byte {
+	req := ChatRequest{
+		ChatID:         chatID,
+		Type:           reqType,
+		Username:       username,
+		MessageContent: messageContent,
+		MessageID:      messageID,
+	}
+	bytes, err := json.Marshal(req)
+	if err != nil {
+		Error.Printf("Failed to marshal chat request: %s\n", err)
+		return nil
+	}
+	return append(bytes, '\n')
 }
