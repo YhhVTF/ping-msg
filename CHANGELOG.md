@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Audio assets although they aren't being used yet
+- Changelog
 - Protocol for communicating with server
 - Receiving singular messages from server
 - Sending messages to server
