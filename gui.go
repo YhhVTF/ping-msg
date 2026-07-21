@@ -37,7 +37,7 @@ type GUI struct {
 	Dialogs DialogTable
 	// All widgets
 	Widgets          WidgetTable
-	OutgoingMessages chan []byte // Connects to net.go
+	OutgoingMessages chan ChatRequest // Connects to net.go
 }
 
 // All widget to be used by Ping
@@ -96,7 +96,7 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 	Info.Printf("Creating GUI\n")
 
 	g := &GUI{}
-	g.OutgoingMessages = make(chan []byte, 10)
+	g.OutgoingMessages = make(chan ChatRequest)
 	g.Window = a.NewWindow("Ping")
 
 	// Initialize message entry
@@ -121,14 +121,9 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 			return
 		}
 
-		g.OutgoingMessages <- []byte(text)
+        g.SendMessage()
 
-		msg := canvas.NewText(
-			g.Widgets.BottomBarEntry.Text, color.NRGBA{255, 255, 255, 255},
-		)
-		g.Containers.Chat.VBox.Add(msg)
 		g.Widgets.BottomBarEntry.SetText("")
-		g.Containers.Chat.VScroll.ScrollToBottom()
 	})
 
 	// Initialize chat containers
@@ -173,7 +168,7 @@ func (g *GUI) NewDialog(title, content string) *dialog.CustomDialog {
 }
 
 func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
-    Info.Printf("Adding message to chat\n")
+    Info.Printf("Received message\n")
 
     msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
 
@@ -183,4 +178,15 @@ func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
 }
 
 func (g *GUI) SendMessage() {
+    Info.Printf("Sending message\n")
+
+    req := ChatRequest{
+        ChatID: 0,
+        MessageContent: g.Widgets.BottomBarEntry.Text,
+        MessageID: -1,
+        Type: REQ_ADD,
+        Username: "buh",
+    }
+
+    g.OutgoingMessages <- req
 }
