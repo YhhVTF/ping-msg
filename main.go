@@ -30,9 +30,10 @@ func main() {
     Info.Printf("Loading assets\n")
 	iconData, err := os.ReadFile("assets/icon.png")
 	if err == nil {
-        Error.Printf("Failed to load asset assets/icon.png: %s\n", err)
 		a.SetIcon(fyne.NewStaticResource("icon.png", iconData))
-	}
+	} else {
+        Error.Printf("Failed to load asset assets/icon.png: %s\n", err)
+    }
 
 	// Create a loading window
 	// This window will be shown while Ping starts and will be closed when it is ready

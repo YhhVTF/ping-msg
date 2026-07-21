@@ -70,7 +70,6 @@ func serverRecieve(conn net.Conn, gui *GUI, done chan bool) {
 		Info.Printf("Successfully recieved chat update for Chat ID %d. Total messages: %d\n", resp.ChatID, len(resp.Messages.Messages))
 
 		fyne.Do(func() {
-			gui.Containers.Chat.VBox.Objects = nil // Clear current list to redraw
 			for _, msg := range resp.Messages.Messages {
 				card := NewMessage(msg.Content, msg.Username)
 				gui.Containers.Chat.VBox.Add(card)
