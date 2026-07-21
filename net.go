@@ -12,7 +12,12 @@ import (
 // Parameters:
 //
 //	gui (*GUI) - GUI elements
-func StartNet(gui *GUI) {
+//  u (*UserData) - Information pertaining to users
+func StartNet(gui *GUI, u *UserData) {
+    // Prompt for a username
+    gui.DialogLogin(u)
+    for gui.Dialogs.Login != nil {}
+
 	// Until Ping has been quit...
 	for !PingQuit {
 		// Connect to the server
@@ -31,7 +36,7 @@ func StartNet(gui *GUI) {
 		Info.Printf("Successfully connected to server\n")
 
 		connDone := make(chan bool)
-		go HandleServerCommunication(conn, gui, connDone)
+		go HandleServerCommunication(conn, gui, u, connDone)
 
 		<-connDone
 		Error.Printf("Connection lost. Reconnecting in 5 seconds...\n")
@@ -39,20 +44,20 @@ func StartNet(gui *GUI) {
 	}
 }
 
-func HandleServerCommunication(conn net.Conn, gui *GUI, connDone chan bool) {
+func HandleServerCommunication(conn net.Conn, gui *GUI, u *UserData, connDone chan bool) {
 	defer conn.Close()
 
 	connectionFailed := make(chan bool)
 
-	go serverRecieve(conn, gui, connectionFailed)
+	go serverRecieve(conn, gui, u, connectionFailed)
 
-	go serverSend(conn, gui, connectionFailed)
+	go serverSend(conn, gui, u, connectionFailed)
 
 	<-connectionFailed // Wait for communication failure
 	connDone <- true   // tell StartNet connection died
 }
 
-func serverRecieve(conn net.Conn, gui *GUI, done chan bool) {
+func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 	decoder := json.NewDecoder(conn)
 	for {
 		var resp ChatResponse
@@ -80,7 +85,7 @@ func serverRecieve(conn net.Conn, gui *GUI, done chan bool) {
 	}
 }
 
-func serverSend(conn net.Conn, gui *GUI, done chan bool) {
+func serverSend(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 	for {
 		select {
 		case msg := <-gui.OutgoingMessages:

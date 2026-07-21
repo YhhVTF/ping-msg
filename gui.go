@@ -25,6 +25,8 @@ type ContainerTable struct {
 type DialogTable struct {
 	// Informs the user that there are issues with connecting to the server
 	ConnectionIssues *dialog.CustomDialog
+    // Asks the user for information to log in
+    Login *dialog.CustomDialog
 }
 
 // A collection of all GUI elements to be used
@@ -83,16 +85,66 @@ func (g *GUI) DialogConnectionIssues(err error) {
 	g.Dialogs.ConnectionIssues = dialog
 }
 
+func (g *GUI) DialogLogin(u *UserData) {
+	Info.Printf("Creating Dialog Login\n")
+
+    // Text telling the user what to do
+	prompt := widget.NewLabel("Enter a username to login as")
+    // Entry for username
+    entry := widget.NewEntry()
+    entry.SetPlaceHolder("Enter a username")
+	// add them to a new vbox
+	c := container.NewVBox(prompt, entry)
+
+	// Create a dialog with the vbox as the content
+	dialog := dialog.NewCustom("Login", "", c, g.Window)
+	// add a login button
+	dialog.SetButtons([]fyne.CanvasObject{
+		widget.NewButton("Login", func() {
+            // Set the text in the entry as the username
+            if entry.Text == "" { return }
+            u.ThisUser = entry.Text
+
+            // Dismiss the dialog and set it as nil in the dialog table
+            dialog.Dismiss()
+            g.Dialogs.Login = nil
+
+            Info.Printf("Username set as %s\n", u.ThisUser)
+		    Info.Printf("Dialog Login dismissed\n")
+		}),
+	})
+	// Resize to default dialog size and show the dialog
+	dialog.Resize(fyne.NewSize(350, 200))
+	dialog.Show()
+
+    entry.OnSubmitted = func(text string) {
+        // Set the text in the entry as the username
+        if entry.Text == "" { return }
+        u.ThisUser = entry.Text
+
+        // Dismiss the dialog and set it as nil in the dialog table
+        dialog.Dismiss()
+        g.Dialogs.Login = nil
+
+        Info.Printf("Username set as %s\n", u.ThisUser)
+		Info.Printf("Dialog Login dismissed\n")
+    }
+
+	// add the dialog to the dialog table
+	g.Dialogs.Login = dialog
+}
+
 // InitGUI: Initializes the main window and all objects in it, closes the loading window and then shows the main window
 // Parameters:
 //
 //	a (fyne.App) - The fyne application the window will be initialized in
+//  u (*UserData) - Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
 //
 // Returns:
 //
 //	*GUI - The main window and all its objects
-func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
+func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 	Info.Printf("Creating GUI\n")
 
 	g := &GUI{}
@@ -113,7 +165,7 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 			MessageContent: text,
 			MessageID:      -1,
 			Type:           REQ_ADD,
-			Username:       "TestUser",
+			Username:       u.ThisUser,
 		}
 		g.OutgoingMessages <- req
 
@@ -133,7 +185,7 @@ func InitGUI(a fyne.App, loadingWindow fyne.Window) *GUI {
 			MessageContent: text,
 			MessageID:      -1,
 			Type:           REQ_ADD,
-			Username:       "TestUser",
+			Username:       u.ThisUser,
 		}
 		g.OutgoingMessages <- req
 

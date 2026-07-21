@@ -18,7 +18,8 @@ var PingQuit = false
 //	a (fyne.App) - argument for InitGUI
 //	loadingWindow (fyne.Window) - argument for InitGUI
 func StartPing(a fyne.App, loadingWindow fyne.Window) {
-	StartNet(InitGUI(a, loadingWindow))
+    u := &UserData{}
+	StartNet(InitGUI(a, u, loadingWindow), u)
 }
 
 func main() {
