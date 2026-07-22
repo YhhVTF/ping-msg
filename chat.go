@@ -47,6 +47,6 @@ func NewMessage(content string, username string) *widget.Card {
 	contentLabel := widget.NewLabel(content)
 	contentLabel.Wrapping = fyne.TextWrapWord
 
-	card := widget.NewCard(username, "", contentLabel)
+	card := widget.NewCard("", username, contentLabel)
 	return card
 }

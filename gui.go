@@ -156,9 +156,9 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 	g.Widgets.BottomBarEntry.PlaceHolder = "Type a message..."
 	g.Widgets.BottomBarEntry.OnSubmitted = func(text string) {
 		Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
-		if text == "" {
+		if text == "" || !Connected {
 			return
-		}
+        }
 
 		req := ChatRequest{
 			ChatID:         1,

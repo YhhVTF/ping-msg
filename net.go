@@ -8,6 +8,8 @@ import (
 	"fyne.io/fyne/v2"
 )
 
+var Connected = false
+
 // StartNet: Connect to the server and show an error dialog if it fails
 // Parameters:
 //
@@ -33,12 +35,14 @@ func StartNet(gui *GUI, u *UserData) {
 			continue
 		}
 
+        Connected = true
 		Info.Printf("Successfully connected to server\n")
 
 		connDone := make(chan bool)
 		go HandleServerCommunication(conn, gui, u, connDone)
 
 		<-connDone
+        Connected = false
 		Error.Printf("Connection lost. Reconnecting in 5 seconds...\n")
 		time.Sleep(5 * time.Second)
 	}
