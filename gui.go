@@ -150,6 +150,7 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 	g := &GUI{}
 	g.OutgoingMessages = make(chan ChatRequest)
 	g.Window = a.NewWindow("Ping")
+    g.Window.Resize(fyne.NewSize(850, 550))
 
 	// Initialize message entry
 	g.Widgets.BottomBarEntry = widget.NewEntry()
