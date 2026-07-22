@@ -75,6 +75,9 @@ func (g *GUI) DialogConnectionIssues(err error) {
 			// Dismiss the dialog and set it to nil in the dialog table
 			dialog.Dismiss()
 			g.Dialogs.ConnectionIssues = nil
+
+            // Set focus on message entry now that dialog is dismissed
+            g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 		}),
 	})
 	// Resize to default dialog size and show the dialog
@@ -109,6 +112,9 @@ func (g *GUI) DialogLogin(u *UserData) {
             dialog.Dismiss()
             g.Dialogs.Login = nil
 
+            // Set focus on message entry now that dialog is dismissed
+            g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+
             Info.Printf("Username set as %s\n", u.ThisUser)
 		    Info.Printf("Dialog Login dismissed\n")
 		}),
@@ -125,6 +131,9 @@ func (g *GUI) DialogLogin(u *UserData) {
         // Dismiss the dialog and set it as nil in the dialog table
         dialog.Dismiss()
         g.Dialogs.Login = nil
+
+        // Set focus on message entry now that dialog is dismissed
+        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 
         Info.Printf("Username set as %s\n", u.ThisUser)
 		Info.Printf("Dialog Login dismissed\n")
@@ -172,6 +181,8 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 
 		g.Widgets.BottomBarEntry.SetText("")
 	}
+    // Set focus on message entry
+    g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 
 	// Initialize send button
 	g.Widgets.BottomBarButtonSend = widget.NewButton("Send", func() {
