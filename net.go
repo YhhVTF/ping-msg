@@ -76,7 +76,7 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 			continue
 		}
 
-		Info.Printf("Successfully recieved chat update for Chat ID %d. Total messages: %d\n", resp.ChatID, len(resp.Messages.Messages))
+		Info.Printf("Received message from server\n")
 
 		fyne.Do(func() {
 			for _, msg := range resp.Messages.Messages {
