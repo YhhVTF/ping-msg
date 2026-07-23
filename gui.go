@@ -188,9 +188,9 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 	g.Widgets.BottomBarButtonSend = widget.NewButton("Send", func() {
 		Info.Printf("Widget BottomBarButtonSend pressed\n")
 		text := g.Widgets.BottomBarEntry.Text
-		if text == "" {
+		if text == "" || !Connected {
 			return
-		}
+        }
 
 		req := ChatRequest{
 			ChatID:         1,

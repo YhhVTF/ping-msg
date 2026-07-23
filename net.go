@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net"
+    "os"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -20,12 +21,17 @@ func StartNet(gui *GUI, u *UserData) {
     gui.DialogLogin(u)
     for gui.Dialogs.Login != nil {}
 
+        addr := "127.0.0.1:5555"
+        if len(os.Args) > 1 {
+            addr = os.Args[1]
+        }
+
 	// Until Ping has been quit...
 	for !PingQuit {
 		// Connect to the server
 		Info.Printf("Connecting to server\n")
 
-		conn, err := net.Dial("tcp", "127.0.0.1:5555")
+        conn, err := net.Dial("tcp", addr)
 		if err != nil {
 			Error.Printf("Failed to connect to server: %s\n", err)
 			if gui.Dialogs.ConnectionIssues == nil {
