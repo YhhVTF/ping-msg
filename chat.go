@@ -43,10 +43,20 @@ func NewChat() Chat {
 	return c
 }
 
-func NewMessage(content string, username string) *widget.Card {
-	contentLabel := widget.NewLabel(content)
-	contentLabel.Wrapping = fyne.TextWrapWord
+func NewMessage(content string, username string, time string) *widget.Card {
+    usernameLabel := widget.NewLabel(username)
+	usernameLabel.Wrapping = fyne.TextWrapWord
+    usernameLabel.TextStyle.Bold = true
 
-	card := widget.NewCard("", username, contentLabel)
+    timeLabel := widget.NewLabel(time)
+
+    cTop := container.NewBorder(nil, nil, usernameLabel, timeLabel, nil)
+
+    contentLabel := widget.NewLabel(content)
+    contentLabel.Wrapping = fyne.TextWrapWord
+
+    cBase := container.NewVBox(cTop, contentLabel)
+
+	card := widget.NewCard("", "", cBase)
 	return card
 }

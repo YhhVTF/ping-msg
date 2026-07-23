@@ -86,7 +86,10 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 
 		fyne.Do(func() {
 			for _, msg := range resp.Messages.Messages {
-				card := NewMessage(msg.Content, msg.Username)
+				card := NewMessage(
+                    msg.Content, msg.Username,
+                    time.Unix(msg.Time, 0).Format("3:04 PM"),
+                )
 				gui.Containers.Chat.VBox.Add(card)
 			}
 			gui.Containers.Chat.VBox.Refresh()
