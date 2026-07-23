@@ -9,8 +9,8 @@ import (
 // Messages from chats that aren't currently shown are stored here
 type ChatCache struct {
 	// Key (int) - Chat ID
-	// Val ([]string) - List of cached messages from that chat
-	CachedMessages map[int][]string
+	// Val ([]MessageRaw) - List of cached messages from that chat
+	CachedMessages map[int][]MessageRaw
 }
 
 // Wrapper struct containing all containers that compose the chat section of the screen
@@ -25,6 +25,21 @@ type Chat struct {
 	Border *fyne.Container
 	// Lists messages vertically
 	VBox *fyne.Container
+}
+
+type Message struct {
+    // Surrounds message in a card
+    Base *widget.Card
+    // Base VBox container for card content
+    VBox *fyne.Container
+    // Border container for message metadata, added to VBox first
+    Border *fyne.Container
+    // Label for message content, added to VBox second
+    Content *widget.Label
+    // Label for username, added to left side of Border
+    Username *widget.Label
+    // Label for time, added to right side of Border
+    Time *widget.Label
 }
 
 // NewChat: Creates and returns all containers needed for the section of the GUI
@@ -43,20 +58,23 @@ func NewChat() Chat {
 	return c
 }
 
-func NewMessage(content string, username string, time string) *widget.Card {
-    usernameLabel := widget.NewLabel(username)
-	usernameLabel.Wrapping = fyne.TextWrapWord
-    usernameLabel.TextStyle.Bold = true
+func NewMessage(content string, username string, time string) Message {
+    msg := Message{}
 
-    timeLabel := widget.NewLabel(time)
+    msg.Username = widget.NewLabel(username)
+	msg.Username.Wrapping = fyne.TextWrapWord
+    msg.Username.TextStyle.Bold = true
 
-    cTop := container.NewBorder(nil, nil, usernameLabel, timeLabel, nil)
+    msg.Time = widget.NewLabel(time)
 
-    contentLabel := widget.NewLabel(content)
-    contentLabel.Wrapping = fyne.TextWrapWord
+    msg.Border = container.NewBorder(nil, nil, msg.Username, msg.Time, nil)
 
-    cBase := container.NewVBox(cTop, contentLabel)
+    msg.Content = widget.NewLabel(content)
+    msg.Content.Wrapping = fyne.TextWrapWord
 
-	card := widget.NewCard("", "", cBase)
-	return card
+    msg.VBox = container.NewVBox(msg.Border, msg.Content)
+
+	msg.Base = widget.NewCard("", "", msg.VBox)
+
+	return msg
 }

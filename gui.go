@@ -48,6 +48,8 @@ type WidgetTable struct {
 	BottomBarButtonSend *widget.Button
 	// Entry in the bottom bar used to type and send messages
 	BottomBarEntry *widget.Entry
+    // Messages in the chat containers
+    Messages map[int]Message
 }
 
 // DialogConnectionIssues: Creates and shows a dialog set to the default size that informs the user that there are connection issues, with a user friendly message and a technical message
@@ -160,6 +162,8 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 	g.OutgoingMessages = make(chan ChatRequest)
 	g.Window = a.NewWindow("Ping")
     g.Window.Resize(fyne.NewSize(850, 550))
+
+    g.Widgets.Messages = make(map[int]Message)
 
 	// Initialize message entry
 	g.Widgets.BottomBarEntry = widget.NewEntry()
