@@ -89,6 +89,7 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 				msgWidget := NewMessage(
                     msg.Content, msg.Username,
                     time.Unix(msg.Time, 0).Format("3:04 PM"),
+                    msg.ID, gui,
                 )
                 gui.Widgets.Messages[msg.ID] = msgWidget
 				gui.Containers.Chat.VBox.Add(msgWidget.Base)

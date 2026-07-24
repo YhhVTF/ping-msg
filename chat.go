@@ -58,7 +58,7 @@ func NewChat() Chat {
 	return c
 }
 
-func NewMessage(content string, username string, time string) Message {
+func NewMessage(content string, username string, time string, id int, g *GUI) Message {
     msg := Message{}
 
     msg.Username = widget.NewLabel(username)
@@ -67,7 +67,31 @@ func NewMessage(content string, username string, time string) Message {
 
     msg.Time = widget.NewLabel(time)
 
-    msg.Border = container.NewBorder(nil, nil, msg.Username, msg.Time, nil)
+    buttonDelete := widget.NewButton("D", func() {
+        req := ChatRequest{
+            ChatID: 1,
+            MessageContent: "",
+            MessageID: id,
+            Type: REQ_DEL,
+        }
+        g.OutgoingMessages <- req
+    })
+    buttonEdit := widget.NewButton("E", func() {
+        req := ChatRequest{
+            ChatID: 1,
+            MessageContent: msg.Content.Text,
+            MessageID: id,
+            Type: REQ_EDIT,
+        }
+        g.OutgoingMessages <- req
+    })
+    buttonCopy := widget.NewButton("C", func() {
+        fyne.CurrentApp().Clipboard().SetContent(msg.Content.Text)
+    })
+
+    c := container.NewHBox(buttonCopy, buttonEdit, buttonDelete, msg.Time)
+
+    msg.Border = container.NewBorder(nil, nil, msg.Username, c, nil)
 
     msg.Content = widget.NewLabel(content)
     msg.Content.Wrapping = fyne.TextWrapWord
