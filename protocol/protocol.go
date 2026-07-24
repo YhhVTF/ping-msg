@@ -39,9 +39,9 @@ const REQ_CHATMETADATA  RequestWhere = 1
 // Request for user
 const REQ_USER          RequestWhere = 2
 
-// Collection of raw messages, used for sending and receicing messages to and from the server
+// Collection of raw messages, used for saving and loading messages, not for communication between the client and server
 type ChatRaw struct {
-    // Server version the chat was encoded in
+    // Protocol version
     Version string          `json:"version"`
     // Array of all messages in chat
     Messages []MessageRaw   `json:"messages"`
@@ -64,15 +64,15 @@ type ChatRequest struct {
 // A response to a chat request after the request is fulfuilled
 type ChatResponse struct {
     // ID of the chat involved
-    ChatID int          `json:"chat_id"`
+    ChatID int              `json:"chat_id"`
     // An error that prevented the request from being fulfilled. Is empty if no error occurred
-    Error string        `json:"error"`
+    Error string            `json:"error"`
     // ID of the message involved
-    MessageID int       `json:"message_int"`
+    MessageID int           `json:"message_int"`
     // Messages that the client may have requested
-    Messages ChatRaw    `json:"messages"`
+    Messages []MessageRaw   `json:"messages"`
     // Action that this response fulfilled
-    Type RequestWhat    `json:"chat_response_type"`
+    Type RequestWhat        `json:"chat_response_type"`
 }
 
 // Message data sent to and received from the server
