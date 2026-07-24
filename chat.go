@@ -58,7 +58,9 @@ func NewChat() Chat {
 	return c
 }
 
-func NewMessage(content string, username string, time string, id int, g *GUI) Message {
+func NewMessage(
+    content, username, time string, clientOwnsMsg bool, del func(), edit func(string),
+) Message {
     msg := Message{}
 
     msg.Username = widget.NewLabel(username)
@@ -67,29 +69,21 @@ func NewMessage(content string, username string, time string, id int, g *GUI) Me
 
     msg.Time = widget.NewLabel(time)
 
-    buttonDelete := widget.NewButton("D", func() {
-        req := ChatRequest{
-            ChatID: 1,
-            MessageContent: "",
-            MessageID: id,
-            Type: REQ_DEL,
-        }
-        g.OutgoingMessages <- req
-    })
-    buttonEdit := widget.NewButton("E", func() {
-        req := ChatRequest{
-            ChatID: 1,
-            MessageContent: msg.Content.Text,
-            MessageID: id,
-            Type: REQ_EDIT,
-        }
-        g.OutgoingMessages <- req
-    })
     buttonCopy := widget.NewButton("C", func() {
         fyne.CurrentApp().Clipboard().SetContent(msg.Content.Text)
     })
 
-    c := container.NewHBox(buttonCopy, buttonEdit, buttonDelete, msg.Time)
+    var c *fyne.Container
+
+    if clientOwnsMsg {
+        buttonDelete := widget.NewButton("D", del)
+        buttonEdit := widget.NewButton("E", func() {
+            //edit(msg.Content.Text)
+        })
+        c = container.NewHBox(buttonCopy, buttonEdit, buttonDelete, msg.Time)
+    } else {
+        c = container.NewHBox(buttonCopy, msg.Time)
+    }
 
     msg.Border = container.NewBorder(nil, nil, msg.Username, c, nil)
 

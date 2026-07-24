@@ -91,7 +91,27 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
                     msgWidget := NewMessage(
                         msg.Content, msg.Username,
                         time.Unix(msg.Time, 0).Format("3:04 PM"),
-                        msg.ID, gui,
+                        msg.Username == u.ThisUser,
+                        func() {
+                            req := ChatRequest{
+                                ChatID: 1,
+                                MessageContent: "",
+                                MessageID: msg.ID,
+                                Type: REQ_DEL,
+                                Username: u.ThisUser,
+                            }
+                            gui.OutgoingMessages <- req
+                        },
+                        func(newText string) {
+                            req := ChatRequest{
+                                ChatID: 1,
+                                MessageContent: newText,
+                                MessageID: msg.ID,
+                                Type: REQ_EDIT,
+                                Username: u.ThisUser,
+                            }
+                            gui.OutgoingMessages <- req
+                        },
                     )
                     gui.Widgets.Messages[msg.ID] = msgWidget
                     gui.Containers.Chat.VBox.Add(msgWidget.Base)
@@ -101,8 +121,10 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
             })
         case REQ_DEL:
             fyne.Do(func() {
-                gui.Widgets.Messages[resp.MessageID].Base.Hide()
-                delete(gui.Widgets.Messages, resp.MessageID)
+                if _, exists := gui.Widgets.Messages[resp.MessageID]; exists {
+                    gui.Widgets.Messages[resp.MessageID].Base.Hide()
+                    delete(gui.Widgets.Messages, resp.MessageID)
+                }
             })
         }
 	}
