@@ -101,6 +101,8 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
             })
         case REQ_DEL:
             fyne.Do(func() {
+                gui.Widgets.Messages[resp.MessageID].Base.Hide()
+                delete(gui.Widgets.Messages, resp.MessageID)
             })
         }
 	}
