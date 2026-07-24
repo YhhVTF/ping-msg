@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"fyne.io/fyne/v2"
+
+    "ping/protocol"
 )
 
 var Connected = false
@@ -70,7 +72,7 @@ func HandleServerCommunication(conn net.Conn, gui *GUI, u *UserData, connDone ch
 func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 	decoder := json.NewDecoder(conn)
 	for {
-		var resp ChatResponse
+		var resp prot.ChatResponse
 		err := decoder.Decode(&resp)
 		if err != nil {
 			done <- true
@@ -85,7 +87,7 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 		Info.Printf("Received response from server\n")
 
         switch resp.Type {
-        case REQ_ADD:
+        case prot.REQ_ADD:
             fyne.Do(func() {
                 for _, msg := range resp.Messages.Messages {
                     msgWidget := NewMessage(
@@ -93,21 +95,21 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
                         time.Unix(msg.Time, 0).Format("3:04 PM"),
                         msg.Username == u.ThisUser,
                         func() {
-                            req := ChatRequest{
+                            req := prot.ChatRequest{
                                 ChatID: 1,
-                                MessageContent: "",
+                                MessageContent: prot.NONE_STRING,
                                 MessageID: msg.ID,
-                                Type: REQ_DEL,
+                                Type: prot.REQ_DEL,
                                 Username: u.ThisUser,
                             }
                             gui.OutgoingMessages <- req
                         },
                         func(newText string) {
-                            req := ChatRequest{
+                            req := prot.ChatRequest{
                                 ChatID: 1,
                                 MessageContent: newText,
                                 MessageID: msg.ID,
-                                Type: REQ_EDIT,
+                                Type: prot.REQ_EDIT,
                                 Username: u.ThisUser,
                             }
                             gui.OutgoingMessages <- req
@@ -119,7 +121,7 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
                 gui.Containers.Chat.VBox.Refresh()
                 gui.Containers.Chat.VScroll.ScrollToBottom()
             })
-        case REQ_DEL:
+        case prot.REQ_DEL:
             fyne.Do(func() {
                 if _, exists := gui.Widgets.Messages[resp.MessageID]; exists {
                     gui.Widgets.Messages[resp.MessageID].Base.Hide()
@@ -152,8 +154,8 @@ func serverSend(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 	}
 }
 
-func CreateChatRequest(chatID int, reqType RequestWhat, username string, messageContent string, messageID int) []byte {
-	req := ChatRequest{
+func CreateChatRequest(chatID int, reqType prot.RequestWhat, username string, messageContent string, messageID int) []byte {
+	req := prot.ChatRequest{
 		ChatID:         chatID,
 		Type:           reqType,
 		Username:       username,

@@ -9,6 +9,8 @@ import (
 
 	"fmt"
 	"image/color"
+
+    "ping/protocol"
 )
 
 // All containers to be used by Ping
@@ -39,7 +41,7 @@ type GUI struct {
 	Dialogs DialogTable
 	// All widgets
 	Widgets          WidgetTable
-	OutgoingMessages chan ChatRequest // Connects to net.go
+	OutgoingMessages chan prot.ChatRequest // Connects to net.go
 }
 
 // All widget to be used by Ping
@@ -159,7 +161,7 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 	Info.Printf("Creating GUI\n")
 
 	g := &GUI{}
-	g.OutgoingMessages = make(chan ChatRequest)
+	g.OutgoingMessages = make(chan prot.ChatRequest)
 	g.Window = a.NewWindow("Ping")
     g.Window.Resize(fyne.NewSize(850, 550))
 
@@ -174,11 +176,11 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 			return
         }
 
-		req := ChatRequest{
+		req := prot.ChatRequest{
 			ChatID:         1,
 			MessageContent: text,
-			MessageID:      -1,
-			Type:           REQ_ADD,
+			MessageID:      prot.NONE_INT,
+			Type:           prot.REQ_ADD,
 			Username:       u.ThisUser,
 		}
 		g.OutgoingMessages <- req
@@ -196,11 +198,11 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 			return
         }
 
-		req := ChatRequest{
+		req := prot.ChatRequest{
 			ChatID:         1,
 			MessageContent: text,
-			MessageID:      -1,
-			Type:           REQ_ADD,
+			MessageID:      prot.NONE_INT,
+			Type:           prot.REQ_ADD,
 			Username:       u.ThisUser,
 		}
 		g.OutgoingMessages <- req
@@ -249,7 +251,7 @@ func (g *GUI) NewDialog(title, content string) *dialog.CustomDialog {
 	return dialog
 }
 
-func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
+func (g *GUI) ReceiveMessage(rawMsg prot.MessageRaw) {
 	Info.Printf("Received message\n")
 
 	msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
@@ -269,11 +271,11 @@ func (g *GUI) ReceiveMessage(rawMsg MessageRaw) {
 func (g *GUI) SendMessage() {
 	Info.Printf("Sending message\n")
 
-	req := ChatRequest{
+	req := prot.ChatRequest{
 		ChatID:         0,
 		MessageContent: g.Widgets.BottomBarEntry.Text,
-		MessageID:      -1,
-		Type:           REQ_ADD,
+		MessageID:      prot.NONE_INT,
+		Type:           prot.REQ_ADD,
 		Username:       "buh",
 	}
 

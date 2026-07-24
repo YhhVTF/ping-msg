@@ -1,6 +1,11 @@
-package main
+package prot
 
-var PROTOCOL_VER_LATEST = "1"
+const PROTOCOL_VER_LATEST = "2"
+
+// Shows that an integer field in a request or response is empty
+const NONE_INT = -1
+// Shows that a string field in a request or response is empty
+const NONE_STRING = "##"
 
 // What action is being requested. What these do differ depending on the RequestWhere
 type RequestWhat int
