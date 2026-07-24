@@ -79,7 +79,7 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 			return
 		}
 
-		if resp.Error != "" {
+		if resp.Error != prot.NONE_STRING {
 			Error.Printf("Server returned error: %s\n", resp.Error)
 			continue
 		}
