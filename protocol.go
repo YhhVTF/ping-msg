@@ -62,6 +62,8 @@ type ChatResponse struct {
     ChatID int          `json:"chat_id"`
     // An error that prevented the request from being fulfilled. Is empty if no error occurred
     Error string        `json:"error"`
+    // ID of the message involved
+    MessageID int       `json:"message_int"`
     // Messages that the client may have requested
     Messages ChatRaw    `json:"messages"`
     // Action that this response fulfilled

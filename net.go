@@ -82,21 +82,27 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 			continue
 		}
 
-		Info.Printf("Received message from server\n")
+		Info.Printf("Received response from server\n")
 
-		fyne.Do(func() {
-			for _, msg := range resp.Messages.Messages {
-				msgWidget := NewMessage(
-                    msg.Content, msg.Username,
-                    time.Unix(msg.Time, 0).Format("3:04 PM"),
-                    msg.ID, gui,
-                )
-                gui.Widgets.Messages[msg.ID] = msgWidget
-				gui.Containers.Chat.VBox.Add(msgWidget.Base)
-			}
-			gui.Containers.Chat.VBox.Refresh()
-			gui.Containers.Chat.VScroll.ScrollToBottom()
-		})
+        switch resp.Type {
+        case REQ_ADD:
+            fyne.Do(func() {
+                for _, msg := range resp.Messages.Messages {
+                    msgWidget := NewMessage(
+                        msg.Content, msg.Username,
+                        time.Unix(msg.Time, 0).Format("3:04 PM"),
+                        msg.ID, gui,
+                    )
+                    gui.Widgets.Messages[msg.ID] = msgWidget
+                    gui.Containers.Chat.VBox.Add(msgWidget.Base)
+                }
+                gui.Containers.Chat.VBox.Refresh()
+                gui.Containers.Chat.VScroll.ScrollToBottom()
+            })
+        case REQ_DEL:
+            fyne.Do(func() {
+            })
+        }
 	}
 }
 
