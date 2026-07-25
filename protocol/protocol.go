@@ -8,36 +8,36 @@ const NONE_INT = -1
 const NONE_STRING = "##"
 
 // What action is being requested. What these do differ depending on the RequestWhere
-type RequestWhat int
+type RequestWhat string
 // Adds new data provided by the client
 //  REQ_CHAT - Adds a message to the chat
 //  REQ_CHATMETADATA - Creates a new chat
 //  REQ_USER - Registers a new user
-const REQ_ADD   RequestWhat = 0
+const REQ_ADD   RequestWhat = "ADD"
 // Deletes existing data
 //  REQ_CHAT - Deletes the a message
 //  REQ_CHATMETADATA - Deletes a chat
 //  REQ_USER - Deletes a user
-const REQ_DEL   RequestWhat = 1
+const REQ_DEL   RequestWhat = "DEL"
 // Edits existing data
 //  REQ_CHAT - Edits a message
 //  REQ_CHATMETADATA - Edits a chat's metadata
 //  REQ_USER - Edits user information
-const REQ_EDIT  RequestWhat = 2
+const REQ_EDIT  RequestWhat = "EDIT"
 // Sends existing data to the client that requested it
 //  REQ_CHAT - Sends a chat block to the client
 //  REQ_CHATMETADATA - Sends a chat's metadata to the client
 //  REQ_USER - Sends user information to the client
-const REQ_GET  RequestWhat = 3
+const REQ_GET  RequestWhat = "GET"
 
 // What data is the request asking for the action to be done upon
-type RequestWhere int
+type RequestWhere string
 // Request for chat
-const REQ_CHAT          RequestWhere = 0
+const REQ_CHAT          RequestWhere = "CHAT"
 // Request for chat metadata
-const REQ_CHATMETADATA  RequestWhere = 1
+const REQ_CHATMETADATA  RequestWhere = "CHATMETADATA"
 // Request for user
-const REQ_USER          RequestWhere = 2
+const REQ_USER          RequestWhere = "USER"
 
 // Collection of raw messages, used for saving and loading messages, not for communication between the client and server
 type ChatRaw struct {

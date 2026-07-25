@@ -87,7 +87,7 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 			continue
 		}
 
-		Info.Printf("Received response from server\n")
+		Info.Printf("Received %s response from server\n", resp.Type)
 
         switch resp.Type {
         case prot.REQ_ADD:
@@ -105,15 +105,17 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 func serverSend(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 	for {
 		select {
-		case msg := <-gui.OutgoingMessages:
-			msgBytes, err := json.Marshal(msg)
+		case req := <-gui.OutgoingMessages:
+			reqBytes, err := json.Marshal(req)
 			if err != nil {
 				Error.Printf("Failed to marshal outgoing request\n")
 				continue
 			}
-			msgBytes = append(msgBytes, '\n')
+			reqBytes = append(reqBytes, '\n')
 
-			_, err = conn.Write(msgBytes)
+            Info.Printf("Sending %s request to server\n", req.Type)
+
+			_, err = conn.Write(reqBytes)
 			if err != nil {
 				done <- true
 				return
