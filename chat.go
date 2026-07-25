@@ -60,7 +60,7 @@ func NewChat() Chat {
 	return c
 }
 
-func NewMessage(
+func (g *GUI) NewMessage(
     content, username, time string, clientOwnsMsg bool, del func(), edit func(string),
 ) Message {
     msg := Message{}
@@ -77,10 +77,30 @@ func NewMessage(
 
     var c *fyne.Container
 
+    // If the message was sent by the user of this client
     if clientOwnsMsg {
+        // Add a delete button
         buttonDelete := widget.NewButton("D", del)
+
+        // Add an edit button, upon pressing...
         buttonEdit := widget.NewButton("E", func() {
-            //edit(msg.Content.Text)
+            // Replace the message content label with an entry to allow editing
+            msg.Content.Hide()
+            editEntry := widget.NewEntry()
+            editEntry.Text = msg.Content.Text
+            msg.VBox.Add(editEntry)
+
+            g.Window.Canvas().Focus(editEntry)
+
+            // On submission of entry...
+            editEntry.OnSubmitted = func(text string) {
+                // Send edit request
+                //edit(text)
+                // Replace the edit entry with the message content label again
+                editEntry.Hide()
+                msg.Content.Show()
+                g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+            }
         })
         c = container.NewHBox(buttonCopy, buttonEdit, buttonDelete, msg.Time)
     } else {

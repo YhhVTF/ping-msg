@@ -95,7 +95,7 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
         case prot.REQ_ADD:
             fyne.Do(func() {
                 for _, msg := range resp.Messages {
-                    msgWidget := NewMessage(
+                    msgWidget := gui.NewMessage(
                         msg.Content, msg.Username,
                         time.Unix(msg.Time, 0).Format("3:04 PM"),
                         msg.Username == u.ThisUser,
