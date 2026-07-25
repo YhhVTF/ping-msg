@@ -45,6 +45,11 @@ func StartNet(gui *GUI, u *UserData) {
 
         Connected = true
 		Info.Printf("Successfully connected to server\n")
+        // Dismiss connection issues dialog after connecting successfully
+        if gui.Dialogs.ConnectionIssues != nil {
+            gui.Dialogs.ConnectionIssues.Dismiss()
+            gui.Dialogs.ConnectionIssues = nil
+        }
 
 		connDone := make(chan bool)
 		go HandleServerCommunication(conn, gui, u, connDone)
