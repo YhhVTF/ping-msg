@@ -5,6 +5,8 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
+    "time"
+
     "ping/protocol"
 )
 
@@ -130,4 +132,59 @@ func (g *GUI) NewMessage(
 	msg.Base = widget.NewCard("", "", msg.VBox)
 
 	return msg
+}
+
+func (g *GUI) RespAdd(r *prot.ChatResponse, u *UserData) {
+    fyne.Do(func() {
+        for _, msg := range r.Messages {
+            msgWidget := g.NewMessage(
+                msg.Content, msg.Username,
+                time.Unix(msg.Time, 0).Format("3:04 PM"),
+                msg.Username == u.ThisUser,
+                func() {
+                    req := prot.ChatRequest{
+                        ChatID: 1,
+                        MessageContent: prot.NONE_STRING,
+                        MessageID: msg.ID,
+                        Type: prot.REQ_DEL,
+                        Username: u.ThisUser,
+                    }
+                    g.OutgoingMessages <- req
+                },
+                func(newText string) {
+                    req := prot.ChatRequest{
+                        ChatID: 1,
+                        MessageContent: newText,
+                        MessageID: msg.ID,
+                        Type: prot.REQ_EDIT,
+                        Username: u.ThisUser,
+                    }
+                    g.OutgoingMessages <- req
+                },
+            )
+            g.Widgets.Messages[msg.ID] = msgWidget
+            g.Containers.Chat.VBox.Add(msgWidget.Base)
+        }
+        g.Containers.Chat.VBox.Refresh()
+        g.Containers.Chat.VScroll.ScrollToBottom()
+    })
+}
+
+func (g *GUI) RespDel(r *prot.ChatResponse) {
+    fyne.Do(func() {
+        if _, exists := g.Widgets.Messages[r.MessageID]; exists {
+            g.Widgets.Messages[r.MessageID].Base.Hide()
+            delete(g.Widgets.Messages, r.MessageID)
+        }
+    })
+}
+
+func (g *GUI) RespEdit(r *prot.ChatResponse) {
+    fyne.Do(func() {
+        if _, exists := g.Widgets.Messages[r.MessageID]; exists {
+            g.Widgets.Messages[r.MessageID].Content.Text =
+                r.Messages[0].Content
+            g.Widgets.Messages[r.MessageID].Content.Refresh()
+        }
+    })
 }

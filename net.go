@@ -6,8 +6,6 @@ import (
     "os"
 	"time"
 
-	"fyne.io/fyne/v2"
-
     "ping/protocol"
 )
 
@@ -93,54 +91,13 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 
         switch resp.Type {
         case prot.REQ_ADD:
-            fyne.Do(func() {
-                for _, msg := range resp.Messages {
-                    msgWidget := gui.NewMessage(
-                        msg.Content, msg.Username,
-                        time.Unix(msg.Time, 0).Format("3:04 PM"),
-                        msg.Username == u.ThisUser,
-                        func() {
-                            req := prot.ChatRequest{
-                                ChatID: 1,
-                                MessageContent: prot.NONE_STRING,
-                                MessageID: msg.ID,
-                                Type: prot.REQ_DEL,
-                                Username: u.ThisUser,
-                            }
-                            gui.OutgoingMessages <- req
-                        },
-                        func(newText string) {
-                            req := prot.ChatRequest{
-                                ChatID: 1,
-                                MessageContent: newText,
-                                MessageID: msg.ID,
-                                Type: prot.REQ_EDIT,
-                                Username: u.ThisUser,
-                            }
-                            gui.OutgoingMessages <- req
-                        },
-                    )
-                    gui.Widgets.Messages[msg.ID] = msgWidget
-                    gui.Containers.Chat.VBox.Add(msgWidget.Base)
-                }
-                gui.Containers.Chat.VBox.Refresh()
-                gui.Containers.Chat.VScroll.ScrollToBottom()
-            })
+            gui.RespAdd(&resp, u)
+
         case prot.REQ_DEL:
-            fyne.Do(func() {
-                if _, exists := gui.Widgets.Messages[resp.MessageID]; exists {
-                    gui.Widgets.Messages[resp.MessageID].Base.Hide()
-                    delete(gui.Widgets.Messages, resp.MessageID)
-                }
-            })
+            gui.RespDel(&resp)
+
         case prot.REQ_EDIT:
-            fyne.Do(func() {
-                if _, exists := gui.Widgets.Messages[resp.MessageID]; exists {
-                    gui.Widgets.Messages[resp.MessageID].Content.Text =
-                        resp.Messages[0].Content
-                    gui.Widgets.Messages[resp.MessageID].Content.Refresh()
-                }
-            })
+            gui.RespEdit(&resp)
         }
 	}
 }
