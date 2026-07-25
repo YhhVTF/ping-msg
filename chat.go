@@ -63,6 +63,8 @@ func NewChat() Chat {
 func (g *GUI) NewMessage(
     content, username, time string, clientOwnsMsg bool, del func(), edit func(string),
 ) Message {
+    Info.Printf("Creating new message widget\n")
+
     msg := Message{}
 
     msg.Username = widget.NewLabel(username)
@@ -72,6 +74,7 @@ func (g *GUI) NewMessage(
     msg.Time = widget.NewLabel(time)
 
     buttonCopy := widget.NewButton("C", func() {
+        Info.Printf("Copied message\n")
         fyne.CurrentApp().Clipboard().SetContent(msg.Content.Text)
     })
 
@@ -81,12 +84,15 @@ func (g *GUI) NewMessage(
     if clientOwnsMsg {
         // Add a delete button
         buttonDelete := widget.NewButton("D", func() {
+            Info.Printf("Delete button on message pressed\n")
             del()
             g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
         })
 
         // Add an edit button, upon pressing...
         buttonEdit := widget.NewButton("E", func() {
+            Info.Printf("Edit button on message pressed\n")
+
             // Replace the message content label with an entry to allow editing
             msg.Content.Hide()
             editEntry := widget.NewEntry()
@@ -97,6 +103,7 @@ func (g *GUI) NewMessage(
 
             // On submission of entry...
             editEntry.OnSubmitted = func(text string) {
+                Info.Printf("Edit entry on message submitted\n")
                 // Send edit request if there was an actual edit
                 if text != msg.Content.Text {
                     edit(text)
