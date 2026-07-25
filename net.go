@@ -133,6 +133,14 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
                     delete(gui.Widgets.Messages, resp.MessageID)
                 }
             })
+        case prot.REQ_EDIT:
+            fyne.Do(func() {
+                if _, exists := gui.Widgets.Messages[resp.MessageID]; exists {
+                    gui.Widgets.Messages[resp.MessageID].Content.Text =
+                        resp.Messages[0].Content
+                    gui.Widgets.Messages[resp.MessageID].Content.Refresh()
+                }
+            })
         }
 	}
 }

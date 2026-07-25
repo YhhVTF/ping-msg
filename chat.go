@@ -95,7 +95,7 @@ func (g *GUI) NewMessage(
             // On submission of entry...
             editEntry.OnSubmitted = func(text string) {
                 // Send edit request
-                //edit(text)
+                edit(text)
                 // Replace the edit entry with the message content label again
                 editEntry.Hide()
                 msg.Content.Show()
