@@ -208,6 +208,8 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
 		g.OutgoingMessages <- req
 
 		g.Widgets.BottomBarEntry.SetText("")
+
+        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 	})
 
 	// Initialize chat containers

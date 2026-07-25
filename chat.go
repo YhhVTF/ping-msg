@@ -80,7 +80,10 @@ func (g *GUI) NewMessage(
     // If the message was sent by the user of this client
     if clientOwnsMsg {
         // Add a delete button
-        buttonDelete := widget.NewButton("D", del)
+        buttonDelete := widget.NewButton("D", func() {
+            del()
+            g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+        })
 
         // Add an edit button, upon pressing...
         buttonEdit := widget.NewButton("E", func() {
@@ -101,6 +104,7 @@ func (g *GUI) NewMessage(
                 // Replace the edit entry with the message content label again
                 editEntry.Hide()
                 msg.Content.Show()
+
                 g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
             }
         })
