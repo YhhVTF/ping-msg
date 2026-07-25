@@ -108,8 +108,12 @@ func (g *GUI) DialogLogin(u *UserData) {
 	// add a login button
 	dialog.SetButtons([]fyne.CanvasObject{
 		widget.NewButton("Login", func() {
-            // Set the text in the entry as the username
+            // Set the text in the entry as the username if it isn't a reserved username or empty
             if entry.Text == "" { return }
+            if entry.Text == prot.SERVER_USERNAME || entry.Text == prot.NONE_STRING {
+                prompt.SetText("This username can't be used try a different one")
+                return
+            }
             u.ThisUser = entry.Text
 
             // Dismiss the dialog and set it as nil in the dialog table
@@ -128,8 +132,12 @@ func (g *GUI) DialogLogin(u *UserData) {
 	dialog.Show()
 
     entry.OnSubmitted = func(text string) {
-        // Set the text in the entry as the username
+        // Set the text in the entry as the username if it isn't a reserved username or empty
         if entry.Text == "" { return }
+        if entry.Text == prot.SERVER_USERNAME || entry.Text == prot.NONE_STRING {
+            prompt.SetText("This username can't be used. Try a different one")
+            return
+        }
         u.ThisUser = entry.Text
 
         // Dismiss the dialog and set it as nil in the dialog table
