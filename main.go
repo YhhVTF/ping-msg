@@ -17,9 +17,10 @@ var PingQuit = false
 //
 //	a (fyne.App) - argument for InitGUI
 //	loadingWindow (fyne.Window) - argument for InitGUI
-func StartPing(a fyne.App, loadingWindow fyne.Window) {
+//  opt (*Options) - options/settings
+func StartPing(a fyne.App, loadingWindow fyne.Window, opt *Options) {
     u := &UserData{}
-	StartNet(InitGUI(a, u, loadingWindow), u)
+	StartNet(InitGUI(a, u, loadingWindow, opt), u, opt)
 }
 
 func main() {
@@ -27,6 +28,21 @@ func main() {
 	Info.Printf("Starting Ping\n")
 
 	a := app.New()
+
+    // Create a loading window
+    // This window will be shown while Ping starts and will be closed when it is ready
+    loadingWindow := a.NewWindow("Launching Ping")
+    c := container.NewCenter(widget.NewLabel("Loading..."))
+    fyne.Do(func() {
+        loadingWindow.SetContent(c)
+    })
+    fyne.Do(loadingWindow.Show)
+    //fyne.Do(loadingWindow.SetMaster)
+
+    opt, err := LoadOptions("options")
+    if err != nil {
+        return
+    }
 
     Info.Printf("Loading assets\n")
 	iconData, err := os.ReadFile("assets/icon.png")
@@ -36,17 +52,7 @@ func main() {
         Error.Printf("Failed to load asset assets/icon.png: %s\n", err)
     }
 
-	// Create a loading window
-	// This window will be shown while Ping starts and will be closed when it is ready
-	loadingWindow := a.NewWindow("Launching Ping")
-	c := container.NewCenter(widget.NewLabel("Loading..."))
-	fyne.Do(func() {
-		loadingWindow.SetContent(c)
-	})
-	fyne.Do(loadingWindow.Show)
-	//fyne.Do(loadingWindow.SetMaster)
-
-	go StartPing(a, loadingWindow)
+	go StartPing(a, loadingWindow, opt)
 
 	a.Run()
 }

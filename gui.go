@@ -161,11 +161,12 @@ func (g *GUI) DialogLogin(u *UserData) {
 //	a (fyne.App) - The fyne application the window will be initialized in
 //  u (*UserData) - Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
+//  opt (*Options) - Options/settings
 //
 // Returns:
 //
 //	*GUI - The main window and all its objects
-func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window) *GUI {
+func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *GUI {
 	Info.Printf("Creating GUI\n")
 
 	g := &GUI{}

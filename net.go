@@ -16,7 +16,8 @@ var Connected = false
 //
 //	gui (*GUI) - GUI elements
 //  u (*UserData) - Information pertaining to users
-func StartNet(gui *GUI, u *UserData) {
+//  opt (*Options) - Options/settings
+func StartNet(gui *GUI, u *UserData, opt *Options) {
     // Prompt for a username
     gui.DialogLogin(u)
     for gui.Dialogs.Login != nil {}
