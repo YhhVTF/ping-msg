@@ -29,14 +29,15 @@ type EntryTextOptions struct {
 type EntryOptions struct {}
 
 type GUITextOptions struct {
-    ButtonAttach        ButtonTextOptions   `json:"button_attach"`
-    ButtonOptions       ButtonTextOptions   `json:"button_options"`
-    ButtonSend          ButtonTextOptions   `json:"button_send"`
-    DialogConnIssues    DialogTextOptions   `json:"dialog_connection_issues"`
-    DialogLogin         DialogTextOptions   `json:"dialog_login"`
-    EntryMessage        EntryTextOptions    `json:"entry_message"`
-    EntryUsername       EntryTextOptions    `json:"entry_username"`
-    Window              WindowTextOptions   `json:"window"`
+    ButtonAttach            ButtonTextOptions   `json:"button_attach"`
+    ButtonOptions           ButtonTextOptions   `json:"button_options"`
+    ButtonSend              ButtonTextOptions   `json:"button_send"`
+    DialogConnIssues        DialogTextOptions   `json:"dialog_connection_issues"`
+    DialogLogin             DialogTextOptions   `json:"dialog_login"`
+    DialogLoginAltPrompt    string              `json:"dialog_login_altprompt"`
+    EntryMessage            EntryTextOptions    `json:"entry_message"`
+    EntryUsername           EntryTextOptions    `json:"entry_username"`
+    Window                  WindowTextOptions   `json:"window"`
 }
 
 type GUIOptions struct {

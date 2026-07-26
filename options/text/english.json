@@ -12,6 +12,7 @@
         "prompt": "Enter a username to login as",
         "title": "Login"
     },
+    "dialog_login_altprompt": "This username can't be used try a different one",
     "entry_message": { "label": "Type a message..." },
     "entry_username": { "label": "Enter a username" },
     "window": { "title": "Ping" }
