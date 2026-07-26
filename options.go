@@ -6,37 +6,37 @@ import (
     "os"
 )
 
-type ButtonLabelOptions struct {
+type ButtonTextOptions struct {
     Label   string  `json:"label"`
 }
 
 type ButtonOptions struct {}
 
-type DialogLabelOptions struct {
-    Buttons []ButtonLabelOptions    `json:"buttons"`
-    Prompt  string                  `json:"prompt"`
-    Title   string                  `json:"title"`
+type DialogTextOptions struct {
+    Buttons []ButtonTextOptions `json:"buttons"`
+    Prompt  string              `json:"prompt"`
+    Title   string              `json:"title"`
 }
 
 type DialogOptions struct {
-    Size    []int                   `json:"size"`
+    Size    []int   `json:"size"`
 }
 
-type EntryLabelOptions struct {
+type EntryTextOptions struct {
     Label   string  `json:"label"`
 }
 
 type EntryOptions struct {}
 
-type GUILabelOptions struct {
-    ButtonAttach        ButtonLabelOptions   `json:"button_attach"`
-    ButtonLabelOptions  ButtonLabelOptions   `json:"button_options"`
-    ButtonSend          ButtonLabelOptions   `json:"button_send"`
-    DialogConnIssues    DialogLabelOptions   `json:"dialog_connection_issues"`
-    DialogLogin         DialogLabelOptions   `json:"dialog_login"`
-    EntryMessage        EntryLabelOptions    `json:"entry_message"`
-    EntryUsername       EntryLabelOptions    `json:"entry_username"`
-    Window              WindowLabelOptions   `json:"window"`
+type GUITextOptions struct {
+    ButtonAttach        ButtonTextOptions   `json:"button_attach"`
+    ButtonOptions       ButtonTextOptions   `json:"button_options"`
+    ButtonSend          ButtonTextOptions   `json:"button_send"`
+    DialogConnIssues    DialogTextOptions   `json:"dialog_connection_issues"`
+    DialogLogin         DialogTextOptions   `json:"dialog_login"`
+    EntryMessage        EntryTextOptions    `json:"entry_message"`
+    EntryUsername       EntryTextOptions    `json:"entry_username"`
+    Window              WindowTextOptions   `json:"window"`
 }
 
 type GUIOptions struct {
@@ -56,12 +56,12 @@ type NetOptions struct {
 
 type Options struct {
     GUI         GUIOptions
-    GUILabels   GUILabelOptions
+    GUIText     GUITextOptions
     Language    LanguageOptions
     Net         NetOptions
 }
 
-type WindowLabelOptions struct {
+type WindowTextOptions struct {
     Title   string  `json:"title"`
 }
 
