@@ -49,8 +49,9 @@ type NetOptions struct {
 }
 
 type Options struct {
-    GUI GUIOptions  `json:"gui"`
-    Net NetOptions  `json:"net"`
+    GUI         GUIOptions
+    Language    LanguageOptions
+    Net         NetOptions
 }
 
 type WindowLabelOptions struct {
