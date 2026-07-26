@@ -136,7 +136,7 @@ func LoadOptions(pathToOptions string) (*Options, error) {
 
     // Decode text gui options
     decoder = json.NewDecoder(f)
-    err = decoder.Decode(&opt.GUILabels)
+    err = decoder.Decode(&opt.GUIText)
     if err != nil {
         Error.Printf("Failed to deocde text options: %s\n", err)
         return nil, err
