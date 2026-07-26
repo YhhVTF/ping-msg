@@ -42,11 +42,8 @@ type GUITextOptions struct {
 type GUIOptions struct {
     DialogConnIssues    DialogOptions   `json:"dialog_connection_issues"`
     DialogLogin         DialogOptions   `json:"dialog_login"`
+    Language            string          `json:"language"`
     Window              WindowOptions   `json:"window"`
-}
-
-type LanguageOptions struct {
-    Language    string  `json:"language"`
 }
 
 type NetOptions struct {
@@ -57,7 +54,6 @@ type NetOptions struct {
 type Options struct {
     GUI         GUIOptions
     GUIText     GUITextOptions
-    Language    LanguageOptions
     Net         NetOptions
 }
 
@@ -108,26 +104,9 @@ func LoadOptions(pathToOptions string) (*Options, error) {
         return nil, err
     }
 
-    // Open language options
-    f, err = os.OpenFile(
-        fmt.Sprintf("%s/language.json", pathToOptions), os.O_RDWR, 644,
-    )
-    if err != nil {
-        Error.Printf("Failed to open language options: %s\n", err)
-        return nil, err
-    }
-
-    // Decode languae options
-    decoder = json.NewDecoder(f)
-    err = decoder.Decode(&opt.Language)
-    if err != nil {
-        Error.Printf("Failed to deocde language options: %s\n", err)
-        return nil, err
-    }
-
     // Open text gui options of the specified language
     f, err = os.OpenFile(
-        fmt.Sprintf("%s/text/%s.json", pathToOptions, opt.Language), os.O_RDWR, 644,
+        fmt.Sprintf("%s/text/%s.json", pathToOptions, opt.GUI.Language), os.O_RDWR, 644,
     )
     if err != nil {
         Error.Printf("Failed to open text options: %s\n", err)

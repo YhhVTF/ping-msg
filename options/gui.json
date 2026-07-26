@@ -5,6 +5,7 @@
     "dialog_login": {
         "size": [350, 200]
     },
+    "language": "english",
     "window": {
         "size": [850, 550]
     }
