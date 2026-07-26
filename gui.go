@@ -58,11 +58,12 @@ type WidgetTable struct {
 // Parameters:
 //
 //	err (error) - The error that occurred. This will be used as the technical error message
-func (g *GUI) DialogConnectionIssues(err error) {
+//  opt (*Options) - Options/settings
+func (g *GUI) DialogConnectionIssues(err error, opt *Options) {
 	Info.Printf("Creating Dialog ConnectionIssues\n")
 
 	// Create the user friendly error message as a label
-	uxErrMsg := widget.NewLabel("Failed to connect to server. The server may be down or your internet connection could be unstable")
+	uxErrMsg := widget.NewLabel(opt.GUIText.DialogConnIssues.Prompt)
 	// Create the technical error message as a label, make it selectable and a low importance widget
 	technicalErrMsg := widget.NewLabel(err.Error())
 	technicalErrMsg.Selectable = true
@@ -71,10 +72,10 @@ func (g *GUI) DialogConnectionIssues(err error) {
 	c := container.NewVBox(uxErrMsg, technicalErrMsg)
 
 	// Create a dialog with the vbox as the content
-	dialog := dialog.NewCustom("Connection Issues", "", c, g.Window)
+	dialog := dialog.NewCustom(opt.GUIText.DialogConnIssues.Title, "", c, g.Window)
 	// add an ok button
 	dialog.SetButtons([]fyne.CanvasObject{
-		widget.NewButton("Ok", func() {
+		widget.NewButton(opt.GUIText.DialogConnIssues.Buttons[0].Label, func() {
 			Info.Printf("Dialog ConnectionsIssues dismissed\n")
 			// Dismiss the dialog and set it to nil in the dialog table
 			dialog.Dismiss()
@@ -85,33 +86,33 @@ func (g *GUI) DialogConnectionIssues(err error) {
 		}),
 	})
 	// Resize to default dialog size and show the dialog
-	dialog.Resize(fyne.NewSize(350, 200))
+	dialog.Resize(fyne.NewSize(opt.GUI.DialogConnIssues.Size[0], opt.GUI.DialogConnIssues.Size[1]))
 	dialog.Show()
 
 	// add the dialog to the dialog table
 	g.Dialogs.ConnectionIssues = dialog
 }
 
-func (g *GUI) DialogLogin(u *UserData) {
+func (g *GUI) DialogLogin(u *UserData, opt *Options) {
 	Info.Printf("Creating Dialog Login\n")
 
     // Text telling the user what to do
-	prompt := widget.NewLabel("Enter a username to login as")
+	prompt := widget.NewLabel(opt.GUIText.DialogLogin.Prompt)
     // Entry for username
     entry := widget.NewEntry()
-    entry.SetPlaceHolder("Enter a username")
+    entry.SetPlaceHolder(opt.GUIText.EntryUsername.Label)
 	// add them to a new vbox
 	c := container.NewVBox(prompt, entry)
 
 	// Create a dialog with the vbox as the content
-	dialog := dialog.NewCustom("Login", "", c, g.Window)
+	dialog := dialog.NewCustom(opt.GUIText.DialogLogin.Title, "", c, g.Window)
 	// add a login button
 	dialog.SetButtons([]fyne.CanvasObject{
-		widget.NewButton("Login", func() {
+		widget.NewButton(opt.GUIText.DialogLogin.Buttons[0].Label, func() {
             // Set the text in the entry as the username if it isn't a reserved username or empty
             if entry.Text == "" { return }
             if entry.Text == prot.SERVER_USERNAME || entry.Text == prot.NONE_STRING {
-                prompt.SetText("This username can't be used try a different one")
+                prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
                 return
             }
             u.ThisUser = entry.Text
@@ -128,14 +129,14 @@ func (g *GUI) DialogLogin(u *UserData) {
 		}),
 	})
 	// Resize to default dialog size and show the dialog
-	dialog.Resize(fyne.NewSize(350, 200))
+	dialog.Resize(fyne.NewSize(opt.GUI.DialogConnIssues.Size[0], opt.GUI.DialogConnIssues.Size[1]))
 	dialog.Show()
 
     entry.OnSubmitted = func(text string) {
         // Set the text in the entry as the username if it isn't a reserved username or empty
         if entry.Text == "" { return }
         if entry.Text == prot.SERVER_USERNAME || entry.Text == prot.NONE_STRING {
-            prompt.SetText("This username can't be used. Try a different one")
+            prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
             return
         }
         u.ThisUser = entry.Text
@@ -171,14 +172,14 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
 
 	g := &GUI{}
 	g.OutgoingMessages = make(chan prot.ChatRequest)
-	g.Window = a.NewWindow("Ping")
-    g.Window.Resize(fyne.NewSize(850, 550))
+	g.Window = a.NewWindow(opt.GUIText.Window.Title)
+    g.Window.Resize(fyne.NewSize(opt.GUI.Window.Size[0], opt.GUI.Window.Size[1]))
 
     g.Widgets.Messages = make(map[int]Message)
 
 	// Initialize message entry
 	g.Widgets.BottomBarEntry = widget.NewEntry()
-	g.Widgets.BottomBarEntry.PlaceHolder = "Type a message..."
+	g.Widgets.BottomBarEntry.PlaceHolder = opt.GUIText.EntryMessage.Label
 	g.Widgets.BottomBarEntry.OnSubmitted = func(text string) {
 		Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
 		if text == "" || !Connected {
@@ -200,7 +201,8 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
     g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 
 	// Initialize send button
-	g.Widgets.BottomBarButtonSend = widget.NewButton("Send", func() {
+	g.Widgets.BottomBarButtonSend = 
+    widget.NewButton(opt.GUIText.ButtonSend.Label, func() {
 		Info.Printf("Widget BottomBarButtonSend pressed\n")
 		text := g.Widgets.BottomBarEntry.Text
 		if text == "" || !Connected {

@@ -19,7 +19,7 @@ var Connected = false
 //  opt (*Options) - Options/settings
 func StartNet(gui *GUI, u *UserData, opt *Options) {
     // Prompt for a username
-    gui.DialogLogin(u)
+    gui.DialogLogin(u, opt)
     for gui.Dialogs.Login != nil {}
 
         addr := "127.0.0.1:5555"
@@ -36,7 +36,7 @@ func StartNet(gui *GUI, u *UserData, opt *Options) {
 		if err != nil {
 			Error.Printf("Failed to connect to server: %s\n", err)
 			if gui.Dialogs.ConnectionIssues == nil {
-				gui.DialogConnectionIssues(err)
+				gui.DialogConnectionIssues(err, opt)
 			}
 			time.Sleep(30 * time.Second)
 			continue

@@ -19,7 +19,7 @@ type DialogTextOptions struct {
 }
 
 type DialogOptions struct {
-    Size    []int   `json:"size"`
+    Size    []float32   `json:"size"`
 }
 
 type EntryTextOptions struct {
@@ -63,7 +63,7 @@ type WindowTextOptions struct {
 }
 
 type WindowOptions struct {
-    Size    []int   `json:"size"`
+    Size    []float32   `json:"size"`
 }
 
 func LoadOptions(pathToOptions string) (*Options, error) {
