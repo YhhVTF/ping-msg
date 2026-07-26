@@ -1,0 +1,18 @@
+{
+    "button_attach": { "label": "Attach" },
+    "button_options": { "label": "Options" },
+    "button_send": { "label": "Send" },
+    "dialog_connection_issues": {
+        "buttons": [{ "label": "Ok" }],
+        "prompt": "Failed to connect to server. The server may be down or your internet connection could be unstable",
+        "title": "Connection Issues"
+    },
+    "dialog_login": {
+        "buttons": [{ "label": "Login" }],
+        "prompt": "Enter a username to login as",
+        "title": "Login"
+    },
+    "entry_message": { "label": "Type a message..." },
+    "entry_username": { "label": "Enter a username" },
+    "window": { "title": "Ping" }
+}

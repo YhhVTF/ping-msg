@@ -1,0 +1,11 @@
+{
+    "dialog_connection_issues": {
+        "size": [350, 200]
+    },
+    "dialog_login": {
+        "size": [350, 200]
+    },
+    "window": {
+        "size": [850, 550]
+    }
+}
