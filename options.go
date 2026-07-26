@@ -1,16 +1,5 @@
 package main
 
-type GUIOptions struct {
-    ButtonAttach        ButtonOptions   `json:"button_attach"`
-    ButtonOptions       ButtonOptions   `json:"button_options"`
-    ButtonSend          ButtonOptions   `json:"button_send"`
-    DialogConnIssues    DialogOptions   `json:"dialog_connection_issues"`
-    DialogLogin         DialogOptions   `json:"dialog_login"`
-    EntryMessage        EntryOptions    `json:"entry_message"`
-    EntryUsername       EntryOptions    `json:"entry_username"`
-    Window              WindowOptions   `json:"window"`
-}
-
 type ButtonOptions struct {
     Label   string  `json:"label"`
 }
@@ -24,6 +13,27 @@ type DialogOptions struct {
 
 type EntryOptions struct {
     Label   string  `json:"label"`
+}
+
+type GUIOptions struct {
+    ButtonAttach        ButtonOptions   `json:"button_attach"`
+    ButtonOptions       ButtonOptions   `json:"button_options"`
+    ButtonSend          ButtonOptions   `json:"button_send"`
+    DialogConnIssues    DialogOptions   `json:"dialog_connection_issues"`
+    DialogLogin         DialogOptions   `json:"dialog_login"`
+    EntryMessage        EntryOptions    `json:"entry_message"`
+    EntryUsername       EntryOptions    `json:"entry_username"`
+    Window              WindowOptions   `json:"window"`
+}
+
+type NetOptions struct {
+    InitialReconnCooldown   int `json:"initial_reconn_cooldown"`
+    ReconnCooldown          int `json:"reconn_cooldown"`
+}
+
+type Options struct {
+    GUI GUIOptions  `json:"gui"`
+    Net NetOptions  `json:"net"`
 }
 
 type WindowOptions struct {
