@@ -45,11 +45,11 @@ func main() {
     }
 
     Info.Printf("Loading assets\n")
-	iconData, err := os.ReadFile("assets/icon.png")
+	iconData, err := os.ReadFile("assets/icons/ping.png")
 	if err == nil {
-		a.SetIcon(fyne.NewStaticResource("icon.png", iconData))
+		a.SetIcon(fyne.NewStaticResource("ping.png", iconData))
 	} else {
-        Error.Printf("Failed to load asset assets/icon.png: %s\n", err)
+        Error.Printf("Failed to load asset assets/ping.png: %s\n", err)
     }
 
 	go StartPing(a, loadingWindow, opt)
