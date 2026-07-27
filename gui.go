@@ -208,6 +208,7 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
 
         g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 	})
+    g.Widgets.BottomBarButtonSend.Importance = widget.HighImportance
 
     g.Containers.BottomLeftCluster =
         container.NewHBox(g.Widgets.ButtonAttach, g.Widgets.BottomBarButtonSend)
