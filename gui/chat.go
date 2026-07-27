@@ -90,7 +90,7 @@ func (g *GUI) NewMessage(
         buttonDelete := widget.NewButton("D", func() {
             log.Info.Printf("Delete button on message pressed\n")
             del()
-            g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+            g.Window.Canvas().Focus(g.Widgets.EntryMessage)
         })
 
         // Add an edit button, upon pressing...
@@ -116,7 +116,7 @@ func (g *GUI) NewMessage(
                 editEntry.Hide()
                 msg.Content.Show()
 
-                g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+                g.Window.Canvas().Focus(g.Widgets.EntryMessage)
             }
         })
         c = container.NewHBox(buttonCopy, buttonEdit, buttonDelete, msg.Time)

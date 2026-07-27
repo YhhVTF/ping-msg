@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"image/color"
 
-    "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"

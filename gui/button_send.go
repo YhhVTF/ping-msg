@@ -38,7 +38,7 @@ func createButtonSend(g *GUI, u *user.UserData, opt *options.Options) *widget.Bu
         buttonSendOnPressed(g, u)
 	})
     // Set importance to high
-    g.Widgets.ButtonSend.Importance = widget.HighImportance
+    button.Importance = widget.HighImportance
 
     return button
 }
