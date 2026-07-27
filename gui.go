@@ -184,7 +184,9 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
     g.Widgets.Messages = make(map[int]Message)
 
     // Initialize attach button
-    g.Widgets.ButtonAttach = widget.NewButton(opt.GUIText.ButtonAttach.Label, func(){})
+    g.Widgets.ButtonAttach = widget.NewButton(opt.GUIText.ButtonAttach.Label, func(){
+        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+    })
 
 	// Initialize send button
 	g.Widgets.BottomBarButtonSend = 
@@ -237,7 +239,9 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
     g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 
     // Initialize options button
-    g.Widgets.ButtonOptions = widget.NewButton(opt.GUIText.ButtonOptions.Label, func(){})
+    g.Widgets.ButtonOptions = widget.NewButton(opt.GUIText.ButtonOptions.Label, func(){
+        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+    })
 
 	// Initialize chat containers
 	g.Containers.Chat = NewChat()
