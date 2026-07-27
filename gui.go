@@ -19,6 +19,8 @@ type ContainerTable struct {
 	Base *fyne.Container
 	// Container for objects at the bottom of the screen (like the message entry, send button, etc.)
 	BottomBar *fyne.Container
+    // Container for buttons at the bottom of the screen to the left of the message entry
+    BottomLeftCluster *fyne.Container
 	// Containers containing the messages in the chat
 	Chat Chat
 }
@@ -50,6 +52,10 @@ type WidgetTable struct {
 	BottomBarButtonSend *widget.Button
 	// Entry in the bottom bar used to type and send messages
 	BottomBarEntry *widget.Entry
+    // Button in the bottom left for attaching files to messages
+    ButtonAttach *widget.Button
+    // Button in the bottom right of the screen for opening a settings window
+    ButtonOptions *widget.Button
     // Messages in the chat containers
     Messages map[int]Message
 }
@@ -177,28 +183,8 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
 
     g.Widgets.Messages = make(map[int]Message)
 
-	// Initialize message entry
-	g.Widgets.BottomBarEntry = widget.NewEntry()
-	g.Widgets.BottomBarEntry.PlaceHolder = opt.GUIText.EntryMessage.Label
-	g.Widgets.BottomBarEntry.OnSubmitted = func(text string) {
-		Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
-		if text == "" || !Connected {
-			return
-        }
-
-		req := prot.ChatRequest{
-			ChatID:         1,
-			MessageContent: text,
-			MessageID:      prot.NONE_INT,
-			Type:           prot.REQ_ADD,
-			Username:       u.ThisUser,
-		}
-		g.OutgoingMessages <- req
-
-		g.Widgets.BottomBarEntry.SetText("")
-	}
-    // Set focus on message entry
-    g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+    // Initialize attach button
+    g.Widgets.ButtonAttach = widget.NewButton(opt.GUIText.ButtonAttach.Label, func(){})
 
 	// Initialize send button
 	g.Widgets.BottomBarButtonSend = 
@@ -223,13 +209,42 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
         g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 	})
 
+    g.Containers.BottomLeftCluster =
+        container.NewHBox(g.Widgets.ButtonAttach, g.Widgets.BottomBarButtonSend)
+
+	// Initialize message entry
+	g.Widgets.BottomBarEntry = widget.NewEntry()
+	g.Widgets.BottomBarEntry.PlaceHolder = opt.GUIText.EntryMessage.Label
+	g.Widgets.BottomBarEntry.OnSubmitted = func(text string) {
+		Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
+		if text == "" || !Connected {
+			return
+        }
+
+		req := prot.ChatRequest{
+			ChatID:         1,
+			MessageContent: text,
+			MessageID:      prot.NONE_INT,
+			Type:           prot.REQ_ADD,
+			Username:       u.ThisUser,
+		}
+		g.OutgoingMessages <- req
+
+		g.Widgets.BottomBarEntry.SetText("")
+	}
+    // Set focus on message entry
+    g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+
+    // Initialize options button
+    g.Widgets.ButtonOptions = widget.NewButton(opt.GUIText.ButtonOptions.Label, func(){})
+
 	// Initialize chat containers
 	g.Containers.Chat = NewChat()
 
 	// Initialize bottom bar container and add the message entry and send button
 	g.Containers.BottomBar = container.NewBorder(
 		// top, bottom, left, right, center
-		nil, nil, nil, g.Widgets.BottomBarButtonSend, g.Widgets.BottomBarEntry,
+		nil, nil, g.Containers.BottomLeftCluster, g.Widgets.ButtonOptions, g.Widgets.BottomBarEntry,
 	)
 
 	// Initialize the base container and add the chat scroll container and bottom bar
