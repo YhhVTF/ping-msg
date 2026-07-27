@@ -7,25 +7,28 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	"os"
-)
 
-// Whether or not the user has quit Ping
-var PingQuit = false
+    "github.com/YhhVTF/ping-msg/gui"
+    "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/net"
+    "github.com/YhhVTF/ping-msg/opt"
+    "github.com/YhhVTF/ping-msg/user"
+)
 
 // StartPing: Wrapper function that initializes the main window and gui and then connects to the server by calling InitGUI and StartNet respectively
 // Parameters:
 //
 //	a (fyne.App) - argument for InitGUI
 //	loadingWindow (fyne.Window) - argument for InitGUI
-//  opt (*Options) - options/settings
-func StartPing(a fyne.App, loadingWindow fyne.Window, opt *Options) {
-    u := &UserData{}
-	StartNet(InitGUI(a, u, loadingWindow, opt), u, opt)
+//  opt (*options.Options) - options/settings
+func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
+    u := &user.UserData{}
+	net.StartNet(gui.InitGUI(a, u, loadingWindow, opt), u, opt)
 }
 
 func main() {
-	InitLog(os.Stderr, os.Stdout, os.Stdout)
-	Info.Printf("Starting Ping\n")
+	log.InitLog(os.Stderr, os.Stdout, os.Stdout)
+	log.Info.Printf("Starting Ping\n")
 
 	a := app.New()
 
@@ -40,17 +43,17 @@ func main() {
     fyne.Do(loadingWindow.Show)
     //fyne.Do(loadingWindow.SetMaster)
 
-    opt, err := LoadOptions("options")
+    opt, err := options.LoadOptions("options")
     if err != nil {
         return
     }
 
-    Info.Printf("Loading assets\n")
+    log.Info.Printf("Loading assets\n")
 	iconData, err := os.ReadFile("assets/icons/ping.png")
 	if err == nil {
 		a.SetIcon(fyne.NewStaticResource("ping.png", iconData))
 	} else {
-        Error.Printf("Failed to load asset assets/ping.png: %s\n", err)
+        log.Error.Printf("Failed to load asset assets/ping.png: %s\n", err)
     }
 
 	go StartPing(a, loadingWindow, opt)

@@ -1,9 +1,11 @@
-package main
+package options
 
 import (
     "encoding/json"
     "fmt"
     "os"
+
+    "github.com/YhhVTF/ping-msg/log"
 )
 
 type ButtonTextOptions struct {
@@ -67,7 +69,7 @@ type WindowOptions struct {
 }
 
 func LoadOptions(pathToOptions string) (*Options, error) {
-    Info.Printf("Loading options\n")
+    log.Info.Printf("Loading options\n")
 
     opt := &Options{}
 
@@ -76,7 +78,7 @@ func LoadOptions(pathToOptions string) (*Options, error) {
         fmt.Sprintf("%s/net.json", pathToOptions), os.O_RDWR, 644,
     )
     if err != nil {
-        Error.Printf("Failed to open net options: %s\n", err)
+        log.Error.Printf("Failed to open net options: %s\n", err)
         return nil, err
     }
 
@@ -84,7 +86,7 @@ func LoadOptions(pathToOptions string) (*Options, error) {
     decoder := json.NewDecoder(f)
     err = decoder.Decode(&opt.Net)
     if err != nil {
-        Error.Printf("Failed to deocde net options: %s\n", err)
+        log.Error.Printf("Failed to deocde net options: %s\n", err)
         return nil, err
     }
 
@@ -93,7 +95,7 @@ func LoadOptions(pathToOptions string) (*Options, error) {
         fmt.Sprintf("%s/gui.json", pathToOptions), os.O_RDWR, 644,
     )
     if err != nil {
-        Error.Printf("Failed to open gui options: %s\n", err)
+        log.Error.Printf("Failed to open gui options: %s\n", err)
         return nil, err
     }
 
@@ -101,7 +103,7 @@ func LoadOptions(pathToOptions string) (*Options, error) {
     decoder = json.NewDecoder(f)
     err = decoder.Decode(&opt.GUI)
     if err != nil {
-        Error.Printf("Failed to deocde gui options: %s\n", err)
+        log.Error.Printf("Failed to deocde gui options: %s\n", err)
         return nil, err
     }
 
@@ -110,7 +112,7 @@ func LoadOptions(pathToOptions string) (*Options, error) {
         fmt.Sprintf("%s/text/%s.json", pathToOptions, opt.GUI.Language), os.O_RDWR, 644,
     )
     if err != nil {
-        Error.Printf("Failed to open text options: %s\n", err)
+        log.Error.Printf("Failed to open text options: %s\n", err)
         return nil, err
     }
 
@@ -118,7 +120,7 @@ func LoadOptions(pathToOptions string) (*Options, error) {
     decoder = json.NewDecoder(f)
     err = decoder.Decode(&opt.GUIText)
     if err != nil {
-        Error.Printf("Failed to deocde text options: %s\n", err)
+        log.Error.Printf("Failed to deocde text options: %s\n", err)
         return nil, err
     }
 

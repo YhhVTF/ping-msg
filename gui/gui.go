@@ -1,4 +1,4 @@
-package main
+package gui
 
 import (
 	"fyne.io/fyne/v2"
@@ -10,7 +10,11 @@ import (
 	"fmt"
 	"image/color"
 
-    "ping/protocol"
+    "github.com/YhhVTF/ping-msg/global"
+    "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/opt"
+    "github.com/YhhVTF/ping-msg/protocol"
+    "github.com/YhhVTF/ping-msg/user"
 )
 
 // All containers to be used by Ping
@@ -64,9 +68,9 @@ type WidgetTable struct {
 // Parameters:
 //
 //	err (error) - The error that occurred. This will be used as the technical error message
-//  opt (*Options) - Options/settings
-func (g *GUI) DialogConnectionIssues(err error, opt *Options) {
-	Info.Printf("Creating Dialog ConnectionIssues\n")
+//  opt (*options.Options) - Options/settings
+func (g *GUI) DialogConnectionIssues(err error, opt *options.Options) {
+	log.Info.Printf("Creating Dialog ConnectionIssues\n")
 
 	// Create the user friendly error message as a label
 	uxErrMsg := widget.NewLabel(opt.GUIText.DialogConnIssues.Prompt)
@@ -82,7 +86,7 @@ func (g *GUI) DialogConnectionIssues(err error, opt *Options) {
 	// add an ok button
 	dialog.SetButtons([]fyne.CanvasObject{
 		widget.NewButton(opt.GUIText.DialogConnIssues.Buttons[0].Label, func() {
-			Info.Printf("Dialog ConnectionsIssues dismissed\n")
+			log.Info.Printf("Dialog ConnectionsIssues dismissed\n")
 			// Dismiss the dialog and set it to nil in the dialog table
 			dialog.Dismiss()
 			g.Dialogs.ConnectionIssues = nil
@@ -99,8 +103,8 @@ func (g *GUI) DialogConnectionIssues(err error, opt *Options) {
 	g.Dialogs.ConnectionIssues = dialog
 }
 
-func (g *GUI) DialogLogin(u *UserData, opt *Options) {
-	Info.Printf("Creating Dialog Login\n")
+func (g *GUI) DialogLogin(u *user.UserData, opt *options.Options) {
+	log.Info.Printf("Creating Dialog Login\n")
 
     // Text telling the user what to do
 	prompt := widget.NewLabel(opt.GUIText.DialogLogin.Prompt)
@@ -130,8 +134,8 @@ func (g *GUI) DialogLogin(u *UserData, opt *Options) {
             // Set focus on message entry now that dialog is dismissed
             g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 
-            Info.Printf("Username set as %s\n", u.ThisUser)
-		    Info.Printf("Dialog Login dismissed\n")
+            log.Info.Printf("Username set as %s\n", u.ThisUser)
+		    log.Info.Printf("Dialog Login dismissed\n")
 		}),
 	})
 	// Resize to default dialog size and show the dialog
@@ -154,8 +158,8 @@ func (g *GUI) DialogLogin(u *UserData, opt *Options) {
         // Set focus on message entry now that dialog is dismissed
         g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
 
-        Info.Printf("Username set as %s\n", u.ThisUser)
-		Info.Printf("Dialog Login dismissed\n")
+        log.Info.Printf("Username set as %s\n", u.ThisUser)
+		log.Info.Printf("Dialog Login dismissed\n")
     }
 
 	// add the dialog to the dialog table
@@ -166,15 +170,15 @@ func (g *GUI) DialogLogin(u *UserData, opt *Options) {
 // Parameters:
 //
 //	a (fyne.App) - The fyne application the window will be initialized in
-//  u (*UserData) - Information pertaining to users
+//  u (*user.UserData) - log.Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
-//  opt (*Options) - Options/settings
+//  opt (*options.Options) - Options/settings
 //
 // Returns:
 //
 //	*GUI - The main window and all its objects
-func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *GUI {
-	Info.Printf("Creating GUI\n")
+func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *options.Options) *GUI {
+	log.Info.Printf("Creating GUI\n")
 
 	g := &GUI{}
 	g.OutgoingMessages = make(chan prot.ChatRequest)
@@ -191,9 +195,9 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
 	// Initialize send button
 	g.Widgets.BottomBarButtonSend = 
     widget.NewButton(opt.GUIText.ButtonSend.Label, func() {
-		Info.Printf("Widget BottomBarButtonSend pressed\n")
+		log.Info.Printf("Widget BottomBarButtonSend pressed\n")
 		text := g.Widgets.BottomBarEntry.Text
-		if text == "" || !Connected {
+		if text == "" || !ping.Connected {
 			return
         }
 
@@ -219,8 +223,8 @@ func InitGUI(a fyne.App, u *UserData, loadingWindow fyne.Window, opt *Options) *
 	g.Widgets.BottomBarEntry = widget.NewEntry()
 	g.Widgets.BottomBarEntry.PlaceHolder = opt.GUIText.EntryMessage.Label
 	g.Widgets.BottomBarEntry.OnSubmitted = func(text string) {
-		Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
-		if text == "" || !Connected {
+		log.Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
+		if text == "" || !ping.Connected {
 			return
         }
 
@@ -285,7 +289,7 @@ func (g *GUI) NewDialog(title, content string) *dialog.CustomDialog {
 }
 
 func (g *GUI) ReceiveMessage(rawMsg prot.MessageRaw) {
-	Info.Printf("Received message\n")
+	log.Info.Printf("Received message\n")
 
 	msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
 
@@ -302,7 +306,7 @@ func (g *GUI) ReceiveMessage(rawMsg prot.MessageRaw) {
 
 // oopie :P - entie
 func (g *GUI) SendMessage() {
-	Info.Printf("Sending message\n")
+	log.Info.Printf("Sending message\n")
 
 	req := prot.ChatRequest{
 		ChatID:         0,

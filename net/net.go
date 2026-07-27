@@ -1,4 +1,4 @@
-package main
+package net
 
 import (
 	"encoding/json"
@@ -6,18 +6,21 @@ import (
     "os"
 	"time"
 
-    "ping/protocol"
+    "github.com/YhhVTF/ping-msg/global"
+    "github.com/YhhVTF/ping-msg/gui"
+    "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/opt"
+    "github.com/YhhVTF/ping-msg/protocol"
+    "github.com/YhhVTF/ping-msg/user"
 )
-
-var Connected = false
 
 // StartNet: Connect to the server and show an error dialog if it fails
 // Parameters:
 //
-//	gui (*GUI) - GUI elements
-//  u (*UserData) - Information pertaining to users
-//  opt (*Options) - Options/settings
-func StartNet(gui *GUI, u *UserData, opt *Options) {
+//	gui (*gui.GUI) - GUI elements
+//  u (*user.UserData) - Information pertaining to users
+//  opt (*options.Options) - Options/settings
+func StartNet(gui *gui.GUI, u *user.UserData, opt *options.Options) {
     // Prompt for a username
     gui.DialogLogin(u, opt)
     for gui.Dialogs.Login != nil {}
@@ -28,13 +31,13 @@ func StartNet(gui *GUI, u *UserData, opt *Options) {
         }
 
 	// Until Ping has been quit...
-	for !PingQuit {
+	for !ping.Quit {
 		// Connect to the server
-		Info.Printf("Connecting to server\n")
+		log.Info.Printf("Connecting to server\n")
 
         conn, err := net.Dial("tcp", addr)
 		if err != nil {
-			Error.Printf("Failed to connect to server: %s\n", err)
+			log.Error.Printf("Failed to connect to server: %s\n", err)
 			if gui.Dialogs.ConnectionIssues == nil {
 				gui.DialogConnectionIssues(err, opt)
 			}
@@ -42,8 +45,8 @@ func StartNet(gui *GUI, u *UserData, opt *Options) {
 			continue
 		}
 
-        Connected = true
-		Info.Printf("Successfully connected to server\n")
+        ping.Connected = true
+		log.Info.Printf("Successfully connected to server\n")
         // Dismiss connection issues dialog after connecting successfully
         if gui.Dialogs.ConnectionIssues != nil {
             gui.Dialogs.ConnectionIssues.Dismiss()
@@ -54,13 +57,13 @@ func StartNet(gui *GUI, u *UserData, opt *Options) {
 		go HandleServerCommunication(conn, gui, u, connDone)
 
 		<-connDone
-        Connected = false
-		Error.Printf("Connection lost. Reconnecting in 5 seconds...\n")
+        ping.Connected = false
+		log.Error.Printf("Connection lost. Reconnecting in 5 seconds...\n")
 		time.Sleep(5 * time.Second)
 	}
 }
 
-func HandleServerCommunication(conn net.Conn, gui *GUI, u *UserData, connDone chan bool) {
+func HandleServerCommunication(conn net.Conn, gui *gui.GUI, u *user.UserData, connDone chan bool) {
 	defer conn.Close()
 
 	connectionFailed := make(chan bool)
@@ -73,7 +76,7 @@ func HandleServerCommunication(conn net.Conn, gui *GUI, u *UserData, connDone ch
 	connDone <- true   // tell StartNet connection died
 }
 
-func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
+func serverRecieve(conn net.Conn, gui *gui.GUI, u *user.UserData, done chan bool) {
 	decoder := json.NewDecoder(conn)
 	for {
 		var resp prot.ChatResponse
@@ -84,11 +87,11 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 		}
 
 		if resp.Error != prot.NONE_STRING {
-			Error.Printf("Server returned error: %s\n", resp.Error)
+			log.Error.Printf("Server returned error: %s\n", resp.Error)
 			continue
 		}
 
-		Info.Printf("Received %s response from server\n", resp.Type)
+		log.Info.Printf("Received %s response from server\n", resp.Type)
 
         switch resp.Type {
         case prot.REQ_ADD:
@@ -103,18 +106,18 @@ func serverRecieve(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
 	}
 }
 
-func serverSend(conn net.Conn, gui *GUI, u *UserData, done chan bool) {
+func serverSend(conn net.Conn, gui *gui.GUI, u *user.UserData, done chan bool) {
 	for {
 		select {
 		case req := <-gui.OutgoingMessages:
 			reqBytes, err := json.Marshal(req)
 			if err != nil {
-				Error.Printf("Failed to marshal outgoing request\n")
+				log.Error.Printf("Failed to marshal outgoing request\n")
 				continue
 			}
 			reqBytes = append(reqBytes, '\n')
 
-            Info.Printf("Sending %s request to server\n", req.Type)
+            log.Info.Printf("Sending %s request to server\n", req.Type)
 
 			_, err = conn.Write(reqBytes)
 			if err != nil {
@@ -137,7 +140,7 @@ func CreateChatRequest(chatID int, reqType prot.RequestWhat, username string, me
 	}
 	bytes, err := json.Marshal(req)
 	if err != nil {
-		Error.Printf("Failed to marshal chat request: %s\n", err)
+		log.Error.Printf("Failed to marshal chat request: %s\n", err)
 		return nil
 	}
 	return append(bytes, '\n')

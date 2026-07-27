@@ -1,4 +1,4 @@
-package main
+package user
 
 // Data about the client's user and other user data received from the server
 type UserData struct {

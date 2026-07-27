@@ -1,4 +1,4 @@
-module ping
+module github.com/YhhVTF/ping-msg
 
 go 1.24.3
 

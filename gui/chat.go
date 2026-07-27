@@ -1,4 +1,4 @@
-package main
+package gui
 
 import (
 	"fyne.io/fyne/v2"
@@ -7,7 +7,9 @@ import (
 
     "time"
 
-    "ping/protocol"
+    "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/protocol"
+    "github.com/YhhVTF/ping-msg/user"
 )
 
 // Messages from chats that aren't currently shown are stored here
@@ -65,7 +67,7 @@ func NewChat() Chat {
 func (g *GUI) NewMessage(
     content, username, time string, clientOwnsMsg bool, del func(), edit func(string),
 ) Message {
-    Info.Printf("Creating new message widget\n")
+    log.Info.Printf("Creating new message widget\n")
 
     msg := Message{}
 
@@ -76,7 +78,7 @@ func (g *GUI) NewMessage(
     msg.Time = widget.NewLabel(time)
 
     buttonCopy := widget.NewButton("C", func() {
-        Info.Printf("Copied message\n")
+        log.Info.Printf("Copied message\n")
         fyne.CurrentApp().Clipboard().SetContent(msg.Content.Text)
     })
 
@@ -86,14 +88,14 @@ func (g *GUI) NewMessage(
     if clientOwnsMsg {
         // Add a delete button
         buttonDelete := widget.NewButton("D", func() {
-            Info.Printf("Delete button on message pressed\n")
+            log.Info.Printf("Delete button on message pressed\n")
             del()
             g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
         })
 
         // Add an edit button, upon pressing...
         buttonEdit := widget.NewButton("E", func() {
-            Info.Printf("Edit button on message pressed\n")
+            log.Info.Printf("Edit button on message pressed\n")
 
             // Replace the message content label with an entry to allow editing
             msg.Content.Hide()
@@ -105,7 +107,7 @@ func (g *GUI) NewMessage(
 
             // On submission of entry...
             editEntry.OnSubmitted = func(text string) {
-                Info.Printf("Edit entry on message submitted\n")
+                log.Info.Printf("Edit entry on message submitted\n")
                 // Send edit request if there was an actual edit
                 if text != msg.Content.Text {
                     edit(text)
@@ -134,7 +136,7 @@ func (g *GUI) NewMessage(
 	return msg
 }
 
-func (g *GUI) RespAdd(r *prot.ChatResponse, u *UserData) {
+func (g *GUI) RespAdd(r *prot.ChatResponse, u *user.UserData) {
     fyne.Do(func() {
         for _, msg := range r.Messages {
             msgWidget := g.NewMessage(
