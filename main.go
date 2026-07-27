@@ -35,6 +35,7 @@ func main() {
     c := container.NewCenter(widget.NewLabel("Loading..."))
     fyne.Do(func() {
         loadingWindow.SetContent(c)
+        loadingWindow.Resize(fyne.NewSize(500, 500))
     })
     fyne.Do(loadingWindow.Show)
     //fyne.Do(loadingWindow.SetMaster)
