@@ -5,9 +5,6 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 
-    "time"
-
-    "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -64,106 +61,10 @@ func NewChat() Chat {
 	return c
 }
 
-func (g *GUI) NewMessage(
-    content, username, time string, clientOwnsMsg bool, del func(), edit func(string),
-) Message {
-    log.Info.Printf("Creating new message widget\n")
-
-    msg := Message{}
-
-    msg.Username = widget.NewLabel(username)
-	msg.Username.Wrapping = fyne.TextWrapWord
-    msg.Username.TextStyle.Bold = true
-
-    msg.Time = widget.NewLabel(time)
-
-    buttonCopy := widget.NewButton("C", func() {
-        log.Info.Printf("Copied message\n")
-        fyne.CurrentApp().Clipboard().SetContent(msg.Content.Text)
-    })
-
-    var c *fyne.Container
-
-    // If the message was sent by the user of this client
-    if clientOwnsMsg {
-        // Add a delete button
-        buttonDelete := widget.NewButton("D", func() {
-            log.Info.Printf("Delete button on message pressed\n")
-            del()
-            g.Window.Canvas().Focus(g.Widgets.EntryMessage)
-        })
-
-        // Add an edit button, upon pressing...
-        buttonEdit := widget.NewButton("E", func() {
-            log.Info.Printf("Edit button on message pressed\n")
-
-            // Replace the message content label with an entry to allow editing
-            msg.Content.Hide()
-            editEntry := widget.NewEntry()
-            editEntry.Text = msg.Content.Text
-            msg.VBox.Add(editEntry)
-
-            g.Window.Canvas().Focus(editEntry)
-
-            // On submission of entry...
-            editEntry.OnSubmitted = func(text string) {
-                log.Info.Printf("Edit entry on message submitted\n")
-                // Send edit request if there was an actual edit
-                if text != msg.Content.Text {
-                    edit(text)
-                }
-                // Replace the edit entry with the message content label again
-                editEntry.Hide()
-                msg.Content.Show()
-
-                g.Window.Canvas().Focus(g.Widgets.EntryMessage)
-            }
-        })
-        c = container.NewHBox(buttonCopy, buttonEdit, buttonDelete, msg.Time)
-    } else {
-        c = container.NewHBox(buttonCopy, msg.Time)
-    }
-
-    msg.Border = container.NewBorder(nil, nil, msg.Username, c, nil)
-
-    msg.Content = widget.NewLabel(content)
-    msg.Content.Wrapping = fyne.TextWrapWord
-
-    msg.VBox = container.NewVBox(msg.Border, msg.Content)
-
-	msg.Base = widget.NewCard("", "", msg.VBox)
-
-	return msg
-}
-
 func (g *GUI) RespAdd(r *prot.ChatResponse, u *user.UserData) {
     fyne.Do(func() {
         for _, msg := range r.Messages {
-            msgWidget := g.NewMessage(
-                msg.Content, msg.Username,
-                time.Unix(msg.Time, 0).Format("3:04 PM"),
-                msg.Username == u.ThisUser,
-                func() {
-                    req := prot.ChatRequest{
-                        ChatID: 1,
-                        MessageContent: prot.NONE_STRING,
-                        MessageID: msg.ID,
-                        Type: prot.REQ_DEL,
-                        Username: u.ThisUser,
-                    }
-                    g.OutgoingMessages <- req
-                },
-                func(newText string) {
-                    req := prot.ChatRequest{
-                        ChatID: 1,
-                        MessageContent: newText,
-                        MessageID: msg.ID,
-                        Type: prot.REQ_EDIT,
-                        Username: u.ThisUser,
-                    }
-                    g.OutgoingMessages <- req
-                },
-            )
+            msgWidget := createMessage(g, msg, u)
             g.Widgets.Messages[msg.ID] = msgWidget
             g.Containers.Chat.VBox.Add(msgWidget.Base)
         }
