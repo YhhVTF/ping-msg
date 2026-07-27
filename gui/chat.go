@@ -177,6 +177,7 @@ func (g *GUI) RespDel(r *prot.ChatResponse) {
         if _, exists := g.Widgets.Messages[r.MessageID]; exists {
             g.Widgets.Messages[r.MessageID].Base.Hide()
             delete(g.Widgets.Messages, r.MessageID)
+            g.Containers.Chat.VScroll.Refresh()
         }
     })
 }
