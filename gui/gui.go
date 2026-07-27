@@ -52,10 +52,10 @@ type GUI struct {
 
 // All widget to be used by Ping
 type WidgetTable struct {
-	// Button in the bottom bar that sends the contents of BottomBarEntry when pressed
-	BottomBarButtonSend *widget.Button
+	// Button in the bottom bar that sends the contents of EntryMessage when pressed
+	ButtonSend *widget.Button
 	// Entry in the bottom bar used to type and send messages
-	BottomBarEntry *widget.Entry
+	EntryMessage *widget.Entry
     // Button in the bottom left for attaching files to messages
     ButtonAttach *widget.Button
     // Button in the bottom right of the screen for opening a settings window
@@ -92,7 +92,7 @@ func (g *GUI) DialogConnectionIssues(err error, opt *options.Options) {
 			g.Dialogs.ConnectionIssues = nil
 
             // Set focus on message entry now that dialog is dismissed
-            g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+            g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 		}),
 	})
 	// Resize to default dialog size and show the dialog
@@ -132,7 +132,7 @@ func (g *GUI) DialogLogin(u *user.UserData, opt *options.Options) {
             g.Dialogs.Login = nil
 
             // Set focus on message entry now that dialog is dismissed
-            g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+            g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
             log.Info.Printf("Username set as %s\n", u.ThisUser)
 		    log.Info.Printf("Dialog Login dismissed\n")
@@ -156,7 +156,7 @@ func (g *GUI) DialogLogin(u *user.UserData, opt *options.Options) {
         g.Dialogs.Login = nil
 
         // Set focus on message entry now that dialog is dismissed
-        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+        g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
         log.Info.Printf("Username set as %s\n", u.ThisUser)
 		log.Info.Printf("Dialog Login dismissed\n")
@@ -187,65 +187,18 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 
     g.Widgets.Messages = make(map[int]Message)
 
-    // Initialize attach button
-    g.Widgets.ButtonAttach = widget.NewButton(opt.GUIText.ButtonAttach.Label, func(){
-        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
-    })
+    g.Widgets.ButtonAttach = createButtonAttach(g, opt)
 
-	// Initialize send button
-	g.Widgets.BottomBarButtonSend = 
-    widget.NewButton(opt.GUIText.ButtonSend.Label, func() {
-		log.Info.Printf("Widget BottomBarButtonSend pressed\n")
-		text := g.Widgets.BottomBarEntry.Text
-		if text == "" || !ping.Connected {
-			return
-        }
-
-		req := prot.ChatRequest{
-			ChatID:         1,
-			MessageContent: text,
-			MessageID:      prot.NONE_INT,
-			Type:           prot.REQ_ADD,
-			Username:       u.ThisUser,
-		}
-		g.OutgoingMessages <- req
-
-		g.Widgets.BottomBarEntry.SetText("")
-
-        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
-	})
-    g.Widgets.BottomBarButtonSend.Importance = widget.HighImportance
+    g.Widgets.ButtonSend = createButtonSend(g, u, opt)
 
     g.Containers.BottomLeftCluster =
-        container.NewHBox(g.Widgets.ButtonAttach, g.Widgets.BottomBarButtonSend)
+        container.NewHBox(g.Widgets.ButtonAttach, g.Widgets.ButtonSend)
 
-	// Initialize message entry
-	g.Widgets.BottomBarEntry = widget.NewEntry()
-	g.Widgets.BottomBarEntry.PlaceHolder = opt.GUIText.EntryMessage.Label
-	g.Widgets.BottomBarEntry.OnSubmitted = func(text string) {
-		log.Info.Printf("Widget BottomBarEntry submitted (%s)\n", text)
-		if text == "" || !ping.Connected {
-			return
-        }
-
-		req := prot.ChatRequest{
-			ChatID:         1,
-			MessageContent: text,
-			MessageID:      prot.NONE_INT,
-			Type:           prot.REQ_ADD,
-			Username:       u.ThisUser,
-		}
-		g.OutgoingMessages <- req
-
-		g.Widgets.BottomBarEntry.SetText("")
-	}
+    g.Widgets.EntryMessage = createEntryMessage(g, u, opt)
     // Set focus on message entry
-    g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
+    g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    // Initialize options button
-    g.Widgets.ButtonOptions = widget.NewButton(opt.GUIText.ButtonOptions.Label, func(){
-        g.Window.Canvas().Focus(g.Widgets.BottomBarEntry)
-    })
+    g.Widgets.ButtonOptions = createButtonOptions(g, opt)
 
 	// Initialize chat containers
 	g.Containers.Chat = NewChat()
@@ -253,7 +206,7 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 	// Initialize bottom bar container and add the message entry and send button
 	g.Containers.BottomBar = container.NewBorder(
 		// top, bottom, left, right, center
-		nil, nil, g.Containers.BottomLeftCluster, g.Widgets.ButtonOptions, g.Widgets.BottomBarEntry,
+		nil, nil, g.Containers.BottomLeftCluster, g.Widgets.ButtonOptions, g.Widgets.EntryMessage,
 	)
 
 	// Initialize the base container and add the chat scroll container and bottom bar
@@ -310,7 +263,7 @@ func (g *GUI) SendMessage() {
 
 	req := prot.ChatRequest{
 		ChatID:         0,
-		MessageContent: g.Widgets.BottomBarEntry.Text,
+		MessageContent: g.Widgets.EntryMessage.Text,
 		MessageID:      prot.NONE_INT,
 		Type:           prot.REQ_ADD,
 		Username:       "buh",
