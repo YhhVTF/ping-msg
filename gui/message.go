@@ -25,6 +25,10 @@ func createMessage(g *GUI, msgRaw prot.MessageRaw, u *user.UserData) Message {
 
     buttonCopy := widget.NewButton("C", func() {
         log.Info.Printf("Copied message %d\n", msgRaw.ID)
+
+        // Give focus back to the message entry when done
+        defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
+        // Copy the message contents
         fyne.CurrentApp().Clipboard().SetContent(msg.Content.Text)
     })
 
@@ -61,6 +65,9 @@ func createMessage(g *GUI, msgRaw prot.MessageRaw, u *user.UserData) Message {
 func messageOnDelete(g *GUI, msgID int, u *user.UserData) {
     log.Info.Printf("Delete button on message %d pressed\n", msgID)
 
+    // Give focus back to the message entry when done
+    defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
+
     // Send new DEL chat request to net.serverSend
     req := prot.ChatRequest{
         ChatID: 1,
@@ -70,9 +77,6 @@ func messageOnDelete(g *GUI, msgID int, u *user.UserData) {
         Username: u.ThisUser,
     }
     g.OutgoingMessages <- req
-
-    // Give focus back to the message entry
-    g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 }
 
 func messageOnEdit(g *GUI, msg *Message, msgID int, u *user.UserData) {
@@ -90,6 +94,10 @@ func messageOnEdit(g *GUI, msg *Message, msgID int, u *user.UserData) {
     // On submission of entry...
     editEntry.OnSubmitted = func(text string) {
         log.Info.Printf("Edit entry on message %d submitted\n", msgID)
+
+        // Give focus back to the message entry when done
+        defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
+
         // Send edit request if there was an actual edit
         if text != msg.Content.Text {
             req := prot.ChatRequest{
@@ -104,8 +112,5 @@ func messageOnEdit(g *GUI, msg *Message, msgID int, u *user.UserData) {
         // Replace the edit entry with the message content label again
         editEntry.Hide()
         msg.Content.Show()
-
-        // Give focus back to the message entry
-        g.Window.Canvas().Focus(g.Widgets.EntryMessage)
     }
 }

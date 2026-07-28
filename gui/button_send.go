@@ -12,6 +12,8 @@ import (
 
 func buttonSendOnPressed(g *GUI, u *user.UserData) {
 	log.Info.Printf("Widget ButtonSend pressed\n")
+    // Give focus back to the message entry when done
+    defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
     // If there's no text in the message entry or Ping is not connected to the server, don't continue
 	text := g.Widgets.EntryMessage.Text
@@ -27,9 +29,8 @@ func buttonSendOnPressed(g *GUI, u *user.UserData) {
 	}
 	g.OutgoingMessages <- req
 
-    // Clear the text in the message entry and give focus back to it
+    // Clear the text in the message entry
 	g.Widgets.EntryMessage.SetText("")
-    g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 }
 
 func createButtonSend(g *GUI, u *user.UserData, opt *options.Options) *widget.Button {
