@@ -1,4 +1,4 @@
-package gui
+package schat
 
 import (
     "fyne.io/fyne/v2/widget"
@@ -10,7 +10,7 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-func entryMessageOnSubmitted(g *GUI, text string, u *user.UserData) {
+func entryMessageOnSubmitted(g *ScreenChat, text string, u *user.UserData) {
 	log.Info.Printf("Widget EntryMessage submitted (%s)\n", text)
 
     // If there's no text in the entry or Ping isn't connected to the server, don't continue
@@ -30,7 +30,7 @@ func entryMessageOnSubmitted(g *GUI, text string, u *user.UserData) {
 	g.Widgets.EntryMessage.SetText("")
 }
 
-func createEntryMessage(g *GUI, u *user.UserData, opt *options.Options) *widget.Entry {
+func createEntryMessage(g *ScreenChat, u *user.UserData, opt *options.Options) *widget.Entry {
 	// Initialize message entry
     entry := widget.NewEntry()
 	entry.PlaceHolder = opt.GUIText.EntryMessage.Label

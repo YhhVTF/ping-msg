@@ -1,4 +1,4 @@
-package gui
+package schat
 
 import (
     "fyne.io/fyne/v2"
@@ -12,7 +12,7 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-func createMessage(g *GUI, msgRaw prot.MessageRaw, u *user.UserData) Message {
+func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserData) Message {
     log.Info.Printf("Creating new message widget\n")
 
     msg := Message{}
@@ -62,7 +62,7 @@ func createMessage(g *GUI, msgRaw prot.MessageRaw, u *user.UserData) Message {
 	return msg
 }
 
-func messageOnDelete(g *GUI, msgID int, u *user.UserData) {
+func messageOnDelete(g *ScreenChat, msgID int, u *user.UserData) {
     log.Info.Printf("Delete button on message %d pressed\n", msgID)
 
     // Give focus back to the message entry when done
@@ -79,7 +79,7 @@ func messageOnDelete(g *GUI, msgID int, u *user.UserData) {
     g.OutgoingMessages <- req
 }
 
-func messageOnEdit(g *GUI, msg *Message, msgID int, u *user.UserData) {
+func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserData) {
     log.Info.Printf("Edit button on message %d pressed\n", msgID)
 
     // Replace the message content label with an entry to allow editing

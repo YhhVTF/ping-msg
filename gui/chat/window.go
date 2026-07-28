@@ -1,4 +1,4 @@
-package gui
+package schat
 
 import (
 	"fyne.io/fyne/v2"
@@ -16,8 +16,8 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-// All containers to be used by Ping
-type ContainerTable struct {
+// All containers to be used by chat screen
+type ContainerTableChat struct {
 	// Highest level container that contains all other objects in the window
 	Base *fyne.Container
 	// Container for objects at the bottom of the screen (like the message entry, send button, etc.)
@@ -28,7 +28,7 @@ type ContainerTable struct {
 	Chat Chat
 }
 
-// All dialogs to be used by Ping
+// All dialogs to be used by chat screen
 type DialogTable struct {
 	// Informs the user that there are issues with connecting to the server
 	ConnectionIssues *dialog.CustomDialog
@@ -36,12 +36,12 @@ type DialogTable struct {
     Login *dialog.CustomDialog
 }
 
-// A collection of all GUI elements to be used
-type GUI struct {
+// A collection of all GUI elements to be used chat screen
+type ScreenChat struct {
 	// The main window
 	Window fyne.Window
 	// All containers
-	Containers ContainerTable
+	Containers ContainerTableChat
 	// All dialogs
 	Dialogs DialogTable
     // Manages inner window
@@ -70,7 +70,7 @@ type WidgetTable struct {
 //
 //	err (error) - The error that occurred. This will be used as the technical error message
 //  opt (*options.Options) - Options/settings
-func (g *GUI) DialogConnectionIssues(err error, opt *options.Options) {
+func (g *ScreenChat) DialogConnectionIssues(err error, opt *options.Options) {
 	log.Info.Printf("Creating Dialog ConnectionIssues\n")
 
 	// Create the user friendly error message as a label
@@ -104,7 +104,7 @@ func (g *GUI) DialogConnectionIssues(err error, opt *options.Options) {
 	g.Dialogs.ConnectionIssues = dialog
 }
 
-func (g *GUI) DialogLogin(u *user.UserData, opt *options.Options) {
+func (g *ScreenChat) DialogLogin(u *user.UserData, opt *options.Options) {
 	log.Info.Printf("Creating Dialog Login\n")
 
     // Text telling the user what to do
@@ -167,25 +167,13 @@ func (g *GUI) DialogLogin(u *user.UserData, opt *options.Options) {
 	g.Dialogs.Login = dialog
 }
 
-// InitGUI: Initializes the main window and all objects in it, closes the loading window and then shows the main window
-// Parameters:
-//
-//	a (fyne.App) - The fyne application the window will be initialized in
-//  u (*user.UserData) - log.Information pertaining to users
-//	loadingWindow (fyne.Window) - The loading window
-//  opt (*options.Options) - Options/settings
-//
-// Returns:
-//
-//	*GUI - The main window and all its objects
-func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *options.Options) *GUI {
-	log.Info.Printf("Creating GUI\n")
+func InitScreenChat(w fyne.Window, u *user.UserData, opt *options.Options) *ScreenChat {
+	log.Info.Printf("Initializing chat screen\n")
 
-	g := &GUI{}
+	g := &ScreenChat{}
+    g.Window = w
+
 	g.OutgoingMessages = make(chan prot.ChatRequest)
-	g.Window = a.NewWindow(opt.GUIText.Window.Title)
-    g.Window.Resize(fyne.NewSize(opt.GUI.Window.Size[0], opt.GUI.Window.Size[1]))
-    g.InnerWindows = container.NewMultipleWindows()
 
     g.Widgets.Messages = make(map[int]Message)
 
@@ -216,14 +204,6 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 		// top, bottom, left, right, center
 		nil, g.Containers.BottomBar, nil, nil, g.Containers.Chat.Base,
 	)
-	// Set window content as the base container
-	g.Window.SetContent(g.Containers.Base)
-
-	// Close loading window, set the main window as master window and show it
-	loadingWindow.Close()
-	g.Window.SetMaster()
-	g.Window.Show()
-
 	return g
 }
 
@@ -236,14 +216,14 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 // Returns:
 //
 //	*dialog.CustomDialog - The new dialog
-func (g *GUI) NewDialog(title, content string) *dialog.CustomDialog {
+func (g *ScreenChat) NewDialog(title, content string) *dialog.CustomDialog {
 	dialog := dialog.NewCustom(title, "", widget.NewLabel(content), g.Window)
 	dialog.Resize(fyne.NewSize(350, 200))
 	dialog.Show()
 	return dialog
 }
 
-func (g *GUI) ReceiveMessage(rawMsg prot.MessageRaw) {
+func (g *ScreenChat) ReceiveMessage(rawMsg prot.MessageRaw) {
 	log.Info.Printf("Received message\n")
 
 	msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
@@ -260,7 +240,7 @@ func (g *GUI) ReceiveMessage(rawMsg prot.MessageRaw) {
 // huh? Twt
 
 // oopie :P - entie
-func (g *GUI) SendMessage() {
+func (g *ScreenChat) SendMessage() {
 	log.Info.Printf("Sending message\n")
 
 	req := prot.ChatRequest{

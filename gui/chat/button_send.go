@@ -1,4 +1,4 @@
-package gui
+package schat
 
 import (
     "fyne.io/fyne/v2/widget"
@@ -10,7 +10,7 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-func buttonSendOnPressed(g *GUI, u *user.UserData) {
+func buttonSendOnPressed(g *ScreenChat, u *user.UserData) {
 	log.Info.Printf("Widget ButtonSend pressed\n")
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
@@ -33,7 +33,7 @@ func buttonSendOnPressed(g *GUI, u *user.UserData) {
 	g.Widgets.EntryMessage.SetText("")
 }
 
-func createButtonSend(g *GUI, u *user.UserData, opt *options.Options) *widget.Button {
+func createButtonSend(g *ScreenChat, u *user.UserData, opt *options.Options) *widget.Button {
 	// Initialize send button
     button := widget.NewButton(opt.GUIText.ButtonSend.Label, func() {
         buttonSendOnPressed(g, u)

@@ -1,4 +1,4 @@
-package gui
+package schat
 
 import (
 	"fyne.io/fyne/v2"
@@ -61,7 +61,7 @@ func NewChat() Chat {
 	return c
 }
 
-func (g *GUI) RespAdd(r *prot.ChatResponse, u *user.UserData) {
+func (g *ScreenChat) RespAdd(r *prot.ChatResponse, u *user.UserData) {
     fyne.Do(func() {
         for _, msg := range r.Messages {
             msgWidget := createMessage(g, msg, u)
@@ -73,7 +73,7 @@ func (g *GUI) RespAdd(r *prot.ChatResponse, u *user.UserData) {
     })
 }
 
-func (g *GUI) RespDel(r *prot.ChatResponse) {
+func (g *ScreenChat) RespDel(r *prot.ChatResponse) {
     fyne.Do(func() {
         if _, exists := g.Widgets.Messages[r.MessageID]; exists {
             g.Widgets.Messages[r.MessageID].Base.Hide()
@@ -83,7 +83,7 @@ func (g *GUI) RespDel(r *prot.ChatResponse) {
     })
 }
 
-func (g *GUI) RespEdit(r *prot.ChatResponse) {
+func (g *ScreenChat) RespEdit(r *prot.ChatResponse) {
     fyne.Do(func() {
         if _, exists := g.Widgets.Messages[r.MessageID]; exists {
             g.Widgets.Messages[r.MessageID].Content.Text =

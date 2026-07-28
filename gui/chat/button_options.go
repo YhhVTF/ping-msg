@@ -1,4 +1,4 @@
-package gui
+package schat
 
 import (
     "fyne.io/fyne/v2"
@@ -9,7 +9,7 @@ import (
     "github.com/YhhVTF/ping-msg/opt"
 )
 
-func createButtonOptions(g *GUI, opt *options.Options) *widget.Button {
+func createButtonOptions(g *ScreenChat, opt *options.Options) *widget.Button {
     // Initialize options button
     button := widget.NewButton(opt.GUIText.ButtonOptions.Label, func(){
         log.Info.Printf("Widget ButtonOptions pressed\n")
