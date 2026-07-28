@@ -16,8 +16,15 @@ func createButtonOptions(g *GUI, opt *options.Options) *widget.Button {
         defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
         w := container.NewInnerWindow("Options", widget.NewButton("e", func(){}))
-        w.Resize(fyne.NewSize(500, 600))
+        mw := container.NewMultipleWindows(w)
+
+        w.Resize(fyne.NewSize(600, 500))
         w.SetMaximized(false)
+        w.CloseIntercept = func() {
+            g.Window.Canvas().Overlays().Remove(mw)
+            g.Window.Canvas().Content().Refresh()
+        }
+        g.Window.Canvas().Overlays().Add(mw)
     })
     return button
 }
