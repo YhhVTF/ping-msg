@@ -44,6 +44,8 @@ type GUI struct {
 	Containers ContainerTable
 	// All dialogs
 	Dialogs DialogTable
+    // Manages inner window
+    InnerWindows *container.MultipleWindows
 	// All widgets
 	Widgets          WidgetTable
 	OutgoingMessages chan prot.ChatRequest // Connects to net.go
@@ -183,6 +185,7 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 	g.OutgoingMessages = make(chan prot.ChatRequest)
 	g.Window = a.NewWindow(opt.GUIText.Window.Title)
     g.Window.Resize(fyne.NewSize(opt.GUI.Window.Size[0], opt.GUI.Window.Size[1]))
+    g.InnerWindows = container.NewMultipleWindows()
 
     g.Widgets.Messages = make(map[int]Message)
 
