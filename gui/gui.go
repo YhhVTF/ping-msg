@@ -62,23 +62,25 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 }
 
 func (g *GUI) manageScreens(s *screen.ScreenManager, opt *options.Options) {
-    switch <-s.Chan {
-    case screen.SS_OPTIONS_FLOAT:
-        log.Info.Printf("Opening options screen as floating window\n")
+    for {
+        switch <-s.Chan {
+        case screen.SS_OPTIONS_FLOAT:
+            log.Info.Printf("Opening options screen as floating window\n")
 
-        fyne.Do(func() {
-            g.Options = sopt.InitScreenOptions(g.Window, g.InnerWindows, opt)
+            fyne.Do(func() {
+                g.Options = sopt.InitScreenOptions(g.Window, g.InnerWindows, opt)
 
-            w := container.NewInnerWindow("Options", g.Options.Containers.Base)
-            g.InnerWindows.Add(w)
+                w := container.NewInnerWindow("Options", g.Options.Containers.Base)
+                g.InnerWindows.Add(w)
 
-            w.Resize(fyne.NewSize(600, 500))
-            w.SetMaximized(false)
-            w.CloseIntercept = func() {
-                g.Window.Canvas().Overlays().Remove(g.InnerWindows)
-                g.Window.Canvas().Content().Refresh()
-            }
-            g.Window.Canvas().Overlays().Add(g.InnerWindows)
-        })
+                w.Resize(fyne.NewSize(600, 500))
+                w.SetMaximized(false)
+                w.CloseIntercept = func() {
+                    g.Window.Canvas().Overlays().Remove(g.InnerWindows)
+                    g.Window.Canvas().Content().Refresh()
+                }
+                g.Window.Canvas().Overlays().Add(g.InnerWindows)
+            })
+        }
     }
 }
