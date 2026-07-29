@@ -6,7 +6,16 @@ import (
     "github.com/YhhVTF/ping-msg/opt"
 )
 
-func createSelectLanguage(g *ScreenOptions, opt *options.Options) *widget.SelectEntry {
-    //selectEntry := widget.NewSelectEntry
-    return nil
+func selectLanguageOnChanged(language string, opt *options.Options) {
+    opt.GUI.Language = language
+}
+
+func createSelectLanguage(opt *options.Options) *widget.Select {
+    sel := widget.NewSelect([]string{
+        "english", "entish", "gakotolo",
+    }, func(language string) {
+        selectLanguageOnChanged(language, opt)
+    })
+    sel.PlaceHolder = opt.GUI.Language
+    return sel
 }

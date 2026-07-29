@@ -68,7 +68,7 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, opt *options.Options) {
             log.Info.Printf("Opening options screen as floating window\n")
 
             fyne.Do(func() {
-                g.Options = sopt.InitScreenOptions(g.Window, g.InnerWindows, opt)
+                g.Options = sopt.InitScreenOptions(g.Window, opt)
 
                 w := container.NewInnerWindow("Options", g.Options.Containers.Base)
                 g.InnerWindows.Add(w)

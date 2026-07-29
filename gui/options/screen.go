@@ -14,23 +14,23 @@ type ContainerTableOptions struct {
 
 type ScreenOptions struct {
     Containers      ContainerTableOptions
-    InnerWindows    *container.MultipleWindows
     Widgets         WidgetTableOptions
     Window          fyne.Window
 }
 
 type WidgetTableOptions struct {
-    SelectLanguage *widget.SelectEntry
+    SelectLanguage *widget.Select
 }
 
 func InitScreenOptions(
-    w fyne.Window, wInner *container.MultipleWindows, opt *options.Options,
+    w fyne.Window, opt *options.Options,
 ) *ScreenOptions {
     g := &ScreenOptions{}
     g.Window = w
-    g.InnerWindows = wInner
 
-    g.Containers.Base = container.NewHBox()
+    g.Widgets.SelectLanguage = createSelectLanguage(opt)
+
+    g.Containers.Base = container.NewVBox(g.Widgets.SelectLanguage)
 
     return g
 }
