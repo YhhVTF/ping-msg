@@ -77,6 +77,7 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, opt *options.Options) {
                 w.SetMaximized(false)
                 w.CloseIntercept = func() {
                     g.Window.Canvas().Overlays().Remove(g.InnerWindows)
+                    w.Hide()
                     g.Window.Canvas().Content().Refresh()
                 }
                 g.Window.Canvas().Overlays().Add(g.InnerWindows)
