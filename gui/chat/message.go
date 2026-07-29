@@ -87,6 +87,9 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserData) {
     editEntry := widget.NewEntry()
     editEntry.Text = msg.Content.Text
     msg.VBox.Add(editEntry)
+    
+    // Move cursor to the end of the text
+    editEntry.CursorRow = len(msg.Content.Text)
 
     // Focus on the edit entry
     g.Window.Canvas().Focus(editEntry)
