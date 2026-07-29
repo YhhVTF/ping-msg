@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-07-29
+
+### Added
+
+- Attachments button (not yet functional)
+- Copying, editing and deleting messages
+- Languages (3, English, Entish, Gakotolo)
+- Options button
+- Options loading system
+- Options screen (not yet functional)
+- Screen management system
+- Time on messages
+
+### Changed
+
+- Bottom bar layout
+
+### Fixed
+
+- Connection issues dialog now auto dismisses after client connects to the server
+- Giving focus back to the message entry after interacting with other widgets
+
 ## [0.1.1] - 2026-07-21
 
 ### Changed
