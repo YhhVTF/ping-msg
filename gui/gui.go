@@ -46,12 +46,10 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 
     // Start screen management
     g.ScreenManager = screen.NewScreenManager()
-    go g.manageScreens(g.ScreenManager, opt)
+    go g.manageScreens(g.ScreenManager, u, opt)
 
-    // Initialize the chat screen
-    g.Chat = schat.InitScreenChat(g.ScreenManager, g.Window, u, opt)
-	// Set window content as the base container of the chat screen
-	g.Window.SetContent(g.Chat.Containers.Base)
+    // Initialize chat screen
+    g.ScreenManager.ScreenChatFull()
 
 	// Close loading window, set the main window as master window and show it
 	loadingWindow.Close()
@@ -61,10 +59,20 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
     return g
 }
 
-func (g *GUI) manageScreens(s *screen.ScreenManager, opt *options.Options) {
+func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserData, opt *options.Options) {
     for {
         switch <-s.Chan {
-        case screen.SS_OPTIONS_FLOAT:
+        case screen.S_CHAT_FULL:
+            log.Info.Printf("Opening chat screen on the main window\n")
+
+            fyne.Do(func() {
+                // Initialize the chat screen
+                g.Chat = schat.InitScreenChat(s, g.Window, u, opt)
+	            // Set window content as the base container of the chat screen
+                g.Window.SetContent(g.Chat.Containers.Base)
+            })
+
+        case screen.S_OPTIONS_FLOAT:
             log.Info.Printf("Opening options screen as floating window\n")
 
             fyne.Do(func() {

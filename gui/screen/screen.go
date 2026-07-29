@@ -3,10 +3,10 @@ package screen
 import (
 )
 
-const SS_CHAT_FLOAT     = "CHAT_FLOAT"
-const SS_CHAT_FULL      = "CHAT_FULL"
-const SS_OPTIONS_FLOAT  = "OPTIONS_FLOAT"
-const SS_OPTIONS_FULL   = "OPTIONS_FULL"
+const S_CHAT_FLOAT     = "CHAT_FLOAT"
+const S_CHAT_FULL      = "CHAT_FULL"
+const S_OPTIONS_FLOAT  = "OPTIONS_FLOAT"
+const S_OPTIONS_FULL   = "OPTIONS_FULL"
 
 type ScreenManager struct {
     Chan chan string
@@ -18,6 +18,10 @@ func NewScreenManager() *ScreenManager {
     }
 }
 
-func (ss *ScreenManager) ScreenOptionsFloat() {
-    ss.Chan <- SS_OPTIONS_FLOAT
+func (s *ScreenManager) ScreenChatFull() {
+    s.Chan <- S_CHAT_FULL
+}
+
+func (s *ScreenManager) ScreenOptionsFloat() {
+    s.Chan <- S_OPTIONS_FLOAT
 }
