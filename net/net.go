@@ -1,6 +1,8 @@
 package net
 
 import (
+    "fyne.io/fyne/v2"
+
 	"encoding/json"
 	"net"
     "os"
@@ -95,13 +97,13 @@ func serverRecieve(conn net.Conn, gui *gui.GUI, u *user.UserData, done chan bool
 
         switch resp.Type {
         case prot.REQ_ADD:
-            gui.Chat.RespAdd(&resp, u)
+            fyne.Do(func() { gui.Chat.RespAdd(&resp, u) })
 
         case prot.REQ_DEL:
-            gui.Chat.RespDel(&resp)
+            fyne.Do(func() { gui.Chat.RespDel(&resp) })
 
         case prot.REQ_EDIT:
-            gui.Chat.RespEdit(&resp)
+            fyne.Do(func() { gui.Chat.RespEdit(&resp) })
         }
 	}
 }

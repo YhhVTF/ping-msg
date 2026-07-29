@@ -62,33 +62,27 @@ func NewChat() Chat {
 }
 
 func (g *ScreenChat) RespAdd(r *prot.ChatResponse, u *user.UserData) {
-    fyne.Do(func() {
-        for _, msg := range r.Messages {
-            msgWidget := createMessage(g, msg, u)
-            g.Widgets.Messages[msg.ID] = msgWidget
-            g.Containers.Chat.VBox.Add(msgWidget.Base)
-        }
-        g.Containers.Chat.VBox.Refresh()
-        g.Containers.Chat.VScroll.ScrollToBottom()
-    })
+    for _, msg := range r.Messages {
+        msgWidget := createMessage(g, msg, u)
+        g.Widgets.Messages[msg.ID] = msgWidget
+        g.Containers.Chat.VBox.Add(msgWidget.Base)
+    }
+    g.Containers.Chat.VBox.Refresh()
+    g.Containers.Chat.VScroll.ScrollToBottom()
 }
 
 func (g *ScreenChat) RespDel(r *prot.ChatResponse) {
-    fyne.Do(func() {
-        if _, exists := g.Widgets.Messages[r.MessageID]; exists {
-            g.Widgets.Messages[r.MessageID].Base.Hide()
-            delete(g.Widgets.Messages, r.MessageID)
-            g.Containers.Chat.VScroll.Refresh()
-        }
-    })
+    if _, exists := g.Widgets.Messages[r.MessageID]; exists {
+        g.Widgets.Messages[r.MessageID].Base.Hide()
+        delete(g.Widgets.Messages, r.MessageID)
+        g.Containers.Chat.VScroll.Refresh()
+    }
 }
 
 func (g *ScreenChat) RespEdit(r *prot.ChatResponse) {
-    fyne.Do(func() {
-        if _, exists := g.Widgets.Messages[r.MessageID]; exists {
-            g.Widgets.Messages[r.MessageID].Content.Text =
-                r.Messages[0].Content
-            g.Widgets.Messages[r.MessageID].Content.Refresh()
-        }
-    })
+    if _, exists := g.Widgets.Messages[r.MessageID]; exists {
+        g.Widgets.Messages[r.MessageID].Content.Text =
+        r.Messages[0].Content
+        g.Widgets.Messages[r.MessageID].Content.Refresh()
+    }
 }
