@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"image/color"
 
+    "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
@@ -38,16 +39,14 @@ type DialogTable struct {
 
 // A collection of all GUI elements to be used chat screen
 type ScreenChat struct {
-	// The main window
-	Window fyne.Window
 	// All containers
 	Containers ContainerTableChat
 	// All dialogs
 	Dialogs DialogTable
-    // Manages inner window
-    InnerWindows *container.MultipleWindows
 	// All widgets
 	Widgets          WidgetTable
+    // The main window
+    Window fyne.Window
 	OutgoingMessages chan prot.ChatRequest // Connects to net.go
 }
 
@@ -167,7 +166,9 @@ func (g *ScreenChat) DialogLogin(u *user.UserData, opt *options.Options) {
 	g.Dialogs.Login = dialog
 }
 
-func InitScreenChat(w fyne.Window, u *user.UserData, opt *options.Options) *ScreenChat {
+func InitScreenChat(
+    s *screen.ScreenManager, w fyne.Window, u *user.UserData, opt *options.Options,
+) *ScreenChat {
 	log.Info.Printf("Initializing chat screen\n")
 
 	g := &ScreenChat{}
@@ -188,7 +189,7 @@ func InitScreenChat(w fyne.Window, u *user.UserData, opt *options.Options) *Scre
     // Set focus on message entry
     g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    g.Widgets.ButtonOptions = createButtonOptions(g, opt)
+    g.Widgets.ButtonOptions = createButtonOptions(g, s, opt)
 
 	// Initialize chat containers
 	g.Containers.Chat = NewChat()

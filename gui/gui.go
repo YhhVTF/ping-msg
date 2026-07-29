@@ -6,6 +6,7 @@ import (
 
     "github.com/YhhVTF/ping-msg/gui/chat"
     "github.com/YhhVTF/ping-msg/gui/options"
+    "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/user"
@@ -18,6 +19,8 @@ type GUI struct {
     InnerWindows *container.MultipleWindows
     // Options screen
     Options *sopt.ScreenOptions
+    // Manages screens
+    ScreenManager *screen.ScreenManager
     // The main window
     Window fyne.Window
 }
@@ -41,8 +44,12 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
     g.Window.Resize(fyne.NewSize(opt.GUI.Window.Size[0], opt.GUI.Window.Size[1]))
     g.InnerWindows = container.NewMultipleWindows()
 
+    // Start screen management
+    g.ScreenManager = screen.NewScreenManager()
+    go g.manageScreens(g.ScreenManager, opt)
+
     // Initialize the chat screen
-    g.Chat = schat.InitScreenChat(g.Window, u, opt)
+    g.Chat = schat.InitScreenChat(g.ScreenManager, g.Window, u, opt)
 	// Set window content as the base container of the chat screen
 	g.Window.SetContent(g.Chat.Containers.Base)
 
@@ -52,4 +59,26 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
 	g.Window.Show()
 
     return g
+}
+
+func (g *GUI) manageScreens(s *screen.ScreenManager, opt *options.Options) {
+    switch <-s.Chan {
+    case screen.SS_OPTIONS_FLOAT:
+        log.Info.Printf("Opening options screen as floating window\n")
+
+        fyne.Do(func() {
+            g.Options = sopt.InitScreenOptions(g.Window, g.InnerWindows, opt)
+
+            w := container.NewInnerWindow("Options", g.Options.Containers.Base)
+            g.InnerWindows.Add(w)
+
+            w.Resize(fyne.NewSize(600, 500))
+            w.SetMaximized(false)
+            w.CloseIntercept = func() {
+                g.Window.Canvas().Overlays().Remove(g.InnerWindows)
+                g.Window.Canvas().Content().Refresh()
+            }
+            g.Window.Canvas().Overlays().Add(g.InnerWindows)
+        })
+    }
 }

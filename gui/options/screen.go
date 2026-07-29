@@ -2,20 +2,35 @@ package sopt
 
 import (
     "fyne.io/fyne/v2"
+    "fyne.io/fyne/v2/container"
+    "fyne.io/fyne/v2/widget"
 
     "github.com/YhhVTF/ping-msg/opt"
 )
 
-type ContainerTableOptions struct {}
-
-type ScreenOptions struct {
-    Containers  ContainerTableOptions
-    Widgets     WidgetTableOptions
-    Window      fyne.Window
+type ContainerTableOptions struct {
+    Base *fyne.Container
 }
 
-type WidgetTableOptions struct {}
+type ScreenOptions struct {
+    Containers      ContainerTableOptions
+    InnerWindows    *container.MultipleWindows
+    Widgets         WidgetTableOptions
+    Window          fyne.Window
+}
 
-func InitScreenOptions(w fyne.Window, opt *options.Options) *ScreenOptions {
-    return nil
+type WidgetTableOptions struct {
+    SelectLanguage *widget.SelectEntry
+}
+
+func InitScreenOptions(
+    w fyne.Window, wInner *container.MultipleWindows, opt *options.Options,
+) *ScreenOptions {
+    g := &ScreenOptions{}
+    g.Window = w
+    g.InnerWindows = wInner
+
+    g.Containers.Base = container.NewHBox()
+
+    return g
 }
