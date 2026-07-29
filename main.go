@@ -23,7 +23,11 @@ import (
 //  opt (*options.Options) - options/settings
 func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
     u := &user.UserData{}
-	net.StartNet(gui.InitGUI(a, u, loadingWindow, opt), u, opt)
+
+    var g *gui.GUI
+    fyne.DoAndWait(func() { g = gui.InitGUI(a, u, loadingWindow, opt) })
+
+	net.StartNet(g, u, opt)
 }
 
 func main() {

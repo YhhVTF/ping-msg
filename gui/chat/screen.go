@@ -111,6 +111,7 @@ func (g *ScreenChat) DialogLogin(u *user.UserData, opt *options.Options) {
     // Entry for username
     entry := widget.NewEntry()
     entry.SetPlaceHolder(opt.GUIText.EntryUsername.Label)
+
 	// add them to a new vbox
 	c := container.NewVBox(prompt, entry)
 

@@ -24,7 +24,7 @@ import (
 //  opt (*options.Options) - Options/settings
 func StartNet(gui *gui.GUI, u *user.UserData, opt *options.Options) {
     // Prompt for a username
-    gui.Chat.DialogLogin(u, opt)
+    fyne.DoAndWait(func() { gui.Chat.DialogLogin(u, opt) })
     for gui.Chat.Dialogs.Login != nil {}
 
         addr := "127.0.0.1:5555"
@@ -41,7 +41,7 @@ func StartNet(gui *gui.GUI, u *user.UserData, opt *options.Options) {
 		if err != nil {
 			log.Error.Printf("Failed to connect to server: %s\n", err)
 			if gui.Chat.Dialogs.ConnectionIssues == nil {
-				gui.Chat.DialogConnectionIssues(err, opt)
+				fyne.DoAndWait(func() { gui.Chat.DialogConnectionIssues(err, opt) })
 			}
 			time.Sleep(30 * time.Second)
 			continue
@@ -51,7 +51,7 @@ func StartNet(gui *gui.GUI, u *user.UserData, opt *options.Options) {
 		log.Info.Printf("Successfully connected to server\n")
         // Dismiss connection issues dialog after connecting successfully
         if gui.Chat.Dialogs.ConnectionIssues != nil {
-            gui.Chat.Dialogs.ConnectionIssues.Dismiss()
+            fyne.DoAndWait(func() { gui.Chat.Dialogs.ConnectionIssues.Dismiss() })
             gui.Chat.Dialogs.ConnectionIssues = nil
         }
 
