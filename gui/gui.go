@@ -81,6 +81,7 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserData, opt *opti
                 w := container.NewInnerWindow("Options", g.Options.Containers.Base)
                 g.InnerWindows.Add(w)
 
+                w.SetPadded(true)
                 w.Resize(fyne.NewSize(700, 400))
                 w.SetMaximized(false)
                 w.CloseIntercept = func() {

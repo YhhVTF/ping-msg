@@ -9,7 +9,10 @@ import (
 )
 
 type ContainerTableOptions struct {
-    Base *fyne.Container
+    // Base container of the options sceen, makes the child container scrollable
+    Base *container.Scroll
+    // Contains widgets for changing options
+    VBox *fyne.Container
 }
 
 type ScreenOptions struct {
@@ -19,7 +22,8 @@ type ScreenOptions struct {
 }
 
 type WidgetTableOptions struct {
-    SelectLanguage *widget.Select
+    CardLanguage    *widget.Card
+    SelectLanguage  *widget.Select
 }
 
 func InitScreenOptions(
@@ -29,8 +33,11 @@ func InitScreenOptions(
     g.Window = w
 
     g.Widgets.SelectLanguage = createSelectLanguage(opt)
+    g.Widgets.CardLanguage = 
+        widget.NewCard("", "Language", g.Widgets.SelectLanguage)
 
-    g.Containers.Base = container.NewVBox(g.Widgets.SelectLanguage)
+    g.Containers.VBox = container.NewVBox(g.Widgets.CardLanguage)
+    g.Containers.Base = container.NewVScroll(g.Containers.VBox)
 
     return g
 }
