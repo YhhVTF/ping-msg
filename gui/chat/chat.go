@@ -61,7 +61,7 @@ func NewChat() Chat {
 	return c
 }
 
-func (g *ScreenChat) RespAdd(r *prot.ChatResponse, u *user.UserData) {
+func (g *ScreenChat) RespAdd(r *prot.ChatResponse, u *user.UserCache) {
     for _, msg := range r.Messages {
         msgWidget := createMessage(g, msg, u)
         g.Widgets.Messages[msg.ID] = msgWidget

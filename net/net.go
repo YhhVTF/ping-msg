@@ -20,9 +20,9 @@ import (
 // Parameters:
 //
 //	gui (*gui.GUI) - GUI elements
-//  u (*user.UserData) - Information pertaining to users
+//  u (*user.UserCache) - Information pertaining to users
 //  opt (*options.Options) - Options/settings
-func StartNet(gui *gui.GUI, u *user.UserData, opt *options.Options) {
+func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
     // Prompt for a username
     fyne.DoAndWait(func() { gui.Chat.DialogLogin(u, opt) })
     for gui.Chat.Dialogs.Login != nil {}
@@ -65,7 +65,7 @@ func StartNet(gui *gui.GUI, u *user.UserData, opt *options.Options) {
 	}
 }
 
-func HandleServerCommunication(conn net.Conn, gui *gui.GUI, u *user.UserData, connDone chan bool) {
+func HandleServerCommunication(conn net.Conn, gui *gui.GUI, u *user.UserCache, connDone chan bool) {
 	defer conn.Close()
 
 	connectionFailed := make(chan bool)
@@ -78,7 +78,7 @@ func HandleServerCommunication(conn net.Conn, gui *gui.GUI, u *user.UserData, co
 	connDone <- true   // tell StartNet connection died
 }
 
-func serverRecieve(conn net.Conn, gui *gui.GUI, u *user.UserData, done chan bool) {
+func serverRecieve(conn net.Conn, gui *gui.GUI, u *user.UserCache, done chan bool) {
 	decoder := json.NewDecoder(conn)
 	for {
 		var resp prot.ChatResponse
@@ -108,7 +108,7 @@ func serverRecieve(conn net.Conn, gui *gui.GUI, u *user.UserData, done chan bool
 	}
 }
 
-func serverSend(conn net.Conn, gui *gui.GUI, u *user.UserData, done chan bool) {
+func serverSend(conn net.Conn, gui *gui.GUI, u *user.UserCache, done chan bool) {
 	for {
 		select {
 		case req := <-gui.Chat.OutgoingMessages:

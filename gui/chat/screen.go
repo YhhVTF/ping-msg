@@ -103,7 +103,7 @@ func (g *ScreenChat) DialogConnectionIssues(err error, opt *options.Options) {
 	g.Dialogs.ConnectionIssues = dialog
 }
 
-func (g *ScreenChat) DialogLogin(u *user.UserData, opt *options.Options) {
+func (g *ScreenChat) DialogLogin(u *user.UserCache, opt *options.Options) {
 	log.Info.Printf("Creating Dialog Login\n")
 
     // Text telling the user what to do
@@ -168,7 +168,7 @@ func (g *ScreenChat) DialogLogin(u *user.UserData, opt *options.Options) {
 }
 
 func InitScreenChat(
-    s *screen.ScreenManager, w fyne.Window, u *user.UserData, opt *options.Options,
+    s *screen.ScreenManager, w fyne.Window, u *user.UserCache, opt *options.Options,
 ) *ScreenChat {
 	log.Info.Printf("Initializing chat screen\n")
 

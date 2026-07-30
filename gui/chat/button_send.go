@@ -10,7 +10,7 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-func buttonSendOnPressed(g *ScreenChat, u *user.UserData) {
+func buttonSendOnPressed(g *ScreenChat, u *user.UserCache) {
 	log.Info.Printf("Widget ButtonSend pressed\n")
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
@@ -33,7 +33,7 @@ func buttonSendOnPressed(g *ScreenChat, u *user.UserData) {
 	g.Widgets.EntryMessage.SetText("")
 }
 
-func createButtonSend(g *ScreenChat, u *user.UserData, opt *options.Options) *widget.Button {
+func createButtonSend(g *ScreenChat, u *user.UserCache, opt *options.Options) *widget.Button {
 	// Initialize send button
     button := widget.NewButton(opt.GUIText.ButtonSend.Label, func() {
         buttonSendOnPressed(g, u)
