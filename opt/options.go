@@ -134,3 +134,45 @@ func LoadOptions(pathToOptions string) (*Options, error) {
 
     return opt, nil
 }
+
+func (opt *Options) SaveGUI(pathToOptions string) error {
+    log.Info.Printf("Saving GUI options\n")
+
+    // Open gui options
+    f, err := os.OpenFile(fmt.Sprintf("%s/gui.json", pathToOptions), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 644)
+    if err != nil {
+        log.Error.Printf("Failed to open gui options: %s\n", err)
+        return err
+    }
+
+    // Encode gui options and save them
+    encoder := json.NewEncoder(f)
+    err = encoder.Encode(opt.GUI)
+    if err != nil {
+        log.Error.Printf("Failed to encode and save gui options: %s\n", err)
+        return err
+    }
+
+    return nil
+}
+
+func (opt *Options) SaveNet(pathToOptions string) error {
+    log.Info.Printf("Saving Net options\n")
+
+    // Open net options
+    f, err := os.OpenFile(fmt.Sprintf("%s/net.json", pathToOptions), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 644)
+    if err != nil {
+        log.Error.Printf("Failed to open net options: %s\n", err)
+        return err
+    }
+
+    // Encode net options and save them
+    encoder := json.NewEncoder(f)
+    err = encoder.Encode(opt.GUI)
+    if err != nil {
+        log.Error.Printf("Failed to encode and save net options: %s\n", err)
+        return err
+    }
+
+    return nil
+}
