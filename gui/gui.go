@@ -78,11 +78,15 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserData, opt *opti
             fyne.Do(func() {
                 g.Options = sopt.InitScreenOptions(g.Window, opt)
 
-                w := container.NewInnerWindow("Options", g.Options.Containers.Base)
+                w := container.NewInnerWindow(
+                    opt.GUIText.WindowOptions.Title, g.Options.Containers.Base,
+                )
                 g.InnerWindows.Add(w)
 
                 w.SetPadded(true)
-                w.Resize(fyne.NewSize(700, 400))
+                w.Resize(fyne.NewSize(
+                    opt.GUI.WindowOptions.Size[0], opt.GUI.WindowOptions.Size[1],
+                ))
                 w.SetMaximized(false)
                 w.CloseIntercept = func() {
                     g.Window.Canvas().Overlays().Remove(g.InnerWindows)

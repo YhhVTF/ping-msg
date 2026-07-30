@@ -34,7 +34,7 @@ func InitScreenOptions(
 
     g.Widgets.SelectLanguage = createSelectLanguage(opt)
     g.Widgets.CardLanguage = 
-        widget.NewCard("", "Language", g.Widgets.SelectLanguage)
+        widget.NewCard("", opt.GUIText.OptionCardLanguage.Subtitle, g.Widgets.SelectLanguage)
 
     g.Containers.VBox = container.NewVBox(g.Widgets.CardLanguage)
     g.Containers.Base = container.NewVScroll(g.Containers.VBox)
