@@ -1,6 +1,6 @@
 package prot
 
-const PROTOCOL_VER_LATEST = "2"
+const PROTOCOL_VER_LATEST = "3"
 
 // Shows that an integer field in a request or response is empty
 const NONE_INT = -1
