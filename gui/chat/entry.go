@@ -22,7 +22,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, u *user.UserCache) {
 		MessageContent: text,
 		MessageID:      prot.NONE_INT,
 		Type:           prot.REQ_ADD,
-		Username:       u.ThisUser,
+		UserID:         u.ThisUserID,
 	}
 	g.OutgoingMessages <- req
 

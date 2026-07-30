@@ -122,11 +122,11 @@ func (g *ScreenChat) DialogLogin(u *user.UserCache, opt *options.Options) {
 		widget.NewButton(opt.GUIText.DialogLogin.Buttons[0].Label, func() {
             // Set the text in the entry as the username if it isn't a reserved username or empty
             if entry.Text == "" { return }
-            if entry.Text == prot.SERVER_USERNAME || entry.Text == prot.NONE_STRING {
+            if entry.Text == prot.NONE_STRING {
                 prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
                 return
             }
-            u.ThisUser = entry.Text
+            u.ThisUsername = entry.Text
 
             // Dismiss the dialog and set it as nil in the dialog table
             dialog.Dismiss()
@@ -135,7 +135,7 @@ func (g *ScreenChat) DialogLogin(u *user.UserCache, opt *options.Options) {
             // Set focus on message entry now that dialog is dismissed
             g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-            log.Info.Printf("Username set as %s\n", u.ThisUser)
+            log.Info.Printf("Username set as %s\n", u.ThisUsername)
 		    log.Info.Printf("Dialog Login dismissed\n")
 		}),
 	})
@@ -150,7 +150,7 @@ func (g *ScreenChat) DialogLogin(u *user.UserCache, opt *options.Options) {
             prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
             return
         }
-        u.ThisUser = entry.Text
+        u.ThisUsername = entry.Text
 
         // Dismiss the dialog and set it as nil in the dialog table
         dialog.Dismiss()
@@ -159,7 +159,7 @@ func (g *ScreenChat) DialogLogin(u *user.UserCache, opt *options.Options) {
         // Set focus on message entry now that dialog is dismissed
         g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-        log.Info.Printf("Username set as %s\n", u.ThisUser)
+        log.Info.Printf("Username set as %s\n", u.ThisUsername)
 		log.Info.Printf("Dialog Login dismissed\n")
     }
 
@@ -250,7 +250,6 @@ func (g *ScreenChat) SendMessage() {
 		MessageContent: g.Widgets.EntryMessage.Text,
 		MessageID:      prot.NONE_INT,
 		Type:           prot.REQ_ADD,
-		Username:       "buh",
 	}
 
 	g.OutgoingMessages <- req

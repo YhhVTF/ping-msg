@@ -35,7 +35,7 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
     var c *fyne.Container
 
     // If the message was sent by the user of this client...
-    if msgRaw.Username == u.ThisUser {
+    if msgRaw.UserID == u.ThisUserID {
         // Add a delete button
         buttonDelete := widget.NewButton("D", func() {
             messageOnDelete(g, msgRaw.ID, u)
@@ -74,7 +74,7 @@ func messageOnDelete(g *ScreenChat, msgID int, u *user.UserCache) {
         MessageContent: prot.NONE_STRING,
         MessageID: msgID,
         Type: prot.REQ_DEL,
-        Username: u.ThisUser,
+        UserID: u.ThisUserID,
     }
     g.OutgoingMessages <- req
 }
@@ -108,7 +108,7 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
                 MessageContent: text,
                 MessageID: msgID,
                 Type: prot.REQ_EDIT,
-                Username: u.ThisUser,
+                UserID: u.ThisUserID,
             }
             g.OutgoingMessages <- req
         }
