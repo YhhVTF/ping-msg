@@ -43,7 +43,7 @@ func StartNet(gui *gui.GUI, u *user.UserData, opt *options.Options) {
 			if gui.Chat.Dialogs.ConnectionIssues == nil {
 				fyne.DoAndWait(func() { gui.Chat.DialogConnectionIssues(err, opt) })
 			}
-			time.Sleep(30 * time.Second)
+			time.Sleep(90 * time.Second)
 			continue
 		}
 
