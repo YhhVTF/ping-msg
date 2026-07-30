@@ -7,8 +7,8 @@ const NONE_INT = -1
 // Shows that a string field in a request or response is empty
 const NONE_STRING = "##"
 
-// Reserved username that will be tied to requests and responses to denote them as server messages
-const SERVER_USERNAME = "SERVER"
+// Reserved user ID that will be tied to requests and responses to denote them as server messages
+const SERVER_USER_ID = 0
 
 // What action is being requested. What these do differ depending on the RequestWhere
 type RequestWhat string
@@ -60,8 +60,8 @@ type ChatRequest struct {
     MessageID int           `json:"message_id"`
     // What the request is (e.g., message deletion, editing)
     Type RequestWhat        `json:"chat_request_type"`
-    // Username of who sent the request
-    Username string         `json:"username"`
+    // User ID of who sent the request
+    UserID int              `json:"user_id"`
 }
 
 // A response to a chat request after the request is fulfuilled
@@ -86,6 +86,6 @@ type MessageRaw struct {
     ID int          `json:"id"`
     // Time at which the message was sent (unix format)
     Time int64      `json:"time"`
-    // Username of who sent the message
-    Username string `json:"username"`
+    // User ID of who sent the message
+    UserID int      `json:"user_id"`
 }
