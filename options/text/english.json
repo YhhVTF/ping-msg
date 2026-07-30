@@ -15,5 +15,7 @@
     "dialog_login_altprompt": "This username can't be used try a different one",
     "entry_message": { "label": "Type a message..." },
     "entry_username": { "label": "Enter a username" },
-    "window": { "title": "Ping" }
+    "optioncard_language": { "subtitle": "Language" },
+    "window": { "title": "Ping" },
+    "window_options": { "title": "Options" }
 }

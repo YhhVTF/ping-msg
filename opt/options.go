@@ -14,6 +14,11 @@ type ButtonTextOptions struct {
 
 type ButtonOptions struct {}
 
+type CardTextOptions struct {
+    Subtitle    string  `json:"subtitle"`
+    Title       string  `json:"title"`
+}
+
 type DialogTextOptions struct {
     Buttons []ButtonTextOptions `json:"buttons"`
     Prompt  string              `json:"prompt"`
@@ -39,7 +44,9 @@ type GUITextOptions struct {
     DialogLoginAltPrompt    string              `json:"dialog_login_altprompt"`
     EntryMessage            EntryTextOptions    `json:"entry_message"`
     EntryUsername           EntryTextOptions    `json:"entry_username"`
+    OptionCardLanguage      CardTextOptions     `json:"optioncard_language"`
     Window                  WindowTextOptions   `json:"window"`
+    WindowOptions           WindowTextOptions   `json:"window_options"`
 }
 
 type GUIOptions struct {
@@ -47,6 +54,7 @@ type GUIOptions struct {
     DialogLogin         DialogOptions   `json:"dialog_login"`
     Language            string          `json:"language"`
     Window              WindowOptions   `json:"window"`
+    WindowOptions       WindowOptions   `json:"window_options"`
 }
 
 type NetOptions struct {

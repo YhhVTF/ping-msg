@@ -15,5 +15,7 @@
     "dialog_login_altprompt": "nu not that onesie do like a diffie onesie Twt",
     "entry_message": { "label": "sei smth :3333" },
     "entry_username": { "label": "pickie username ^^" },
-    "window": { "title": "pingieee >w<" }
+    "optioncard_language": { "subtitle": "whar langie :3c" },
+    "window": { "title": "pingieee >w<" },
+    "window_options": { "title": "assemblie :o" }
 }

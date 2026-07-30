@@ -15,5 +15,7 @@
     "dialog_login_altprompt": "Serib bi kosely, dotoz zikol yki kosely",
     "entry_message": { "label": "Dotoz o hipilo" },
     "entry_username": { "label": "Dotoz o kosely" },
-    "window": { "title": "Internetfhalo" }
+    "optioncard_language": { "subtitle": "Language" },
+    "window": { "title": "Internetfhalo" },
+    "window_options": { "title": "Ykil abulin" }
 }

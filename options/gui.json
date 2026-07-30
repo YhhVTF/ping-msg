@@ -8,5 +8,8 @@
     "language": "english",
     "window": {
         "size": [850, 550]
+    },
+    "window_options": {
+        "size": [700, 400]
     }
 }
