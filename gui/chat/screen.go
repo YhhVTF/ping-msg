@@ -146,7 +146,7 @@ func (g *ScreenChat) DialogLogin(u *user.UserData, opt *options.Options) {
     entry.OnSubmitted = func(text string) {
         // Set the text in the entry as the username if it isn't a reserved username or empty
         if entry.Text == "" { return }
-        if entry.Text == prot.SERVER_USERNAME || entry.Text == prot.NONE_STRING {
+        if entry.Text == prot.NONE_STRING {
             prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
             return
         }
