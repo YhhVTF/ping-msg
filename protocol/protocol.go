@@ -69,6 +69,24 @@ type ChatMetadata struct {
 	NumberOfMessages int `json:"messages"`
 }
 
+type ChatMetadataRequest struct {
+    // ID of the chat involved
+    ChatID      int
+    // New chat metadata, only initialized for REQ_ADD and REQ_EDIT
+    NewMetadata ChatMetadata
+    // What the request is (e.g., creating new chat, getting metadata, etc.)
+    Type        RequestWhat
+}
+
+type ChatMetadataResponse struct {
+    // ID of the chat involved
+    ChatID      int
+    // Chat metadata the client may have requested
+    Metadata    ChatMetadata
+    // Action that this response fulfilled
+    Type        RequestWhat
+}
+
 // Collection of raw messages, used for saving and loading messages, not for communication between the client and server
 type ChatRaw struct {
     // Protocol version
