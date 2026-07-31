@@ -42,6 +42,33 @@ const REQ_CHATMETADATA  RequestWhere = "CHATMETADATA"
 // Request for user
 const REQ_USER          RequestWhere = "USER"
 
+// Information about a chat
+type ChatMetadata struct {
+	// Number of messages there are in a block
+	BlockSize int `json:"block_size"`
+	// UserID of who created the chat
+	Creator int `json:"creator"`
+	// A description of what the chat is about
+	Description string `json:"description"`
+	// ID of the chat
+	ID int `json:"id"`
+	// Is the chat public?
+	IsPublic bool `json:"public"`
+	// ID of the last block in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
+	LastBlockID int `json:"last_block"`
+	// ID of the last message in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
+
+	LastMessageID int `json:"last_message"`
+	// UserIDs of everyone who has access to the chat. This is empty if the chat is public
+	Members []int `json:"members"`
+	// The name of the chat
+	Name string `json:"name"`
+	// Total number of blocks in the chat. This should not be updated while the chat is loaded and instead should be calculated from the field `LastBlockID` when saving metadata
+	NumberOfBlocks int `json:"blocks"`
+	// Total number of messages in the chat. This should not be updated while the chat is loaded and instead should be calculated from the field `LastMessageID` when saving metadata
+	NumberOfMessages int `json:"messages"`
+}
+
 // Collection of raw messages, used for saving and loading messages, not for communication between the client and server
 type ChatRaw struct {
     // Protocol version
