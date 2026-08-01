@@ -22,7 +22,7 @@ import (
 //	loadingWindow (fyne.Window) - argument for InitGUI
 //  opt (*options.Options) - options/settings
 func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
-    u := &user.UserData{}
+    u := &user.UserCache{Users: make(map[int]user.User)}
 
     var g *gui.GUI
     fyne.DoAndWait(func() { g = gui.InitGUI(a, u, loadingWindow, opt) })

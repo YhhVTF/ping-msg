@@ -29,14 +29,14 @@ type GUI struct {
 // Parameters:
 //
 //	a (fyne.App) - The fyne application the window will be initialized in
-//  u (*user.UserData) - log.Information pertaining to users
+//  u (*user.UserCache) - log.Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
 //  opt (*options.Options) - Options/settings
 //
 // Returns:
 //
 //	*GUI - The main window and all its objects
-func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *options.Options) *GUI {
+func InitGUI(a fyne.App, u *user.UserCache, loadingWindow fyne.Window, opt *options.Options) *GUI {
 	log.Info.Printf("Creating GUI\n")
 
 	g := &GUI{}
@@ -59,7 +59,7 @@ func InitGUI(a fyne.App, u *user.UserData, loadingWindow fyne.Window, opt *optio
     return g
 }
 
-func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserData, opt *options.Options) {
+func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserCache, opt *options.Options) {
     for {
         switch <-s.Chan {
         case screen.S_CHAT_FULL:

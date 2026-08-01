@@ -228,7 +228,7 @@ func (g *ScreenChat) NewDialog(title, content string) *dialog.CustomDialog {
 func (g *ScreenChat) ReceiveMessage(rawMsg prot.MessageRaw) {
 	log.Info.Printf("Received message\n")
 
-	msgText := fmt.Sprintf("<%s> %s", rawMsg.Username, rawMsg.Content)
+	msgText := fmt.Sprintf("<User %d> %s", rawMsg.UserID, rawMsg.Content)
 
 	msg := canvas.NewText(msgText, color.NRGBA{255, 255, 255, 255})
 	g.Containers.Chat.VBox.Add(msg)

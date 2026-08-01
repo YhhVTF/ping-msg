@@ -5,6 +5,7 @@ import (
     "fyne.io/fyne/v2/container"
     "fyne.io/fyne/v2/widget"
 
+    "fmt"
     "time"
 
     "github.com/YhhVTF/ping-msg/log"
@@ -12,12 +13,28 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
+// messageUsername returns the best available display name for a message.
+// MessageRaw identifies senders by UserID; usernames are held separately in
+// the local user cache.
+func messageUsername(msgRaw prot.MessageRaw, u *user.UserCache) string {
+    if u != nil {
+        if msgRaw.UserID == u.ThisUserID && u.ThisUsername != "" {
+            return u.ThisUsername
+        }
+        if cachedUser, exists := u.Users[msgRaw.UserID]; exists && cachedUser.Username != "" {
+            return cachedUser.Username
+        }
+    }
+
+    return fmt.Sprintf("User %d", msgRaw.UserID)
+}
+
 func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Message {
     log.Info.Printf("Creating new message widget\n")
 
     msg := Message{}
 
-    msg.Username = widget.NewLabel(msgRaw.Username)
+    msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
 	msg.Username.Wrapping = fyne.TextWrapWord
     msg.Username.TextStyle.Bold = true
 

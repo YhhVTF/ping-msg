@@ -119,6 +119,8 @@ type ChatResponse struct {
     MessageID int           `json:"message_id"`
     // Messages that the client may have requested
     Messages []MessageRaw   `json:"messages"`
+    // Public user profiles needed to render message senders
+    Users []User            `json:"users"`
     // Action that this response fulfilled
     Type RequestWhat        `json:"chat_response_type"`
 }
@@ -133,4 +135,25 @@ type MessageRaw struct {
     Time int64      `json:"time"`
     // User ID of who sent the message
     UserID int      `json:"user_id"`
+}
+// UserRequestRegister registers a username on a new connection. The server
+// assigns the numeric ID; clients must not generate their own IDs.
+const UserRequestRegister = "REGISTER"
+
+// User is the public profile data required to render message senders.
+type User struct {
+    ID       int    `json:"id"`
+    Username string `json:"username"`
+}
+
+// UserRequest is sent before chat traffic to establish a connection identity.
+type UserRequest struct {
+    RequestType string `json:"request_type"`
+    Username    string `json:"username"`
+}
+
+// UserResponse is returned for a UserRequest. Error is empty on success.
+type UserResponse struct {
+    Error string `json:"error"`
+    User  User   `json:"user"`
 }
