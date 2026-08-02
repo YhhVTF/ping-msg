@@ -168,7 +168,7 @@ func (opt *Options) SaveNet(pathToOptions string) error {
 
     // Encode net options and save them
     encoder := json.NewEncoder(f)
-    err = encoder.Encode(opt.GUI)
+    err = encoder.Encode(opt.Net)
     if err != nil {
         log.Error.Printf("Failed to encode and save net options: %s\n", err)
         return err
