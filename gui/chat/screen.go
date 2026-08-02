@@ -48,6 +48,8 @@ type ScreenChat struct {
     // The main window
     Window              fyne.Window
 	OutgoingMessages    chan prot.ChatRequest // Connects to net.go
+    // IDs of messages that the next message sent will reply to
+    RepliedMessages     []int
 }
 
 // All widgets to be used by the chat screen

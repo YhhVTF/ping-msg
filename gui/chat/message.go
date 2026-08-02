@@ -143,8 +143,10 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
     }
 }
 
-func messageOnReply(g *ScreenChat, msgID int, u *user.UserCache) {
+func messageOnReply(g *ScreenChat, msgID int) {
     log.Info.Printf("Reply button on message %d pressed\n", msgID)
+
+    g.RepliedMessages = append(g.RepliedMessages, msgID)
 
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
