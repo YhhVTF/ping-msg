@@ -40,18 +40,18 @@ type DialogTable struct {
 // A collection of all GUI elements to be used chat screen
 type ScreenChat struct {
 	// All containers
-	Containers ContainerTableChat
+	Containers          ContainerTableChat
 	// All dialogs
-	Dialogs DialogTable
+	Dialogs             DialogTable
 	// All widgets
-	Widgets          WidgetTable
+	Widgets             WidgetTableChat
     // The main window
-    Window fyne.Window
-	OutgoingMessages chan prot.ChatRequest // Connects to net.go
+    Window              fyne.Window
+	OutgoingMessages    chan prot.ChatRequest // Connects to net.go
 }
 
-// All widget to be used by Ping
-type WidgetTable struct {
+// All widgets to be used by the chat screen
+type WidgetTableChat struct {
 	// Button in the bottom bar that sends the contents of EntryMessage when pressed
 	ButtonSend *widget.Button
 	// Entry in the bottom bar used to type and send messages
