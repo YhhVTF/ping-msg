@@ -40,6 +40,12 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
 
     msg.Time = widget.NewLabel(time.Unix(msgRaw.Time, 0).Format("3:04 PM"))
 
+    // Add a reply button
+    buttonReply := widget.NewButton("R", func() {
+        messageOnReply(g, msgRaw.ID, u)
+    })
+
+    // Add a copy button
     buttonCopy := widget.NewButton("C", func() {
         log.Info.Printf("Copied message %d\n", msgRaw.ID)
 
@@ -62,9 +68,11 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
         buttonEdit := widget.NewButton("E", func() {
             messageOnEdit(g, &msg, msgRaw.ID, u)
         })
-        c = container.NewHBox(buttonCopy, buttonEdit, buttonDelete, msg.Time)
+        c = container.NewHBox(
+            buttonReply, buttonCopy, buttonEdit, buttonDelete, msg.Time,
+        )
     } else {
-        c = container.NewHBox(buttonCopy, msg.Time)
+        c = container.NewHBox(buttonReply, buttonCopy, msg.Time)
     }
 
     msg.Border = container.NewBorder(nil, nil, msg.Username, c, nil)
@@ -133,4 +141,11 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
         editEntry.Hide()
         msg.Content.Show()
     }
+}
+
+func messageOnReply(g *ScreenChat, msgID int, u *user.UserCache) {
+    log.Info.Printf("Reply button on message %d pressed\n", msgID)
+
+    // Give focus back to the message entry when done
+    defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 }
