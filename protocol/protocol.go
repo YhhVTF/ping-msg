@@ -103,6 +103,8 @@ type ChatRequest struct {
     MessageContent string   `json:"content"`
     // ID of the message involved, is -1 for `REQ_ADD`
     MessageID int           `json:"message_id"`
+    // IDs of the messages the message sent in this chat request is replying to, is non nil only for REQ_ADD and REQ_EDIT
+    RepliedMessageIDs []int `json:"replied_ids"`
     // What the request is (e.g., message deletion, editing)
     Type RequestWhat        `json:"chat_request_type"`
     // User ID of who sent the request
@@ -128,13 +130,15 @@ type ChatResponse struct {
 // Message data sent to and received from the server
 type MessageRaw struct {
     // What the message says
-    Content string  `json:"content"`
+    Content string      `json:"content"`
     // Unique message identifier (assigned incrementally, is -1 when a message is received from a client until the server assigns it an ID)
-    ID int          `json:"id"`
+    ID int              `json:"id"`
+    // IDs of the message(s) this message is replying to
+    RepliedIDs []int    `json:"replied_ids"`
     // Time at which the message was sent (unix format)
-    Time int64      `json:"time"`
+    Time int64          `json:"time"`
     // User ID of who sent the message
-    UserID int      `json:"user_id"`
+    UserID int          `json:"user_id"`
 }
 // UserRequestRegister registers a username on a new connection. The server
 // assigns the numeric ID; clients must not generate their own IDs.
