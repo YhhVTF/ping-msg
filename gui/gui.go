@@ -77,32 +77,7 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserCache, opt *opt
 
             fyne.Do(func() {
                 g.Options = sopt.InitScreenOptions(g.Window, opt)
-
-                w := container.NewInnerWindow(
-                    opt.GUIText.WindowOptions.Title, g.Options.Containers.Base,
-                )
-                g.InnerWindows.Add(w)
-
-                w.SetPadded(true)
-                w.Resize(fyne.NewSize(
-                    opt.GUI.WindowOptions.Size[0], opt.GUI.WindowOptions.Size[1],
-                ))
-                w.SetMaximized(false)
-                w.CloseIntercept = func() {
-                    // Set options window size in options to its current size
-                    opt.GUI.WindowOptions.Size[0] = w.Size().Width
-                    opt.GUI.WindowOptions.Size[1] = w.Size().Height
-
-                    // Close the options window
-                    g.Window.Canvas().Overlays().Remove(g.InnerWindows)
-                    w.Hide()
-                    g.Window.Canvas().Content().Refresh()
-
-                    // Save options
-                    opt.SaveGUI("options")
-                    opt.SaveNet("options")
-                }
-                g.Window.Canvas().Overlays().Add(g.InnerWindows)
+                g.Options.Float(g.Window, g.InnerWindows, opt)
             })
         }
     }

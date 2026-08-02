@@ -1,0 +1,21 @@
+{
+    "button_attach": { "label": "Monoz" },
+    "button_options": { "label": "Ykil abulin" },
+    "button_send": { "label": "Toloz" },
+    "dialog_connection_issues": {
+        "buttons": [{ "label": "Fisi" }],
+        "prompt": "Difa didebin yki kilisigo dezol. Podifoz yki kilisigo rrelis, serib yki internetfhalo",
+        "title": "Yki Fhalobeto"
+    },
+    "dialog_login": {
+        "buttons": [{ "label": "Retis" }],
+        "prompt": "Dotoz o kosely yki retis los",
+        "title": "Retis"
+    },
+    "dialog_login_altprompt": "Serib bi kosely, dotoz zikol yki kosely",
+    "entry_message": { "label": "Dotoz o hipilo" },
+    "entry_username": { "label": "Dotoz o kosely" },
+    "optioncard_language": { "subtitle": "Language" },
+    "window": { "title": "Internetfhalo" },
+    "window_options": { "title": "Ykil abulin" }
+}
