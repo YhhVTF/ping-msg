@@ -180,7 +180,6 @@ func InitScreenChat(
     g.Window = w
 
 	g.OutgoingMessages = make(chan prot.ChatRequest)
-    g.RepliedMessages = make(map[int]bool)
 
     g.Widgets.Messages = make(map[int]Message)
 
