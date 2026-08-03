@@ -145,16 +145,15 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
 
 func messageOnReply(g *ScreenChat, msgID int) {
     log.Info.Printf("Reply button on message %d pressed\n", msgID)
-    defer log.Info.Printf("Next message will reply to: %d\n", g.RepliedMessages)
 
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    for i, id := range g.RepliedMessages {
-        if id == msgID {
-            g.RepliedMessages[i] = prot.NONE_INT
-            return
-        }
+    g.RepliedMessages[msgID] = !g.RepliedMessages[msgID]
+
+    if g.RepliedMessages[msgID] {
+        log.Info.Printf("The next message sent will reply to message %d\n", msgID)
+    } else {
+        log.Info.Printf("The next message sent will NOT reply to message %d\n", msgID)
     }
-    g.RepliedMessages = append(g.RepliedMessages, msgID)
 }
