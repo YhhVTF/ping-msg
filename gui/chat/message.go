@@ -3,6 +3,7 @@ package schat
 import (
     "fyne.io/fyne/v2"
     "fyne.io/fyne/v2/container"
+    "fyne.io/fyne/v2/theme"
     "fyne.io/fyne/v2/widget"
 
     "fmt"
@@ -85,6 +86,29 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
 	msg.Base = widget.NewCard("", "", msg.VBox)
 
 	return msg
+}
+
+func createRepliedSection(g *ScreenChat, rawMsg *prot.MessageRaw) *fyne.Container {
+    c := container.NewVBox()
+
+    // Get the username and content of the messages being replied to via the messageids in rawMsg.RepliedMessages and add each one to the replied section
+    for _, repliedID := range rawMsg.RepliedIDs {
+        repliedMsg, exists := g.Widgets.Messages[repliedID]
+        var repliedText string
+        if !exists {
+            repliedText = "Message could not be loaded"
+        } else {
+            repliedText = 
+                fmt.Sprintf("%s: %s", repliedMsg.Username.Text, repliedMsg.Content.Text)
+        }
+
+        replyIcon := widget.NewIcon(theme.Current().Icon(theme.IconNameMailReply))
+        repliedLabel := widget.NewLabel(repliedText)
+
+        cRepliedMsg := container.NewHBox(replyIcon, repliedLabel)
+        c.Add(cRepliedMsg)
+    }
+    return c
 }
 
 func messageOnDelete(g *ScreenChat, msgID int, u *user.UserCache) {
