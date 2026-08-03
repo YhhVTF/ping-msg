@@ -42,7 +42,7 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
 
     // Add a reply button
     buttonReply := widget.NewButton("R", func() {
-        messageOnReply(g, msgRaw.ID, u)
+        messageOnReply(g, msgRaw.ID)
     })
 
     // Add a copy button
@@ -145,6 +145,10 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
 
 func messageOnReply(g *ScreenChat, msgID int) {
     log.Info.Printf("Reply button on message %d pressed\n", msgID)
+    defer log.Info.Printf("Next message will reply to: %d\n", g.RepliedMessages)
+
+    // Give focus back to the message entry when done
+    defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
     for i, id := range g.RepliedMessages {
         if id == msgID {
@@ -152,11 +156,5 @@ func messageOnReply(g *ScreenChat, msgID int) {
             return
         }
     }
-
     g.RepliedMessages = append(g.RepliedMessages, msgID)
-
-    log.Info.Printf("Next message will reply to: %d\n", g.RepliedMessages)
-
-    // Give focus back to the message entry when done
-    defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 }
