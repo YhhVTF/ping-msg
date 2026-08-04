@@ -65,7 +65,7 @@ type WidgetTableChat struct {
     // Button in the bottom right of the screen for opening a settings window
     ButtonOptions *widget.Button
     // Messages in the chat containers
-    Messages map[int]Message
+    Messages map[int]*Message
     // Widgets that show replying to a message
     //  Key (int) - Message ID
     //  Val (*RepliedMessage) - Replied message
@@ -185,7 +185,7 @@ func InitScreenChat(
 
 	g.OutgoingMessages = make(chan prot.ChatRequest)
 
-    g.Widgets.Messages = make(map[int]Message)
+    g.Widgets.Messages = make(map[int]*Message)
     g.Widgets.RepliedMessages = make(map[int]*RepliedMessage)
 
     g.Widgets.ButtonAttach = createButtonAttach(g, opt)

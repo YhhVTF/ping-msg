@@ -46,10 +46,10 @@ func messageUsername(msgRaw prot.MessageRaw, u *user.UserCache) string {
     return fmt.Sprintf("User %d", msgRaw.UserID)
 }
 
-func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Message {
+func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) *Message {
     log.Info.Printf("Creating new message widget\n")
 
-    msg := Message{}
+    msg := &Message{}
 
     if len(msgRaw.RepliedIDs) > 0 {
         // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
@@ -88,7 +88,7 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
 
         // Add an edit button, upon pressing...
         buttonEdit := widget.NewButton("E", func() {
-            messageOnEdit(g, &msg, msgRaw.ID, u)
+            messageOnEdit(g, msg, msgRaw.ID, u)
         })
         c = container.NewHBox(
             buttonReply, buttonCopy, buttonEdit, buttonDelete, msg.Time,
