@@ -15,12 +15,14 @@ import (
 )
 
 type Message struct {
-    // Surrounds message in a card
-    Base *widget.Card
+    // Base VBox container for the message that contains the reply section if there is one, and the message card
+    Base *fyne.Container
+    // A VBox with all replied messages, added to Base first if there is any
+    RepliedSection *fyne.Container
+    // Surrounds message in a card, added to Base first, second if there's replies
+    Card *widget.Card
     // Base VBox container for card content
     VBox *fyne.Container
-    // A VBox with all replied messages, added to VBox first if there are any
-    RepliedSection *fyne.Container
     // Border container for message metadata, added to VBox first, second if there's replied messages
     Border *fyne.Container
     // Label for message content, added to VBox second, third of there are replied messages
@@ -103,27 +105,29 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) *Me
     msg.Content = widget.NewLabel(msgRaw.Content)
     msg.Content.Wrapping = fyne.TextWrapWord
 
-    if msg.RepliedSection != nil {
-        msg.VBox = container.NewVBox(msg.RepliedSection, msg.Border, msg.Content)
+    msg.VBox = container.NewVBox(msg.Border, msg.Content)
+
+	msg.Card = widget.NewCard("", "", msg.VBox)
+
+    if msg.RepliedSection == nil {
+        msg.Base = container.NewVBox(msg.Card)
     } else {
-        msg.VBox = container.NewVBox(msg.Border, msg.Content)
+        msg.Base = container.NewVBox(msg.RepliedSection, msg.Card)
     }
-
-	msg.Base = widget.NewCard("", "", msg.VBox)
-
 	return msg
 }
 
 func createRepliedSection(g *ScreenChat, rawMsg *prot.MessageRaw) *fyne.Container {
-    c := container.NewVBox()
+    vbox := container.NewVBox()
 
     // Get the username and content of the messages being replied to via the messageids in rawMsg.RepliedMessages and add each one to the replied section
     for _, repliedID := range rawMsg.RepliedIDs {
         if _, exists := g.Widgets.RepliedMessages[repliedID]; !exists {
             g.Widgets.RepliedMessages[repliedID] = createRepliedMessage(g, repliedID)
         }
-        c.Add(g.Widgets.RepliedMessages[repliedID].Base)
+        vbox.Add(g.Widgets.RepliedMessages[repliedID].Base)
     }
+    c := container.NewPadded(vbox)
     return c
 }
 
@@ -197,11 +201,4 @@ func messageOnReply(g *ScreenChat, msgID int) {
     }
 
     log.Info.Printf("The next message sent will reply to messages %d\n", g.ReplyingTo)
-    //if g.ReplyingTo[msgID] {
-    //    delete(g.ReplyingTo, msgID)
-    //    log.Info.Printf("The next message sent will NOT reply to message %d\n", msgID)
-    //} else {
-    //    g.ReplyingTo[msgID] = true
-    //    log.Info.Printf("The next message sent will reply to message %d\n", msgID)
-    //}
 }
