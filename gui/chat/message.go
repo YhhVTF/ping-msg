@@ -6,6 +6,7 @@ import (
     "fyne.io/fyne/v2/widget"
 
     "fmt"
+    "slices"
     "time"
 
     "github.com/YhhVTF/ping-msg/log"
@@ -187,16 +188,20 @@ func messageOnReply(g *ScreenChat, msgID int) {
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    if g.ReplyingTo == nil {
-        g.ReplyingTo = make(map[int]bool)
+    // Add the message ID to g.ReplyingTo if it isn't already there or remove it from there if it is
+    if slices.Contains(g.ReplyingTo, msgID) {
+        i := slices.Index(g.ReplyingTo, msgID)
+        g.ReplyingTo = slices.Delete(g.ReplyingTo, i, i+1)
+    } else {
+        g.ReplyingTo = append(g.ReplyingTo, msgID)
     }
 
-    // Add the message ID to g.ReplyingTo if it isn't already there or delete it from there if it is
-    if g.ReplyingTo[msgID] {
-        delete(g.ReplyingTo, msgID)
-        log.Info.Printf("The next message sent will NOT reply to message %d\n", msgID)
-    } else {
-        g.ReplyingTo[msgID] = true
-        log.Info.Printf("The next message sent will reply to message %d\n", msgID)
-    }
+    log.Info.Printf("The next message sent will reply to messages %d\n", g.ReplyingTo)
+    //if g.ReplyingTo[msgID] {
+    //    delete(g.ReplyingTo, msgID)
+    //    log.Info.Printf("The next message sent will NOT reply to message %d\n", msgID)
+    //} else {
+    //    g.ReplyingTo[msgID] = true
+    //    log.Info.Printf("The next message sent will reply to message %d\n", msgID)
+    //}
 }

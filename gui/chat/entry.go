@@ -21,6 +21,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, u *user.UserCache) {
 		ChatID:         1,
 		MessageContent: text,
 		MessageID:      prot.NONE_INT,
+        RepliedIDs:     g.ReplyingTo,
 		Type:           prot.REQ_ADD,
 		UserID:         u.ThisUserID,
 	}
@@ -28,6 +29,8 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, u *user.UserCache) {
 
     // Clear the entry
 	g.Widgets.EntryMessage.SetText("")
+    // Reset ScreenChat.ReplyingTo
+    g.ReplyingTo = make([]int, 0)
 }
 
 func createEntryMessage(g *ScreenChat, u *user.UserCache, opt *options.Options) *widget.Entry {

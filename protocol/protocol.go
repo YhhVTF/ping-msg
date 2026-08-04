@@ -104,7 +104,7 @@ type ChatRequest struct {
     // ID of the message involved, is -1 for `REQ_ADD`
     MessageID int           `json:"message_id"`
     // IDs of the messages the message sent in this chat request is replying to, is non nil only for REQ_ADD and REQ_EDIT
-    RepliedMessageIDs []int `json:"replied_ids"`
+    RepliedIDs []int        `json:"replied_ids"`
     // What the request is (e.g., message deletion, editing)
     Type RequestWhat        `json:"chat_request_type"`
     // User ID of who sent the request

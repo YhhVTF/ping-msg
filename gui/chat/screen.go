@@ -49,9 +49,7 @@ type ScreenChat struct {
     Window              fyne.Window
 	OutgoingMessages    chan prot.ChatRequest // Connects to net.go
     // IDs of messages that the next message sent will reply to
-    //  Key (int) - Message ID
-    //  Val (bool) - Will the next message sent reply to this message
-    ReplyingTo     map[int]bool
+    ReplyingTo          []int
 }
 
 // All widgets to be used by the chat screen
@@ -184,6 +182,7 @@ func InitScreenChat(
     g.Window = w
 
 	g.OutgoingMessages = make(chan prot.ChatRequest)
+    g.ReplyingTo = make([]int, 0)
 
     g.Widgets.Messages = make(map[int]*Message)
     g.Widgets.RepliedMessages = make(map[int]*RepliedMessage)
