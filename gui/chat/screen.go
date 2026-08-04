@@ -51,7 +51,7 @@ type ScreenChat struct {
     // IDs of messages that the next message sent will reply to
     //  Key (int) - Message ID
     //  Val (bool) - Will the next message sent reply to this message
-    RepliedMessages     map[int]bool
+    ReplyingTo     map[int]bool
 }
 
 // All widgets to be used by the chat screen
@@ -66,6 +66,10 @@ type WidgetTableChat struct {
     ButtonOptions *widget.Button
     // Messages in the chat containers
     Messages map[int]Message
+    // Widgets that show replying to a message
+    //  Key (int) - Message ID
+    //  Val (*RepliedMessage) - Replied message
+    RepliedMessages map[int]*RepliedMessage
 }
 
 // DialogConnectionIssues: Creates and shows a dialog set to the default size that informs the user that there are connection issues, with a user friendly message and a technical message
@@ -182,6 +186,7 @@ func InitScreenChat(
 	g.OutgoingMessages = make(chan prot.ChatRequest)
 
     g.Widgets.Messages = make(map[int]Message)
+    g.Widgets.RepliedMessages = make(map[int]*RepliedMessage)
 
     g.Widgets.ButtonAttach = createButtonAttach(g, opt)
 

@@ -3,7 +3,6 @@ package schat
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
@@ -28,21 +27,6 @@ type Chat struct {
 	Border *fyne.Container
 	// Lists messages vertically
 	VBox *fyne.Container
-}
-
-type Message struct {
-    // Surrounds message in a card
-    Base *widget.Card
-    // Base VBox container for card content
-    VBox *fyne.Container
-    // Border container for message metadata, added to VBox first
-    Border *fyne.Container
-    // Label for message content, added to VBox second
-    Content *widget.Label
-    // Label for username, added to left side of Border
-    Username *widget.Label
-    // Label for time, added to right side of Border
-    Time *widget.Label
 }
 
 // NewChat: Creates and returns all containers needed for the section of the GUI

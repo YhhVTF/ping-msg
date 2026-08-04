@@ -3,7 +3,6 @@ package schat
 import (
     "fyne.io/fyne/v2"
     "fyne.io/fyne/v2/container"
-    "fyne.io/fyne/v2/theme"
     "fyne.io/fyne/v2/widget"
 
     "fmt"
@@ -13,6 +12,23 @@ import (
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
+
+type Message struct {
+    // Surrounds message in a card
+    Base *widget.Card
+    // Base VBox container for card content
+    VBox *fyne.Container
+    // A VBox with all replied messages, added to VBox first if there are any
+    RepliedSection *fyne.Container
+    // Border container for message metadata, added to VBox first, second if there's replied messages
+    Border *fyne.Container
+    // Label for message content, added to VBox second, third of there are replied messages
+    Content *widget.Label
+    // Label for username, added to left side of Border
+    Username *widget.Label
+    // Label for time, added to right side of Border
+    Time *widget.Label
+}
 
 // messageUsername returns the best available display name for a message.
 // MessageRaw identifies senders by UserID; usernames are held separately in
@@ -34,6 +50,11 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
     log.Info.Printf("Creating new message widget\n")
 
     msg := Message{}
+
+    if len(msgRaw.RepliedIDs) > 0 {
+        // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
+        msg.RepliedSection = createRepliedSection(g, &msgRaw)
+    }
 
     msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
 	msg.Username.Wrapping = fyne.TextWrapWord
@@ -81,7 +102,11 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) Mes
     msg.Content = widget.NewLabel(msgRaw.Content)
     msg.Content.Wrapping = fyne.TextWrapWord
 
-    msg.VBox = container.NewVBox(msg.Border, msg.Content)
+    if msg.RepliedSection != nil {
+        msg.VBox = container.NewVBox(msg.RepliedSection, msg.Border, msg.Content)
+    } else {
+        msg.VBox = container.NewVBox(msg.Border, msg.Content)
+    }
 
 	msg.Base = widget.NewCard("", "", msg.VBox)
 
@@ -93,20 +118,10 @@ func createRepliedSection(g *ScreenChat, rawMsg *prot.MessageRaw) *fyne.Containe
 
     // Get the username and content of the messages being replied to via the messageids in rawMsg.RepliedMessages and add each one to the replied section
     for _, repliedID := range rawMsg.RepliedIDs {
-        repliedMsg, exists := g.Widgets.Messages[repliedID]
-        var repliedText string
-        if !exists {
-            repliedText = "Message could not be loaded"
-        } else {
-            repliedText = 
-                fmt.Sprintf("%s: %s", repliedMsg.Username.Text, repliedMsg.Content.Text)
+        if _, exists := g.Widgets.RepliedMessages[repliedID]; !exists {
+            g.Widgets.RepliedMessages[repliedID] = createRepliedMessage(g, repliedID)
         }
-
-        replyIcon := widget.NewIcon(theme.Current().Icon(theme.IconNameMailReply))
-        repliedLabel := widget.NewLabel(repliedText)
-
-        cRepliedMsg := container.NewHBox(replyIcon, repliedLabel)
-        c.Add(cRepliedMsg)
+        c.Add(g.Widgets.RepliedMessages[repliedID].Base)
     }
     return c
 }
@@ -172,16 +187,16 @@ func messageOnReply(g *ScreenChat, msgID int) {
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    if g.RepliedMessages == nil {
-        g.RepliedMessages = make(map[int]bool)
+    if g.ReplyingTo == nil {
+        g.ReplyingTo = make(map[int]bool)
     }
 
-    // Add the message ID to g.RepliedMessages if it isn't already there or delete it from there if it is
-    if g.RepliedMessages[msgID] {
-        delete(g.RepliedMessages, msgID)
+    // Add the message ID to g.ReplyingTo if it isn't already there or delete it from there if it is
+    if g.ReplyingTo[msgID] {
+        delete(g.ReplyingTo, msgID)
         log.Info.Printf("The next message sent will NOT reply to message %d\n", msgID)
     } else {
-        g.RepliedMessages[msgID] = true
+        g.ReplyingTo[msgID] = true
         log.Info.Printf("The next message sent will reply to message %d\n", msgID)
     }
 }
