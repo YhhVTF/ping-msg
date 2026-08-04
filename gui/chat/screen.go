@@ -29,20 +29,10 @@ type ContainerTableChat struct {
 	Chat Chat
 }
 
-// All dialogs to be used by chat screen
-type DialogTable struct {
-	// Informs the user that there are issues with connecting to the server
-	ConnectionIssues *dialog.CustomDialog
-    // Asks the user for information to log in
-    Login *dialog.CustomDialog
-}
-
 // A collection of all GUI elements to be used chat screen
 type ScreenChat struct {
 	// All containers
 	Containers          ContainerTableChat
-	// All dialogs
-	Dialogs             DialogTable
 	// All widgets
 	Widgets             WidgetTableChat
     // The main window
@@ -68,109 +58,6 @@ type WidgetTableChat struct {
     //  Key (int) - Message ID
     //  Val (*RepliedMessage) - Replied message
     RepliedMessages map[int]*RepliedMessage
-}
-
-// DialogConnectionIssues: Creates and shows a dialog set to the default size that informs the user that there are connection issues, with a user friendly message and a technical message
-// Parameters:
-//
-//	err (error) - The error that occurred. This will be used as the technical error message
-//  opt (*options.Options) - Options/settings
-func (g *ScreenChat) DialogConnectionIssues(err error, opt *options.Options) {
-	log.Info.Printf("Creating Dialog ConnectionIssues\n")
-
-	// Create the user friendly error message as a label
-	uxErrMsg := widget.NewLabel(opt.GUIText.DialogConnIssues.Prompt)
-	// Create the technical error message as a label, make it selectable and a low importance widget
-	technicalErrMsg := widget.NewLabel(err.Error())
-	technicalErrMsg.Selectable = true
-	technicalErrMsg.Importance = widget.LowImportance
-	// add then to a new vbox
-	c := container.NewVBox(uxErrMsg, technicalErrMsg)
-
-	// Create a dialog with the vbox as the content
-	dialog := dialog.NewCustom(opt.GUIText.DialogConnIssues.Title, "", c, g.Window)
-	// add an ok button
-	dialog.SetButtons([]fyne.CanvasObject{
-		widget.NewButton(opt.GUIText.DialogConnIssues.Buttons[0].Label, func() {
-			log.Info.Printf("Dialog ConnectionsIssues dismissed\n")
-			// Dismiss the dialog and set it to nil in the dialog table
-			dialog.Dismiss()
-			g.Dialogs.ConnectionIssues = nil
-
-            // Set focus on message entry now that dialog is dismissed
-            g.Window.Canvas().Focus(g.Widgets.EntryMessage)
-		}),
-	})
-	// Resize to default dialog size and show the dialog
-	dialog.Resize(fyne.NewSize(opt.GUI.DialogConnIssues.Size[0], opt.GUI.DialogConnIssues.Size[1]))
-	dialog.Show()
-
-	// add the dialog to the dialog table
-	g.Dialogs.ConnectionIssues = dialog
-}
-
-func (g *ScreenChat) DialogLogin(u *user.UserCache, opt *options.Options) {
-	log.Info.Printf("Creating Dialog Login\n")
-
-    // Text telling the user what to do
-	prompt := widget.NewLabel(opt.GUIText.DialogLogin.Prompt)
-    // Entry for username
-    entry := widget.NewEntry()
-    entry.SetPlaceHolder(opt.GUIText.EntryUsername.Label)
-
-	// add them to a new vbox
-	c := container.NewVBox(prompt, entry)
-
-	// Create a dialog with the vbox as the content
-	dialog := dialog.NewCustom(opt.GUIText.DialogLogin.Title, "", c, g.Window)
-	// add a login button
-	dialog.SetButtons([]fyne.CanvasObject{
-		widget.NewButton(opt.GUIText.DialogLogin.Buttons[0].Label, func() {
-            // Set the text in the entry as the username if it isn't a reserved username or empty
-            if entry.Text == "" { return }
-            if entry.Text == prot.NONE_STRING {
-                prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
-                return
-            }
-            u.ThisUsername = entry.Text
-
-            // Dismiss the dialog and set it as nil in the dialog table
-            dialog.Dismiss()
-            g.Dialogs.Login = nil
-
-            // Set focus on message entry now that dialog is dismissed
-            g.Window.Canvas().Focus(g.Widgets.EntryMessage)
-
-            log.Info.Printf("Username set as %s\n", u.ThisUsername)
-		    log.Info.Printf("Dialog Login dismissed\n")
-		}),
-	})
-	// Resize to default dialog size and show the dialog
-	dialog.Resize(fyne.NewSize(opt.GUI.DialogConnIssues.Size[0], opt.GUI.DialogConnIssues.Size[1]))
-	dialog.Show()
-
-    entry.OnSubmitted = func(text string) {
-        // Set the text in the entry as the username if it isn't a reserved username or empty
-        if entry.Text == "" { return }
-        if entry.Text == prot.NONE_STRING {
-            prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
-            return
-        }
-        u.ThisUsername = entry.Text
-
-        // Dismiss the dialog and set it as nil in the dialog table
-        dialog.Dismiss()
-        g.Dialogs.Login = nil
-
-        // Set focus on message entry now that dialog is dismissed
-        g.Window.Canvas().Focus(g.Widgets.EntryMessage)
-
-        log.Info.Printf("Username set as %s\n", u.ThisUsername)
-		log.Info.Printf("Dialog Login dismissed\n")
-    }
-
-	// add the dialog to the dialog table
-	g.Dialogs.Login = dialog
 }
 
 func InitScreenChat(

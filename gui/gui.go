@@ -5,6 +5,7 @@ import (
     "fyne.io/fyne/v2/container"
 
     "github.com/YhhVTF/ping-msg/gui/chat"
+    "github.com/YhhVTF/ping-msg/gui/dialogs"
     "github.com/YhhVTF/ping-msg/gui/options"
     "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/log"
@@ -15,6 +16,8 @@ import (
 type GUI struct {
     // Chat screen
     Chat *schat.ScreenChat
+    // All dialogs used by Ping
+    Dialogs dialogs.DialogTable
     // Manages inner windows
     InnerWindows *container.MultipleWindows
     // Options screen

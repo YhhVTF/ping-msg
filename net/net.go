@@ -16,6 +16,7 @@ import (
 
 	ping "github.com/YhhVTF/ping-msg/global"
 	"github.com/YhhVTF/ping-msg/gui"
+	"github.com/YhhVTF/ping-msg/gui/dialogs"
 	"github.com/YhhVTF/ping-msg/log"
 	options "github.com/YhhVTF/ping-msg/opt"
 	prot "github.com/YhhVTF/ping-msg/protocol"
@@ -25,10 +26,13 @@ import (
 // StartNet connects to the server, registers the selected username, and then
 // starts the chat request/response loops.
 func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
-	fyne.DoAndWait(func() { gui.Chat.DialogLogin(u, opt) })
-	for gui.Chat.Dialogs.Login != nil {
+	fyne.DoAndWait(func() {
+        gui.Dialogs.Login = dialogs.InitDialogLogin(gui.Window, u, opt)
+    })
+	for gui.Dialogs.Login.Dialog != nil {
 		time.Sleep(10 * time.Millisecond)
 	}
+    gui.Dialogs.Login = nil
 
 	endpoint := "wss://ping.da5h1n.uk:5555/ws"
 	if len(os.Args) > 1 {
@@ -44,9 +48,11 @@ func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
 			if registerErr == nil {
 				ping.Connected = true
 				log.Info.Printf("Successfully connected as user %d\n", u.ThisUserID)
-				if gui.Chat.Dialogs.ConnectionIssues != nil {
-					fyne.DoAndWait(func() { gui.Chat.Dialogs.ConnectionIssues.Dismiss() })
-					gui.Chat.Dialogs.ConnectionIssues = nil
+				if gui.Dialogs.ConnectionIssues != nil {
+					fyne.DoAndWait(func() {
+                        gui.Dialogs.ConnectionIssues.Dialog.Dismiss()
+                    })
+					gui.Dialogs.ConnectionIssues = nil
 				}
 				connDone := make(chan bool)
 				go HandleServerCommunication(conn, decoder, gui, u, connDone)
@@ -60,8 +66,10 @@ func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
 			conn.Close()
 		}
 		log.Error.Printf("Failed to connect or register with server: %s\n", err)
-		if gui.Chat.Dialogs.ConnectionIssues == nil {
-			fyne.DoAndWait(func() { gui.Chat.DialogConnectionIssues(err, opt) })
+		if gui.Dialogs.ConnectionIssues == nil {
+			fyne.DoAndWait(func() {
+                dialogs.InitDialogConnIssues(gui.Window, err, opt)
+            })
 		}
 		time.Sleep(5 * time.Second)
 	}
