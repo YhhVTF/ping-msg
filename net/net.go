@@ -69,7 +69,8 @@ func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
 		log.Error.Printf("Failed to connect or register with server: %s\n", err)
 		if gui.Dialogs.ConnectionIssues == nil {
 			fyne.DoAndWait(func() {
-                dialogs.InitDialogConnIssues(gui.Window, err, opt)
+                gui.Dialogs.ConnectionIssues =
+                    dialogs.InitDialogConnIssues(gui.Window, err, opt)
             })
 		}
 		time.Sleep(5 * time.Second)

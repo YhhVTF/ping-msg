@@ -34,12 +34,16 @@ func InitDialogConnIssues(w fyne.Window, err error, opt *options.Options) *Dialo
 	d.LabelTechnicalErrMsg = widget.NewLabel(err.Error())
 	d.LabelTechnicalErrMsg.Selectable = true
 	d.LabelTechnicalErrMsg.Importance = widget.LowImportance
+    d.LabelTechnicalErrMsg.Wrapping = fyne.TextWrapWord
 	// add then to a new vbox
 	d.ContentBase = container.NewVBox(d.LabelUXErrMsg, d.LabelTechnicalErrMsg)
 
 	// Create a dialog with the vbox as the content
 	d.Dialog =
         dialog.NewCustom(opt.GUIText.DialogConnIssues.Title, "", d.ContentBase, w)
+
+    //d.Dialog.SetButtons([]fyne.CanvasObject{})
+
 	// Resize to default dialog size and show the dialog
 	d.Dialog.Resize(fyne.NewSize(opt.GUI.DialogConnIssues.Size[0], opt.GUI.DialogConnIssues.Size[1]))
 	d.Dialog.Show()
