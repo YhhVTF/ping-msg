@@ -6,6 +6,7 @@ import (
     "fyne.io/fyne/v2/dialog"
     "fyne.io/fyne/v2/widget"
 
+    "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
@@ -22,7 +23,7 @@ type DialogLogin struct {
 }
 
 func InitDialogLogin(
-    w fyne.Window, u *user.UserCache, opt *options.Options,
+    w fyne.Window, s *screen.ScreenManager, u *user.UserCache, opt *options.Options,
 ) *DialogLogin {
 	log.Info.Printf("Creating Dialog Login\n")
 
@@ -47,13 +48,13 @@ func InitDialogLogin(
         }
         u.ThisUsername = d.Entry.Text
 
-        // Dismiss the dialog and set it as nil in the dialog table
+        // Dismiss the dialog and set it as nil
         d.Dialog.Dismiss()
         d.Dialog.Hide()
         d.Dialog = nil
 
-        // Set focus on message d.Entry now that dialog is dismissed
-        //w.Canvas().Focus(g.Widgets.EntryMessage)
+        // Set focus on message entry in chat screen now that dialog is dismissed
+        s.ScreenChatFocusDefault()
 
         log.Info.Printf("Username set as %s\n", u.ThisUsername)
         log.Info.Printf("Dialog Login dismissed\n")
@@ -82,7 +83,7 @@ func InitDialogLogin(
         d.Dialog = nil
 
         // Set focus on message d.Entry now that dialog is dismissed
-        //w.Canvas().Focus(g.Widgets.EntryMessage)
+        s.ScreenChatFocusDefault()
 
         log.Info.Printf("Username set as %s\n", u.ThisUsername)
 		log.Info.Printf("Dialog Login dismissed\n")

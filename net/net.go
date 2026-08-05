@@ -27,7 +27,8 @@ import (
 // starts the chat request/response loops.
 func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
 	fyne.DoAndWait(func() {
-        gui.Dialogs.Login = dialogs.InitDialogLogin(gui.Window, u, opt)
+        gui.Dialogs.Login =
+            dialogs.InitDialogLogin(gui.Window, gui.ScreenManager, u, opt)
     })
 	for gui.Dialogs.Login.Dialog != nil {
 		time.Sleep(10 * time.Millisecond)

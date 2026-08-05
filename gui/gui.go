@@ -65,6 +65,10 @@ func InitGUI(a fyne.App, u *user.UserCache, loadingWindow fyne.Window, opt *opti
 func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserCache, opt *options.Options) {
     for {
         switch <-s.Chan {
+        case screen.S_CHAT_FOCUS_DEFAULT:
+            fyne.Do(func() {
+                g.Window.Canvas().Focus(g.Chat.Widgets.EntryMessage)
+            })
         case screen.S_CHAT_FULL:
             log.Info.Printf("Opening chat screen on the main window\n")
 
