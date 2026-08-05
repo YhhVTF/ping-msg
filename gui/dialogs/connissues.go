@@ -42,7 +42,7 @@ func InitDialogConnIssues(w fyne.Window, err error, opt *options.Options) *Dialo
 	d.Dialog =
         dialog.NewCustom(opt.GUIText.DialogConnIssues.Title, "", d.ContentBase, w)
 
-    //d.Dialog.SetButtons([]fyne.CanvasObject{})
+    d.Dialog.SetButtons([]fyne.CanvasObject{})
 
 	// Resize to default dialog size and show the dialog
 	d.Dialog.Resize(fyne.NewSize(opt.GUI.DialogConnIssues.Size[0], opt.GUI.DialogConnIssues.Size[1]))
