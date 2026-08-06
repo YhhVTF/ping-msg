@@ -9,6 +9,7 @@ import (
 
 	"fmt"
 	"image/color"
+    "io"
 
     "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/log"
@@ -37,6 +38,8 @@ type ScreenChat struct {
 	Widgets             WidgetTableChat
     // The main window
     Window              fyne.Window
+    // Readers for files to be attached to the next message sent
+    Attachments         []io.Reader
 	OutgoingMessages    chan prot.ChatRequest // Connects to net.go
     // IDs of messages that the next message sent will reply to
     ReplyingTo          []int

@@ -9,7 +9,7 @@ import (
     "github.com/YhhVTF/ping-msg/opt"
 )
 
-func buttonAttachOnPressed(w fyne.Window) {
+func buttonAttachOnPressed(g *ScreenChat) {
     log.Info.Printf("Creating fyne default open file picker dialog\n")
 
     filePicker := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
@@ -17,7 +17,10 @@ func buttonAttachOnPressed(w fyne.Window) {
             log.Error.Printf("Failed to open file: %s\n", err)
             return
         }
-    }, w)
+        g.Attachments = append(g.Attachments, reader)
+
+        log.Info.Printf("%d files attached\n", len(g.Attachments))
+    }, g.Window)
     filePicker.Show()
 }
 
@@ -27,7 +30,7 @@ func createButtonAttach(g *ScreenChat, opt *options.Options) *widget.Button {
         log.Info.Printf("Widget ButtonAttach pressed\n")
         defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-        buttonAttachOnPressed(g.Window)
+        buttonAttachOnPressed(g)
     })
     return button
 }
