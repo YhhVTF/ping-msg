@@ -4,6 +4,7 @@ import (
     "fyne.io/fyne/v2"
     "fyne.io/fyne/v2/container"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/chat"
     "github.com/YhhVTF/ping-msg/gui/dialogs"
     "github.com/YhhVTF/ping-msg/gui/options"
@@ -32,14 +33,18 @@ type GUI struct {
 // Parameters:
 //
 //	a (fyne.App) - The fyne application the window will be initialized in
-//  u (*user.UserCache) - log.Information pertaining to users
+//  cChat (map[int]*chat.ChatCache) - Information and cache pertaining to chats
+//  u (*user.UserCache) - Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
 //  opt (*options.Options) - Options/settings
 //
 // Returns:
 //
 //	*GUI - The main window and all its objects
-func InitGUI(a fyne.App, u *user.UserCache, loadingWindow fyne.Window, opt *options.Options) *GUI {
+func InitGUI(
+    a fyne.App, cCache map[int]*chat.ChatCache,
+    u *user.UserCache, loadingWindow fyne.Window, opt *options.Options,
+) *GUI {
 	log.Info.Printf("Creating GUI\n")
 
 	g := &GUI{}

@@ -8,13 +8,6 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-// Messages from chats that aren't currently shown are stored here
-type ChatCache struct {
-	// Key (int) - Chat ID
-	// Val ([]MessageRaw) - List of cached messages from that chat
-	CachedMessages map[int][]prot.MessageRaw
-}
-
 // Wrapper struct containing all containers that compose the chat section of the screen
 type Chat struct {
 	// Base container of the chat section, is a stack to allow children to fill all avaliable space

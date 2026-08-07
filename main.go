@@ -8,6 +8,7 @@ import (
 
 	"os"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/net"
@@ -23,9 +24,14 @@ import (
 //  opt (*options.Options) - options/settings
 func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
     u := &user.UserCache{Users: make(map[int]user.User)}
+    // Cache and data for each loaded chat
+    //  Key (int) - Chat ID
+    //  Val (*chat.ChatCache) - Chat cache and data
+    cCache := make(map[int]*chat.ChatCache)
+    cCache[1] = chat.InitChatCache()
 
     var g *gui.GUI
-    fyne.DoAndWait(func() { g = gui.InitGUI(a, u, loadingWindow, opt) })
+    fyne.DoAndWait(func() { g = gui.InitGUI(a, cCache, u, loadingWindow, opt) })
 
 	net.StartNet(g, u, opt)
 }
@@ -45,7 +51,6 @@ func main() {
         loadingWindow.Resize(fyne.NewSize(500, 500))
     })
     fyne.Do(loadingWindow.Show)
-    //fyne.Do(loadingWindow.SetMaster)
 
     opt, err := options.LoadOptions("options")
     if err != nil {
