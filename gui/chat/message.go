@@ -9,6 +9,8 @@ import (
     "slices"
     "time"
 
+    "github.com/YhhVTF/ping-msg/chat"
+    "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
@@ -67,7 +69,7 @@ func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) *Me
 
     // Add a reply button
     buttonReply := widget.NewButton("R", func() {
-        messageOnReply(g, msgRaw.ID)
+        messageOnReply(g, msgRaw.ID, ping.ChatCache)
     })
 
     // Add a copy button
@@ -187,18 +189,18 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
     }
 }
 
-func messageOnReply(g *ScreenChat, msgID int) {
+func messageOnReply(g *ScreenChat, msgID int, c *chat.ChatCache) {
     log.Info.Printf("Reply button on message %d pressed\n", msgID)
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    // Add the message ID to g.ReplyingTo if it isn't already there or remove it from there if it is
-    if slices.Contains(g.ReplyingTo, msgID) {
-        i := slices.Index(g.ReplyingTo, msgID)
-        g.ReplyingTo = slices.Delete(g.ReplyingTo, i, i+1)
+    // Add the message ID to c.ThisChat.ReplyingTo if it isn't already there or remove it from there if it is
+    if slices.Contains(c.ThisChat.ReplyingTo, msgID) {
+        i := slices.Index(c.ThisChat.ReplyingTo, msgID)
+        c.ThisChat.ReplyingTo = slices.Delete(c.ThisChat.ReplyingTo, i, i+1)
     } else {
-        g.ReplyingTo = append(g.ReplyingTo, msgID)
+        c.ThisChat.ReplyingTo = append(c.ThisChat.ReplyingTo, msgID)
     }
 
-    log.Info.Printf("The next message sent will reply to messages %d\n", g.ReplyingTo)
+    log.Info.Printf("The next message sent will reply to messages %d\n", c.ThisChat.ReplyingTo)
 }

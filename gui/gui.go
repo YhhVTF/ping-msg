@@ -5,6 +5,7 @@ import (
     "fyne.io/fyne/v2/container"
 
     "github.com/YhhVTF/ping-msg/chat"
+    "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/gui/chat"
     "github.com/YhhVTF/ping-msg/gui/dialogs"
     "github.com/YhhVTF/ping-msg/gui/options"
@@ -33,7 +34,6 @@ type GUI struct {
 // Parameters:
 //
 //	a (fyne.App) - The fyne application the window will be initialized in
-//  cChat (map[int]*chat.ChatCache) - Information and cache pertaining to chats
 //  u (*user.UserCache) - Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
 //  opt (*options.Options) - Options/settings
@@ -42,8 +42,7 @@ type GUI struct {
 //
 //	*GUI - The main window and all its objects
 func InitGUI(
-    a fyne.App, cCache map[int]*chat.ChatCache,
-    u *user.UserCache, loadingWindow fyne.Window, opt *options.Options,
+    a fyne.App, u *user.UserCache, loadingWindow fyne.Window, opt *options.Options,
 ) *GUI {
 	log.Info.Printf("Creating GUI\n")
 
@@ -55,6 +54,9 @@ func InitGUI(
     // Start screen management
     g.ScreenManager = screen.NewScreenManager()
     go g.manageScreens(g.ScreenManager, u, opt)
+
+    ping.ChatCache.Chats[1] = chat.NewChatCache()
+    ping.ChatCache.ThisChat = ping.ChatCache.Chats[1]
 
     // Initialize chat screen
     g.ScreenManager.ScreenChatFull()

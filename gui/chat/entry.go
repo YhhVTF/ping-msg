@@ -3,6 +3,7 @@ package schat
 import (
     "fyne.io/fyne/v2/widget"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
@@ -10,7 +11,7 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-func entryMessageOnSubmitted(g *ScreenChat, text string, u *user.UserCache) {
+func entryMessageOnSubmitted(g *ScreenChat, text string, c *chat.ChatCache, u *user.UserCache) {
 	log.Info.Printf("Widget EntryMessage submitted (%s)\n", text)
 
     // If there's no text in the entry or Ping isn't connected to the server, don't continue
@@ -21,7 +22,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, u *user.UserCache) {
 		ChatID:         1,
 		MessageContent: text,
 		MessageID:      prot.NONE_INT,
-        RepliedIDs:     g.ReplyingTo,
+        RepliedIDs:     c.ThisChat.ReplyingTo,
 		Type:           prot.REQ_ADD,
 		UserID:         u.ThisUserID,
 	}
@@ -30,7 +31,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, u *user.UserCache) {
     // Clear the entry
 	g.Widgets.EntryMessage.SetText("")
     // Reset ScreenChat.ReplyingTo
-    g.ReplyingTo = make([]int, 0)
+    c.ThisChat.ReplyingTo = make([]int, 0)
 }
 
 func createEntryMessage(g *ScreenChat, u *user.UserCache, opt *options.Options) *widget.Entry {
@@ -38,7 +39,7 @@ func createEntryMessage(g *ScreenChat, u *user.UserCache, opt *options.Options) 
     entry := widget.NewEntry()
 	entry.PlaceHolder = opt.GUIText.EntryMessage.Label
 	entry.OnSubmitted = func(text string) {
-        entryMessageOnSubmitted(g, text, u)
+        entryMessageOnSubmitted(g, text, ping.ChatCache, u)
 	}
     return entry
 }

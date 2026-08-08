@@ -9,7 +9,6 @@ import (
 
 	"fmt"
 	"image/color"
-    "io"
 
     "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/log"
@@ -32,17 +31,14 @@ type ContainerTableChat struct {
 
 // A collection of all GUI elements to be used chat screen
 type ScreenChat struct {
+    ChatID              int
 	// All containers
 	Containers          ContainerTableChat
 	// All widgets
 	Widgets             WidgetTableChat
     // The main window
     Window              fyne.Window
-    // Readers for files to be attached to the next message sent
-    Attachments         []io.Reader
 	OutgoingMessages    chan prot.ChatRequest // Connects to net.go
-    // IDs of messages that the next message sent will reply to
-    ReplyingTo          []int
 }
 
 // All widgets to be used by the chat screen
@@ -72,7 +68,6 @@ func InitScreenChat(
     g.Window = w
 
 	g.OutgoingMessages = make(chan prot.ChatRequest)
-    g.ReplyingTo = make([]int, 0)
 
     g.Widgets.Messages = make(map[int]*Message)
     g.Widgets.RepliedMessages = make(map[int]*RepliedMessage)

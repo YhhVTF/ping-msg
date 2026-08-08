@@ -7,7 +7,7 @@ import (
 )
 
 // Cache and data for a chat
-type ChatCache struct {
+type Chat struct {
     // Readers for files to be attached to the next message the client sends in this chat
     Attachments []io.Reader
     // Data for each message in the chat
@@ -21,8 +21,17 @@ type ChatCache struct {
     ReplyingTo  []int
 }
 
-func InitChatCache() *ChatCache {
-    return &ChatCache{
+type ChatCache struct {
+    // Cache and data for each loaded chat
+    //  Key (int) - Chat ID
+    //  Val (*Chat) - Chat cache and data
+    Chats       map[int]*Chat
+    // Cache and data for chat currently shown on screen, is null if there is no chat on screen
+    ThisChat    *Chat
+}
+
+func NewChatCache() *Chat {
+    return &Chat{
         Attachments:    make([]io.Reader, 0),
         Messages:       make(map[int]*prot.MessageRaw),
         ReplyingTo:     make([]int, 0),

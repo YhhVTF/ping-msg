@@ -3,6 +3,7 @@ package schat
 import (
     "fyne.io/fyne/v2/widget"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
@@ -10,7 +11,7 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
-func buttonSendOnPressed(g *ScreenChat, u *user.UserCache) {
+func buttonSendOnPressed(g *ScreenChat, c *chat.ChatCache, u *user.UserCache) {
 	log.Info.Printf("Widget ButtonSend pressed\n")
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
@@ -24,7 +25,7 @@ func buttonSendOnPressed(g *ScreenChat, u *user.UserCache) {
 		ChatID:         1,
 		MessageContent: text,
 		MessageID:      prot.NONE_INT,
-        RepliedIDs:     g.ReplyingTo,
+        RepliedIDs:     c.ThisChat.ReplyingTo,
 		Type:           prot.REQ_ADD,
 		UserID:         u.ThisUserID,
 	}
@@ -33,13 +34,13 @@ func buttonSendOnPressed(g *ScreenChat, u *user.UserCache) {
     // Clear the text in the message entry
 	g.Widgets.EntryMessage.SetText("")
     // Reset ScreenChat.ReplyingTo
-    g.ReplyingTo = make([]int, 0)
+    c.ThisChat.ReplyingTo = make([]int, 0)
 }
 
 func createButtonSend(g *ScreenChat, u *user.UserCache, opt *options.Options) *widget.Button {
 	// Initialize send button
     button := widget.NewButton(opt.GUIText.ButtonSend.Label, func() {
-        buttonSendOnPressed(g, u)
+        buttonSendOnPressed(g, ping.ChatCache, u)
 	})
     // Set importance to high
     button.Importance = widget.HighImportance
