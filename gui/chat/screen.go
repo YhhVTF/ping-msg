@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"image/color"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
@@ -60,7 +61,8 @@ type WidgetTableChat struct {
 }
 
 func InitScreenChat(
-    s *screen.ScreenManager, w fyne.Window, u *user.UserCache, opt *options.Options,
+    s *screen.ScreenManager, w fyne.Window, 
+    c *chat.ChatCache, u *user.UserCache, opt *options.Options,
 ) *ScreenChat {
 	log.Info.Printf("Initializing chat screen\n")
 

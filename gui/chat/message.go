@@ -38,7 +38,7 @@ type Message struct {
 // messageUsername returns the best available display name for a message.
 // MessageRaw identifies senders by UserID; usernames are held separately in
 // the local user cache.
-func messageUsername(msgRaw prot.MessageRaw, u *user.UserCache) string {
+func messageUsername(msgRaw *prot.MessageRaw, u *user.UserCache) string {
     if u != nil {
         if msgRaw.UserID == u.ThisUserID && u.ThisUsername != "" {
             return u.ThisUsername
@@ -51,14 +51,14 @@ func messageUsername(msgRaw prot.MessageRaw, u *user.UserCache) string {
     return fmt.Sprintf("User %d", msgRaw.UserID)
 }
 
-func createMessage(g *ScreenChat, msgRaw prot.MessageRaw, u *user.UserCache) *Message {
+func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, u *user.UserCache) *Message {
     log.Info.Printf("Creating new message widget\n")
 
     msg := &Message{}
 
     if len(msgRaw.RepliedIDs) > 0 {
         // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
-        msg.RepliedSection = createRepliedSection(g, &msgRaw)
+        msg.RepliedSection = createRepliedSection(g, msgRaw)
     }
 
     msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
