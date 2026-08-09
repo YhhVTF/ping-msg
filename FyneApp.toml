@@ -1,0 +1,8 @@
+Website = "ping.da5h1n.uk"
+
+[Details]
+Icon = "assets/icons/ping.png"
+Name = "Ping"
+ID = "org.interface{}.ping"
+Version = "0.3.0"
+Build = 2
