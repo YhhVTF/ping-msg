@@ -10,7 +10,9 @@ import (
     "fmt"
     "image/color"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/user"
 )
 
 // A widget representing a reply to a message. Is a component of Message widgets that reply to other messages
@@ -21,25 +23,28 @@ type RepliedMessage struct {
     Text        *canvas.Text
 }
 
-func createRepliedMessage(g *ScreenChat, msgID int) *RepliedMessage {
-    log.Info.Printf("Creating replied message widget for message %d\n", msgID)
+func createRepliedMessage(
+    g *ScreenChat, repliedMsg *chat.RepliedMessage, u *user.UserCache,
+) *RepliedMessage {
+    log.Info.Printf("Creating replied message widget for message %d\n", repliedMsg.ID)
 
-    repliedMsg := &RepliedMessage{}
-    repliedMsg.MessageID = msgID
+    repliedMsgWidget := &RepliedMessage{}
+    repliedMsgWidget.MessageID = repliedMsg.ID
 
-    msg, exists := g.Widgets.Messages[msgID]
     var repliedText string
-    if !exists {
+    if repliedMsg.Message == nil {
         repliedText = "Message could not be loaded"
     } else {
-        repliedText = 
-            fmt.Sprintf("%s: %s", msg.Username.Text, msg.Content.Text)
+        repliedText = fmt.Sprintf("%s: %s", 
+            u.Users[repliedMsg.Message.UserID].Username,
+            repliedMsg.Message.Content,
+        )
     }
 
-    repliedMsg.Icon = widget.NewIcon(theme.Current().Icon(theme.IconNameMailReply))
-    repliedMsg.Text = canvas.NewText(repliedText, color.NRGBA{ 255, 255, 255, 255 })
+    repliedMsgWidget.Icon = widget.NewIcon(theme.Current().Icon(theme.IconNameMailReply))
+    repliedMsgWidget.Text = canvas.NewText(repliedText, color.NRGBA{ 255, 255, 255, 255 })
 
-    repliedMsg.Base = container.NewHBox(repliedMsg.Icon, repliedMsg.Text)
+    repliedMsgWidget.Base = container.NewHBox(repliedMsgWidget.Icon, repliedMsgWidget.Text)
 
-    return repliedMsg
+    return repliedMsgWidget
 }

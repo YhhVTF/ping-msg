@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -38,28 +39,47 @@ func NewChat() Chat {
 	return c
 }
 
-func (g *ScreenChat) RespAdd(r *prot.ChatResponse, u *user.UserCache) {
+func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
     for _, msg := range r.Messages {
-        msgWidget := createMessage(g, msg, u)
-        g.Widgets.Messages[msg.ID] = msgWidget
-        g.Containers.Chat.VBox.Add(msgWidget.Base)
+        // Update chat cache with the data from the new message
+        c.Chats[r.ChatID].Messages[msg.ID] = &msg
+        if len(msg.RepliedIDs) != 0 {
+            c.Chats[r.ChatID].RepliedMessages.NewReply(c.Chats[r.ChatID], msg.ID, msg.RepliedIDs, nil)
+        }
+
+        // Create new message widget if the chat involved is currently on screen
+        if r.ChatID == c.ThisChat.Metadata.ID {
+            msgWidget := createMessage(g, c.Chats[r.ChatID].Messages[msg.ID], u)
+            g.Widgets.Messages[msg.ID] = msgWidget
+            g.Containers.Chat.VBox.Add(msgWidget.Base)
+
+            g.Containers.Chat.VBox.Refresh()
+            g.Containers.Chat.VScroll.ScrollToBottom()
+        }
     }
-    g.Containers.Chat.VBox.Refresh()
-    g.Containers.Chat.VScroll.ScrollToBottom()
 }
 
-func (g *ScreenChat) RespDel(r *prot.ChatResponse) {
+func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache) {
     if _, exists := g.Widgets.Messages[r.MessageID]; exists {
-        g.Widgets.Messages[r.MessageID].Base.Hide()
-        delete(g.Widgets.Messages, r.MessageID)
-        g.Containers.Chat.VScroll.Refresh()
+        if r.ChatID == c.ThisChat.Metadata.ID {
+            g.Widgets.Messages[r.MessageID].Base.Hide()
+            delete(g.Widgets.Messages, r.MessageID)
+            g.Containers.Chat.VScroll.Refresh()
+
+            g.Widgets.RepliedMessages[r.MessageID].Text.Text = "Message deleted"
+        }
+        delete(c.ThisChat.Messages, r.MessageID)
     }
 }
 
-func (g *ScreenChat) RespEdit(r *prot.ChatResponse) {
-    if _, exists := g.Widgets.Messages[r.MessageID]; exists {
-        g.Widgets.Messages[r.MessageID].Content.Text =
-        r.Messages[0].Content
-        g.Widgets.Messages[r.MessageID].Content.Refresh()
+func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache) {
+    if _, exists := c.Chats[r.ChatID].Messages[r.MessageID]; exists {
+        // Set the content of the message in cache to the new content
+        c.Chats[r.ChatID].Messages[r.MessageID].Content = r.Messages[0].Content
+
+        // Refresh content label of corresponding message widget if the chat the response was for is the one currently on screen
+        if r.ChatID == c.ThisChat.Metadata.ID {
+            g.Widgets.Messages[r.MessageID].Content.Refresh()
+        }
     }
 }

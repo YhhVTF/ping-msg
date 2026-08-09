@@ -155,11 +155,11 @@ func serverRecieve(decoder *json.Decoder, gui *gui.GUI, u *user.UserCache, signa
 
 		switch resp.Type {
 		case prot.REQ_ADD:
-			fyne.Do(func() { gui.Chat.RespAdd(&resp, u) })
+			fyne.Do(func() { gui.Chat.RespAdd(&resp, ping.ChatCache, u) })
 		case prot.REQ_DEL:
-			fyne.Do(func() { gui.Chat.RespDel(&resp) })
+			fyne.Do(func() { gui.Chat.RespDel(&resp, ping.ChatCache) })
 		case prot.REQ_EDIT:
-			fyne.Do(func() { gui.Chat.RespEdit(&resp) })
+			fyne.Do(func() { gui.Chat.RespEdit(&resp, ping.ChatCache) })
 		}
 	}
 }

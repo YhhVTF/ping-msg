@@ -81,7 +81,7 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserCache, opt *opt
 
             fyne.Do(func() {
                 // Initialize the chat screen
-                g.Chat = schat.InitScreenChat(s, g.Window, u, opt)
+                g.Chat = schat.InitScreenChat(s, g.Window, ping.ChatCache, u, opt)
 	            // Set window content as the base container of the chat screen
                 g.Window.SetContent(g.Chat.Containers.Base)
             })

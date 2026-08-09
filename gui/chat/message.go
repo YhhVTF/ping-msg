@@ -3,6 +3,7 @@ package schat
 import (
     "fyne.io/fyne/v2"
     "fyne.io/fyne/v2/container"
+    "fyne.io/fyne/v2/data/binding"
     "fyne.io/fyne/v2/widget"
 
     "fmt"
@@ -58,7 +59,7 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, u *user.UserCache) *M
 
     if len(msgRaw.RepliedIDs) > 0 {
         // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
-        msg.RepliedSection = createRepliedSection(g, msgRaw)
+        msg.RepliedSection = createRepliedSection(g, ping.ChatCache.ThisChat.RepliedMessages.RepliedMessagesByReplies[msgRaw.ID])
     }
 
     msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
@@ -105,6 +106,7 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, u *user.UserCache) *M
     msg.Border = container.NewBorder(nil, nil, msg.Username, c, nil)
 
     msg.Content = widget.NewLabel(msgRaw.Content)
+    msg.Content.Bind(binding.BindString(&msgRaw.Content))
     msg.Content.Wrapping = fyne.TextWrapWord
 
     msg.VBox = container.NewVBox(msg.Border, msg.Content)
@@ -119,15 +121,15 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, u *user.UserCache) *M
 	return msg
 }
 
-func createRepliedSection(g *ScreenChat, rawMsg *prot.MessageRaw) *fyne.Container {
+func createRepliedSection(g *ScreenChat, repliedMsgs []*chat.RepliedMessage) *fyne.Container {
     vbox := container.NewVBox()
 
     // Get the username and content of the messages being replied to via the messageids in rawMsg.RepliedMessages and add each one to the replied section
-    for _, repliedID := range rawMsg.RepliedIDs {
-        if _, exists := g.Widgets.RepliedMessages[repliedID]; !exists {
-            g.Widgets.RepliedMessages[repliedID] = createRepliedMessage(g, repliedID)
+    for _, repliedMsg := range repliedMsgs {
+        if _, exists := g.Widgets.RepliedMessages[repliedMsg.ID]; !exists {
+            g.Widgets.RepliedMessages[repliedMsg.ID] = createRepliedMessage(g, repliedMsg, ping.UserCache)
         }
-        vbox.Add(g.Widgets.RepliedMessages[repliedID].Base)
+        vbox.Add(g.Widgets.RepliedMessages[repliedMsg.ID].Base)
     }
     c := container.NewPadded(vbox)
     return c
