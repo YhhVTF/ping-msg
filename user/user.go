@@ -1,11 +1,21 @@
 package user
 
+import (
+    "fyne.io/fyne/v2/data/binding"
+)
+
 // Data of a user
 type User struct {
     Bio         string
     ID          int
     Pfp         []byte
     Username    string
+}
+
+// Bindings to data of a user
+type UserBind struct {
+    Pfp         binding.Bytes
+    Username    binding.String
 }
 
 // Data about the client's user and other user data received from the server
@@ -22,4 +32,6 @@ type UserCache struct {
     //  Key (int) - User ID
     //  Val (User) - User data
     Users           map[int]User
+    // Binding to cache of other users' data
+    UsersBind       map[int]UserBind
 }
