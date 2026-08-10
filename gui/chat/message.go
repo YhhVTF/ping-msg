@@ -13,6 +13,7 @@ import (
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -52,14 +53,14 @@ func messageUsername(msgRaw *prot.MessageRaw, u *user.UserCache) string {
     return fmt.Sprintf("User %d", msgRaw.UserID)
 }
 
-func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.String, chatCache *chat.Chat, u *user.UserCache) *Message {
+func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.String, chatCache *chat.Chat, u *user.UserCache, opt *options.Options) *Message {
     log.Info.Printf("Creating new message widget\n")
 
     msg := &Message{}
 
     if len(msgRaw.RepliedIDs) > 0 {
         // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
-        msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, chatCache)
+        msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, chatCache, opt)
     }
 
     msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
@@ -120,14 +121,16 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.Str
 	return msg
 }
 
-func createRepliedSection(g *ScreenChat, repliedIDs []int, chatCache *chat.Chat) *fyne.Container {
+func createRepliedSection(
+    g *ScreenChat, repliedIDs []int, chatCache *chat.Chat, opt *options.Options,
+) *fyne.Container {
     vbox := container.NewVBox()
 
     // Get the username and content of the messages being replied to via the messageids in rawMsg.RepliedMessages and add each one to the replied section
     for _, repliedID := range repliedIDs {
         if _, exists := g.Widgets.RepliedMessages[repliedID]; !exists {
             g.Widgets.RepliedMessages[repliedID] =
-                createRepliedMessage(g, chatCache.Messages[repliedID], ping.UserCache)
+                createRepliedMessage(chatCache.Messages[repliedID], ping.UserCache, opt)
         }
         vbox.Add(g.Widgets.RepliedMessages[repliedID].Base)
     }

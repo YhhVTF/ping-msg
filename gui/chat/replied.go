@@ -11,6 +11,7 @@ import (
     "image/color"
 
     "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -24,7 +25,7 @@ type RepliedMessage struct {
 }
 
 func createRepliedMessage(
-    g *ScreenChat, repliedMsg *prot.MessageRaw, u *user.UserCache,
+    repliedMsg *prot.MessageRaw, u *user.UserCache, opt *options.Options,
 ) *RepliedMessage {
     log.Info.Printf("Creating replied message widget for message %d\n", repliedMsg.ID)
 
@@ -33,7 +34,7 @@ func createRepliedMessage(
 
     var repliedText string
     if repliedMsg == nil {
-        repliedText = "Message could not be loaded"
+        repliedText = opt.GUIText.Greeting.PlaceholderUnloaded
     } else {
         repliedText = fmt.Sprintf("%s: %s", 
             u.Users[repliedMsg.UserID].Username,

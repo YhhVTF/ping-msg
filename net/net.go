@@ -56,7 +56,7 @@ func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
 					gui.Dialogs.ConnectionIssues = nil
 				}
 				connDone := make(chan bool)
-				go HandleServerCommunication(conn, decoder, gui, u, connDone)
+				go HandleServerCommunication(conn, decoder, gui, u, opt, connDone)
 				<-connDone
 				ping.Connected = false
 				log.Error.Printf("Connection lost. Reconnecting in 5 seconds...\n")
@@ -115,14 +115,14 @@ func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
 	return decoder, nil
 }
 
-func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GUI, u *user.UserCache, connDone chan bool) {
+func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GUI, u *user.UserCache, opt *options.Options, connDone chan bool) {
 	defer conn.Close()
 
 	done := make(chan struct{})
 	var once sync.Once
 	signalDone := func() { once.Do(func() { close(done) }) }
 
-	go serverRecieve(decoder, gui, u, signalDone)
+	go serverRecieve(decoder, gui, u, opt, signalDone)
 	go serverSend(conn, gui, done, signalDone)
 
 	<-done
@@ -138,7 +138,10 @@ func cacheUsers(u *user.UserCache, users []prot.User) {
 	}
 }
 
-func serverRecieve(decoder *json.Decoder, gui *gui.GUI, u *user.UserCache, signalDone func()) {
+func serverRecieve(
+    decoder *json.Decoder, gui *gui.GUI, u *user.UserCache,
+    opt *options.Options, signalDone func(),
+) {
 	for {
 		var resp prot.ChatResponse
 		if err := decoder.Decode(&resp); err != nil {
@@ -155,9 +158,9 @@ func serverRecieve(decoder *json.Decoder, gui *gui.GUI, u *user.UserCache, signa
 
 		switch resp.Type {
 		case prot.REQ_ADD:
-			fyne.Do(func() { gui.Chat.RespAdd(&resp, ping.ChatCache, u) })
+			fyne.Do(func() { gui.Chat.RespAdd(&resp, ping.ChatCache, u, opt) })
 		case prot.REQ_DEL:
-			fyne.Do(func() { gui.Chat.RespDel(&resp, ping.ChatCache) })
+			fyne.Do(func() { gui.Chat.RespDel(&resp, ping.ChatCache, opt) })
 		case prot.REQ_EDIT:
 			fyne.Do(func() { gui.Chat.RespEdit(&resp, ping.ChatCache, u) })
 		}

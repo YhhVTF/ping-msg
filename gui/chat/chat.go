@@ -9,6 +9,7 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -43,11 +44,13 @@ func NewChat() Chat {
 	return c
 }
 
-func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
+func (g *ScreenChat) RespAdd(
+    r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache, opt *options.Options,
+) {
     chatCache := c.Chats[r.ChatID]
 
     for _, msg := range r.Messages {
-        log.Info.Printf("Updating chat cache (%s)\n", r.Type)
+        log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
 
         // Update chat cache with the data from the new message
         chatCache.Messages[msg.ID] = &msg
@@ -57,7 +60,7 @@ func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.Us
         // Create new message widget if the chat involved is currently on screen
         if r.ChatID == c.ThisChat.Metadata.ID {
             msgWidget := createMessage(
-                g, msgCache, chatCache.MessagesBind[msg.ID], chatCache, u,
+                g, msgCache, chatCache.MessagesBind[msg.ID], chatCache, u, opt,
             )
             g.Widgets.Messages[msg.ID] = msgWidget
             g.Containers.Chat.VBox.Add(msgWidget.Base)
@@ -68,20 +71,20 @@ func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.Us
     }
 }
 
-func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache) {
+func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache, opt *options.Options) {
     // Delete corresponding message widget if it exists
     if msgWidget, exists := g.Widgets.Messages[r.MessageID]; exists &&
     r.ChatID == c.ThisChat.Metadata.ID {
         // Replace replied message widget text
         if repliedMsg, exists := g.Widgets.RepliedMessages[r.MessageID]; exists {
-            repliedMsg.Text.Text = "Message deleted"
+            repliedMsg.Text.Text = opt.GUIText.Greeting.PlaceholderDeleted
         }
         // Deallocate message widget
         msgWidget.Base.Hide()
         delete(g.Widgets.Messages, r.MessageID)
         g.Containers.Chat.VScroll.Refresh()
     }
-    log.Info.Printf("Updating chat cache (%s)\n", r.Type)
+    log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
     // Delete message in cache
     chatCache := c.Chats[r.ChatID]
     delete(chatCache.MessagesBind, r.MessageID)
@@ -89,7 +92,7 @@ func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache) {
 }
 
 func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
-    log.Info.Printf("Updating chat cache (%s)\n", r.Type)
+    log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
     // Edit message in cache
     chatCache := c.Chats[r.ChatID]
     chatCache.MessagesBind[r.MessageID].Set(r.Messages[0].Content)

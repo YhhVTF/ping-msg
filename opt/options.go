@@ -44,9 +44,15 @@ type GUITextOptions struct {
     DialogLoginAltPrompt    string              `json:"dialog_login_altprompt"`
     EntryMessage            EntryTextOptions    `json:"entry_message"`
     EntryUsername           EntryTextOptions    `json:"entry_username"`
+    Greeting                GreetingTextOptions `json:"greeting"`
     OptionCardLanguage      CardTextOptions     `json:"optioncard_language"`
     Window                  WindowTextOptions   `json:"window"`
     WindowOptions           WindowTextOptions   `json:"window_options"`
+}
+
+type GreetingTextOptions struct {
+    PlaceholderDeleted  string  `json:"placeholder_deleted"`
+    PlaceholderUnloaded string  `json:"placeholder_noload"`
 }
 
 type GUIOptions struct {
