@@ -49,8 +49,8 @@ func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.Us
         // Update chat cache with the data from the new message
         chatCache.Messages[msg.ID] = &msg
         msgCache := chatCache.Messages[msg.ID]
-
         chatCache.MessagesBind[msg.ID] = binding.BindString(&msgCache.Content)
+
         if len(msg.RepliedIDs) != 0 {
             chatCache.NewReply(msg.ID, msg.RepliedIDs)
         }
