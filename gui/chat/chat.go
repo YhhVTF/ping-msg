@@ -8,6 +8,7 @@ import (
     "fmt"
 
     "github.com/YhhVTF/ping-msg/chat"
+    "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -46,6 +47,8 @@ func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.Us
     chatCache := c.Chats[r.ChatID]
 
     for _, msg := range r.Messages {
+        log.Info.Printf("Updating chat cache (%s)\n", r.Type)
+
         // Update chat cache with the data from the new message
         chatCache.Messages[msg.ID] = &msg
         msgCache := chatCache.Messages[msg.ID]
@@ -78,29 +81,15 @@ func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache) {
         delete(g.Widgets.Messages, r.MessageID)
         g.Containers.Chat.VScroll.Refresh()
     }
+    log.Info.Printf("Updating chat cache (%s)\n", r.Type)
     // Delete message in cache
     chatCache := c.Chats[r.ChatID]
     delete(chatCache.MessagesBind, r.MessageID)
     delete(chatCache.Messages, r.MessageID)
-    //// If message is not cached...
-    //if msgWidget, exists := g.Widgets.Messages[r.MessageID]; exists &&
-    //r.ChatID == c.ThisChat.Metadata.ID {
-    //    // Replace replied message widget text
-    //    if repliedMsg, exists := g.Widgets.RepliedMessages[r.MessageID]; exists {
-    //        repliedMsg.Text.Text = "Message deleted"
-    //    }
-    //    // Deallocate message widget
-    //    msgWidget.Base.Hide()
-    //    delete(g.Widgets.Messages, r.MessageID)
-    //    g.Containers.Chat.VScroll.Refresh()
-    //// If message is cached...
-    //} else if _, exists := c.Chats[r.ChatID].Messages[r.MessageID]; exists {
-    //    // Delete message in cache
-    //    delete(c.Chats[r.ChatID].Messages, r.MessageID)
-    //}
 }
 
 func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
+    log.Info.Printf("Updating chat cache (%s)\n", r.Type)
     // Edit message in cache
     chatCache := c.Chats[r.ChatID]
     chatCache.MessagesBind[r.MessageID].Set(r.Messages[0].Content)
@@ -110,18 +99,4 @@ func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.U
     r.ChatID == c.ThisChat.Metadata.ID {
         repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[r.Messages[0].UserID].Username, chatCache.Messages[r.MessageID].Content)
     }
-
-    //// If the message to be edited has an initialized corresponding widget, edit the widget, if the message widget is not initialized, edit the message cache, if the message is not loaded in any form, do nothing
-    //if msgWidget, exists := g.Widgets.Messages[r.MessageID]; exists &&
-    //r.ChatID == c.ThisChat.Metadata.ID {
-    //    msgWidget.Content.SetText(r.Messages[0].Content)
-    //    msgWidget.Content.Refresh()
-//
-    //    if repliedMsgWidget, exists := g.Widgets.RepliedMessages[r.MessageID]; exists {
-    //        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[
-    //    }
-    //} else if msg, exists := c.Chats[r.ChatID].Messages[r.MessageID]; exists {
-    //    // Set the content of the message in cache to the new content
-    //    msg.Content = r.Messages[0].Content
-    //}
 }
