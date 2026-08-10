@@ -33,7 +33,7 @@ func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
 
     var g *gui.GUI
     fyne.DoAndWait(func() {
-        g = gui.InitGUI(a, ping.UserCache, loadingWindow, opt)
+        g = gui.InitGUI(a, ping.ChatCache, ping.UserCache, loadingWindow, opt)
     })
 
 	net.StartNet(g, ping.UserCache, opt)

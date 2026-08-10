@@ -5,7 +5,6 @@ import (
     "fyne.io/fyne/v2/container"
 
     "github.com/YhhVTF/ping-msg/chat"
-    "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/gui/chat"
     "github.com/YhhVTF/ping-msg/gui/dialogs"
     "github.com/YhhVTF/ping-msg/gui/options"
@@ -34,6 +33,7 @@ type GUI struct {
 // Parameters:
 //
 //	a (fyne.App) - The fyne application the window will be initialized in
+//  c (*chat.ChatCache) - Data/cache for chats
 //  u (*user.UserCache) - Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
 //  opt (*options.Options) - Options/settings
@@ -42,7 +42,8 @@ type GUI struct {
 //
 //	*GUI - The main window and all its objects
 func InitGUI(
-    a fyne.App, u *user.UserCache, loadingWindow fyne.Window, opt *options.Options,
+    a fyne.App, c *chat.ChatCache,
+    u *user.UserCache, loadingWindow fyne.Window, opt *options.Options,
 ) *GUI {
 	log.Info.Printf("Creating GUI\n")
 
@@ -53,10 +54,10 @@ func InitGUI(
 
     // Start screen management
     g.ScreenManager = screen.NewScreenManager()
-    go g.manageScreens(g.ScreenManager, u, opt)
+    go g.manageScreens(g.ScreenManager, c, u, opt)
 
-    ping.ChatCache.Chats[1] = chat.NewChatCache()
-    ping.ChatCache.ThisChat = ping.ChatCache.Chats[1]
+    c.Chats[1] = chat.NewChatCache()
+    c.ThisChat = c.Chats[1]
 
     // Initialize chat screen
     g.ScreenManager.ScreenChatFull()
@@ -69,7 +70,7 @@ func InitGUI(
     return g
 }
 
-func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserCache, opt *options.Options) {
+func (g *GUI) manageScreens(s *screen.ScreenManager, c *chat.ChatCache, u *user.UserCache, opt *options.Options) {
     for {
         switch <-s.Chan {
         case screen.S_CHAT_FOCUS_DEFAULT:
@@ -81,7 +82,7 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, u *user.UserCache, opt *opt
 
             fyne.Do(func() {
                 // Initialize the chat screen
-                g.Chat = schat.InitScreenChat(s, g.Window, ping.ChatCache, u, opt)
+                g.Chat = schat.InitScreenChat(s, g.Window, c, u, opt)
 	            // Set window content as the base container of the chat screen
                 g.Window.SetContent(g.Chat.Containers.Base)
             })

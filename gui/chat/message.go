@@ -52,14 +52,14 @@ func messageUsername(msgRaw *prot.MessageRaw, u *user.UserCache) string {
     return fmt.Sprintf("User %d", msgRaw.UserID)
 }
 
-func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.String, u *user.UserCache) *Message {
+func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.String, chatCache *chat.Chat, u *user.UserCache) *Message {
     log.Info.Printf("Creating new message widget\n")
 
     msg := &Message{}
 
     if len(msgRaw.RepliedIDs) > 0 {
         // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
-        msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, ping.ChatCache.ThisChat)
+        msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, chatCache)
     }
 
     msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
@@ -70,7 +70,7 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.Str
 
     // Add a reply button
     buttonReply := widget.NewButton("R", func() {
-        messageOnReply(g, msgRaw.ID, ping.ChatCache)
+        messageOnReply(g, msgRaw.ID, chatCache)
     })
 
     // Add a copy button
@@ -191,18 +191,18 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
     }
 }
 
-func messageOnReply(g *ScreenChat, msgID int, c *chat.ChatCache) {
+func messageOnReply(g *ScreenChat, msgID int, chatCache *chat.Chat) {
     log.Info.Printf("Reply button on message %d pressed\n", msgID)
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    // Add the message ID to c.ThisChat.ReplyingTo if it isn't already there or remove it from there if it is
-    if slices.Contains(c.ThisChat.ReplyingTo, msgID) {
-        i := slices.Index(c.ThisChat.ReplyingTo, msgID)
-        c.ThisChat.ReplyingTo = slices.Delete(c.ThisChat.ReplyingTo, i, i+1)
+    // Add the message ID to chatCache.ReplyingTo if it isn't already there or remove it from there if it is
+    if slices.Contains(chatCache.ReplyingTo, msgID) {
+        i := slices.Index(chatCache.ReplyingTo, msgID)
+        chatCache.ReplyingTo = slices.Delete(chatCache.ReplyingTo, i, i+1)
     } else {
-        c.ThisChat.ReplyingTo = append(c.ThisChat.ReplyingTo, msgID)
+        chatCache.ReplyingTo = append(chatCache.ReplyingTo, msgID)
     }
 
-    log.Info.Printf("The next message sent will reply to messages %d\n", c.ThisChat.ReplyingTo)
+    log.Info.Printf("The next message sent will reply to messages %d\n", chatCache.ReplyingTo)
 }
