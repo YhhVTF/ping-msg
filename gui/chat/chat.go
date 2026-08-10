@@ -5,6 +5,8 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/binding"
 
+    "fmt"
+
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
@@ -108,7 +110,7 @@ func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.U
     // Update replied message widget for message if there is one
     if repliedMsgWidget, exists := g.Widgets.RepliedMessages[r.MessageID]; exists &&
     r.ChatID == c.ThisChat.Metadata.ID {
-        repliedMsgWidget.Text.Text = "Message deleted"
+        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[r.Messages[0].UserID].Username, chatCache.Messages[r.MessageID].Content)
     }
 
     //// If the message to be edited has an initialized corresponding widget, edit the widget, if the message widget is not initialized, edit the message cache, if the message is not loaded in any form, do nothing
