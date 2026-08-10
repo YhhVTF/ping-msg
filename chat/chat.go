@@ -19,11 +19,6 @@ type Chat struct {
     MessagesBind    map[int]binding.String
     // Chat metadata
     Metadata        prot.ChatMetadata
-    //// Cache for the replied messages of each message replying to them, accessed with the ID of a message which replies to the replied message (holy friggie we need a naming convention for thissie T^T)
-    ////  Key (int) - ID of a replying message
-    ////  Val ([]*prot.MessageRaw) - Pointers to the messages being replied to by the replying message
-    //RepliedMessages map[int][]*prot.MessageRaw
-    // IDs of messages that the next message the client sends in this chat will reply to
     ReplyingTo      []int
 }
 
@@ -45,11 +40,3 @@ func NewChatCache() *Chat {
         ReplyingTo:         make([]int, 0),
     }
 }
-
-//func (c *Chat) NewReply(replyingID int, repliedIDs []int) {
-//    c.RepliedMessages[replyingID] = make([]*prot.MessageRaw, len(repliedIDs))
-//
-//    for i, repliedID := range repliedIDs {
-//        c.RepliedMessages[replyingID][i] = c.Messages[repliedID]
-//    }
-//}
