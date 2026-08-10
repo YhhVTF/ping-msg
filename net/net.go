@@ -159,7 +159,7 @@ func serverRecieve(decoder *json.Decoder, gui *gui.GUI, u *user.UserCache, signa
 		case prot.REQ_DEL:
 			fyne.Do(func() { gui.Chat.RespDel(&resp, ping.ChatCache) })
 		case prot.REQ_EDIT:
-			fyne.Do(func() { gui.Chat.RespEdit(&resp, ping.ChatCache) })
+			fyne.Do(func() { gui.Chat.RespEdit(&resp, ping.ChatCache, u) })
 		}
 	}
 }

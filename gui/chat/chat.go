@@ -3,6 +3,7 @@ package schat
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/protocol"
@@ -40,16 +41,21 @@ func NewChat() Chat {
 }
 
 func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
+    chatCache := c.Chats[r.ChatID]
+
     for _, msg := range r.Messages {
         // Update chat cache with the data from the new message
-        c.Chats[r.ChatID].Messages[msg.ID] = &msg
+        chatCache.Messages[msg.ID] = &msg
+        msgCache := chatCache.Messages[msg.ID]
+
+        chatCache.MessagesBind[msg.ID] = binding.BindString(&msgCache.Content)
         if len(msg.RepliedIDs) != 0 {
-            c.Chats[r.ChatID].RepliedMessages.NewReply(c.Chats[r.ChatID], msg.ID, msg.RepliedIDs, nil)
+            chatCache.NewReply(msg.ID, msg.RepliedIDs)
         }
 
         // Create new message widget if the chat involved is currently on screen
         if r.ChatID == c.ThisChat.Metadata.ID {
-            msgWidget := createMessage(g, c.Chats[r.ChatID].Messages[msg.ID], u)
+            msgWidget := createMessage(g, msgCache, chatCache.MessagesBind[msg.ID], u)
             g.Widgets.Messages[msg.ID] = msgWidget
             g.Containers.Chat.VBox.Add(msgWidget.Base)
 
@@ -60,26 +66,62 @@ func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.Us
 }
 
 func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache) {
-    if _, exists := g.Widgets.Messages[r.MessageID]; exists {
-        if r.ChatID == c.ThisChat.Metadata.ID {
-            g.Widgets.Messages[r.MessageID].Base.Hide()
-            delete(g.Widgets.Messages, r.MessageID)
-            g.Containers.Chat.VScroll.Refresh()
-
-            g.Widgets.RepliedMessages[r.MessageID].Text.Text = "Message deleted"
+    // Delete corresponding message widget if it exists
+    if msgWidget, exists := g.Widgets.Messages[r.MessageID]; exists &&
+    r.ChatID == c.ThisChat.Metadata.ID {
+        // Replace replied message widget text
+        if repliedMsg, exists := g.Widgets.RepliedMessages[r.MessageID]; exists {
+            repliedMsg.Text.Text = "Message deleted"
         }
-        delete(c.ThisChat.Messages, r.MessageID)
+        // Deallocate message widget
+        msgWidget.Base.Hide()
+        delete(g.Widgets.Messages, r.MessageID)
+        g.Containers.Chat.VScroll.Refresh()
     }
+    // Delete message in cache
+    chatCache := c.Chats[r.ChatID]
+    delete(chatCache.MessagesBind, r.MessageID)
+    delete(chatCache.Messages, r.MessageID)
+    //// If message is not cached...
+    //if msgWidget, exists := g.Widgets.Messages[r.MessageID]; exists &&
+    //r.ChatID == c.ThisChat.Metadata.ID {
+    //    // Replace replied message widget text
+    //    if repliedMsg, exists := g.Widgets.RepliedMessages[r.MessageID]; exists {
+    //        repliedMsg.Text.Text = "Message deleted"
+    //    }
+    //    // Deallocate message widget
+    //    msgWidget.Base.Hide()
+    //    delete(g.Widgets.Messages, r.MessageID)
+    //    g.Containers.Chat.VScroll.Refresh()
+    //// If message is cached...
+    //} else if _, exists := c.Chats[r.ChatID].Messages[r.MessageID]; exists {
+    //    // Delete message in cache
+    //    delete(c.Chats[r.ChatID].Messages, r.MessageID)
+    //}
 }
 
-func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache) {
-    if _, exists := c.Chats[r.ChatID].Messages[r.MessageID]; exists {
-        // Set the content of the message in cache to the new content
-        c.Chats[r.ChatID].Messages[r.MessageID].Content = r.Messages[0].Content
+func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
+    // Edit message in cache
+    chatCache := c.Chats[r.ChatID]
+    chatCache.MessagesBind[r.MessageID].Set(r.Messages[0].Content)
 
-        // Refresh content label of corresponding message widget if the chat the response was for is the one currently on screen
-        if r.ChatID == c.ThisChat.Metadata.ID {
-            g.Widgets.Messages[r.MessageID].Content.Refresh()
-        }
+    // Update replied message widget for message if there is one
+    if repliedMsgWidget, exists := g.Widgets.RepliedMessages[r.MessageID]; exists &&
+    r.ChatID == c.ThisChat.Metadata.ID {
+        repliedMsgWidget.Text.Text = "Message deleted"
     }
+
+    //// If the message to be edited has an initialized corresponding widget, edit the widget, if the message widget is not initialized, edit the message cache, if the message is not loaded in any form, do nothing
+    //if msgWidget, exists := g.Widgets.Messages[r.MessageID]; exists &&
+    //r.ChatID == c.ThisChat.Metadata.ID {
+    //    msgWidget.Content.SetText(r.Messages[0].Content)
+    //    msgWidget.Content.Refresh()
+//
+    //    if repliedMsgWidget, exists := g.Widgets.RepliedMessages[r.MessageID]; exists {
+    //        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[
+    //    }
+    //} else if msg, exists := c.Chats[r.ChatID].Messages[r.MessageID]; exists {
+    //    // Set the content of the message in cache to the new content
+    //    msg.Content = r.Messages[0].Content
+    //}
 }
