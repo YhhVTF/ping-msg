@@ -59,7 +59,7 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.Str
 
     if len(msgRaw.RepliedIDs) > 0 {
         // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
-        msg.RepliedSection = createRepliedSection(g, ping.ChatCache.ThisChat.RepliedMessages[msgRaw.ID])
+        msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, ping.ChatCache.ThisChat)
     }
 
     msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
@@ -120,15 +120,16 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.Str
 	return msg
 }
 
-func createRepliedSection(g *ScreenChat, repliedMsgs []*prot.MessageRaw) *fyne.Container {
+func createRepliedSection(g *ScreenChat, repliedIDs []int, chatCache *chat.Chat) *fyne.Container {
     vbox := container.NewVBox()
 
     // Get the username and content of the messages being replied to via the messageids in rawMsg.RepliedMessages and add each one to the replied section
-    for _, repliedMsg := range repliedMsgs {
-        if _, exists := g.Widgets.RepliedMessages[repliedMsg.ID]; !exists {
-            g.Widgets.RepliedMessages[repliedMsg.ID] = createRepliedMessage(g, repliedMsg, ping.UserCache)
+    for _, repliedID := range repliedIDs {
+        if _, exists := g.Widgets.RepliedMessages[repliedID]; !exists {
+            g.Widgets.RepliedMessages[repliedID] =
+                createRepliedMessage(g, chatCache.Messages[repliedID], ping.UserCache)
         }
-        vbox.Add(g.Widgets.RepliedMessages[repliedMsg.ID].Base)
+        vbox.Add(g.Widgets.RepliedMessages[repliedID].Base)
     }
     c := container.NewPadded(vbox)
     return c

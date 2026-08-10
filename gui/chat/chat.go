@@ -51,10 +51,6 @@ func (g *ScreenChat) RespAdd(r *prot.ChatResponse, c *chat.ChatCache, u *user.Us
         msgCache := chatCache.Messages[msg.ID]
         chatCache.MessagesBind[msg.ID] = binding.BindString(&msgCache.Content)
 
-        if len(msg.RepliedIDs) != 0 {
-            chatCache.NewReply(msg.ID, msg.RepliedIDs)
-        }
-
         // Create new message widget if the chat involved is currently on screen
         if r.ChatID == c.ThisChat.Metadata.ID {
             msgWidget := createMessage(g, msgCache, chatCache.MessagesBind[msg.ID], u)
