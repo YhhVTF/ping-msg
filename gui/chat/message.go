@@ -126,11 +126,11 @@ func createRepliedSection(
 ) *fyne.Container {
     vbox := container.NewVBox()
 
-    // Get the username and content of the messages being replied to via the messageids in rawMsg.RepliedMessages and add each one to the replied section
+    // Get the username and content of the messages being replied to, create a replied message widget for each one and add each one to the replied section
     for _, repliedID := range repliedIDs {
         if _, exists := g.Widgets.RepliedMessages[repliedID]; !exists {
             g.Widgets.RepliedMessages[repliedID] =
-                createRepliedMessage(chatCache.Messages[repliedID], ping.UserCache, opt)
+                createRepliedMessage(chatCache.Messages[repliedID], repliedID, ping.UserCache, opt)
         }
         vbox.Add(g.Widgets.RepliedMessages[repliedID].Base)
     }

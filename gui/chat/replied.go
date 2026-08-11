@@ -25,12 +25,12 @@ type RepliedMessage struct {
 }
 
 func createRepliedMessage(
-    repliedMsg *prot.MessageRaw, u *user.UserCache, opt *options.Options,
+    repliedMsg *prot.MessageRaw, repliedID int, u *user.UserCache, opt *options.Options,
 ) *RepliedMessage {
-    log.Info.Printf("Creating replied message widget for message %d\n", repliedMsg.ID)
+    log.Info.Printf("Creating replied message widget for message %d\n", repliedID)
 
     repliedMsgWidget := &RepliedMessage{}
-    repliedMsgWidget.MessageID = repliedMsg.ID
+    repliedMsgWidget.MessageID = repliedID
 
     var repliedText string
     if repliedMsg == nil {
