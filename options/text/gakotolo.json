@@ -16,10 +16,10 @@
     "entry_message": { "label": "Dotoz o hipilo" },
     "entry_username": { "label": "Dotoz o kosely" },
     "greeting": { 
-        "placeholder_deleted": "Message deleted",
-        "placeholder_noload": "Could not load message"
+        "placeholder_deleted": "greeting.placeholder_deleted",
+        "placeholder_noload": "greeting.placeholder_noload"
     },
-    "optioncard_language": { "subtitle": "Language" },
+    "optioncard_language": { "subtitle": "optioncard_language.subtitle" },
     "window": { "title": "Internetfhalo" },
     "window_options": { "title": "Ykil abulin" }
 }
