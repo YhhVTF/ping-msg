@@ -33,7 +33,7 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
 
     g.Widgets.ChatsList = widget.NewList(
         func() int {
-            return 78
+            return len(c.Chats)
         },
         func() fyne.CanvasObject {
             return createChatCardTemplate()
