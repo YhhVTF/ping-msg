@@ -9,12 +9,15 @@ import (
     "github.com/YhhVTF/ping-msg/gui/dialogs"
     "github.com/YhhVTF/ping-msg/gui/options"
     "github.com/YhhVTF/ping-msg/gui/screen"
+    "github.com/YhhVTF/ping-msg/gui/sidebar"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/user"
 )
 
 type GUI struct {
+    // Base container that splits the window into the sidebar and main screen
+    Base *container.Split
     // Chat screen
     Chat *schat.ScreenChat
     // All dialogs used by Ping
@@ -25,6 +28,8 @@ type GUI struct {
     Options *sopt.ScreenOptions
     // Manages screens
     ScreenManager *screen.ScreenManager
+    // Sidebar
+    Sidebar *sside.ScreenSidebar
     // The main window
     Window fyne.Window
 }
@@ -59,8 +64,16 @@ func InitGUI(
     c.Chats[1] = chat.NewChatCache()
     c.ThisChat = c.Chats[1]
 
+    // Initialize sidebar
+    g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager)
+    // Create split and add sidebar as the leading child
+    g.Base = container.NewHSplit(g.Sidebar.Base, container.NewStack())
+
     // Initialize chat screen
     g.ScreenManager.ScreenChatFull()
+
+    // Set window content as the split
+    g.Window.SetContent(g.Base)
 
 	// Close loading window, set the main window as master window and show it
 	loadingWindow.Close()
@@ -83,8 +96,8 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, c *chat.ChatCache, u *user.
             fyne.Do(func() {
                 // Initialize the chat screen
                 g.Chat = schat.InitScreenChat(s, g.Window, c, u, opt)
-	            // Set window content as the base container of the chat screen
-                g.Window.SetContent(g.Chat.Containers.Base)
+	            // Set trailing child of split as the base container of the chat screen
+                g.Base.Trailing.(*fyne.Container).Add(g.Chat.Containers.Base)
             })
 
         case screen.S_OPTIONS_FLOAT:
