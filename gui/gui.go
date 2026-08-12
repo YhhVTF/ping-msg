@@ -67,7 +67,6 @@ func InitGUI(
     g.OutgoingRequests = make(chan prot.ChatRequest)
 
     c.Chats[1] = chat.NewChatCache()
-    c.ThisChat = c.Chats[1]
 
     // Initialize sidebar
     log.Info.Printf("Initializing sidebar\n")

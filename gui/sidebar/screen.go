@@ -40,7 +40,7 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
             return createChatCardTemplate()
         },
         func(i widget.ListItemID, o fyne.CanvasObject) {
-            updateChatCard(o.(*widget.Card), c.Chats[1], s)
+            updateChatCard(o.(*widget.Card), c.Chats[1], c, s)
         },
     )
 
