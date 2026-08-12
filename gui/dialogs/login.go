@@ -82,9 +82,6 @@ func InitDialogLogin(
         d.Dialog.Hide()
         d.Dialog = nil
 
-        // Set focus on message d.Entry now that dialog is dismissed
-        s.ScreenChatFocusDefault()
-
         log.Info.Printf("Username set as %s\n", u.ThisUsername)
 		log.Info.Printf("Dialog Login dismissed\n")
     }

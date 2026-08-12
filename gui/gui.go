@@ -5,12 +5,14 @@ import (
     "fyne.io/fyne/v2/container"
 
     "github.com/YhhVTF/ping-msg/chat"
+    "github.com/YhhVTF/ping-msg/gui/blank"
     "github.com/YhhVTF/ping-msg/gui/chat"
     "github.com/YhhVTF/ping-msg/gui/dialogs"
     "github.com/YhhVTF/ping-msg/gui/options"
     "github.com/YhhVTF/ping-msg/gui/screen"
     "github.com/YhhVTF/ping-msg/gui/sidebar"
     "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -26,6 +28,7 @@ type GUI struct {
     InnerWindows *container.MultipleWindows
     // Options screen
     Options *sopt.ScreenOptions
+    OutgoingRequests chan prot.ChatRequest
     // Manages screens
     ScreenManager *screen.ScreenManager
     // Sidebar
@@ -61,6 +64,8 @@ func InitGUI(
     g.ScreenManager = screen.NewScreenManager()
     go g.manageScreens(g.ScreenManager, c, u, opt)
 
+    g.OutgoingRequests = make(chan prot.ChatRequest)
+
     c.Chats[1] = chat.NewChatCache()
     c.ThisChat = c.Chats[1]
 
@@ -68,10 +73,7 @@ func InitGUI(
     log.Info.Printf("Initializing sidebar\n")
     g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager, c)
     // Create split and add sidebar as the leading child
-    g.Base = container.NewHSplit(g.Sidebar.Base, container.NewStack())
-
-    // Initialize chat screen
-    g.ScreenManager.ScreenChatFull()
+    g.Base = container.NewHSplit(g.Sidebar.Base, container.NewStack(sblank.InitScreenBlank()))
 
     // Set window content as the split
     g.Window.SetContent(g.Base)
@@ -96,8 +98,10 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, c *chat.ChatCache, u *user.
 
             fyne.Do(func() {
                 // Initialize the chat screen
-                g.Chat = schat.InitScreenChat(s, g.Window, c, u, opt)
+                g.Chat =
+                    schat.InitScreenChat(s, g.Window, c, u, opt, g.OutgoingRequests)
 	            // Set trailing child of split as the base container of the chat screen
+                g.Base.Trailing.(*fyne.Container).Objects[0].Hide()
                 g.Base.Trailing.(*fyne.Container).Add(g.Chat.Containers.Base)
             })
 

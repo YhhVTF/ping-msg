@@ -152,7 +152,7 @@ func messageOnDelete(g *ScreenChat, msgID int, u *user.UserCache) {
         Type: prot.REQ_DEL,
         UserID: u.ThisUserID,
     }
-    g.OutgoingMessages <- req
+    g.OutgoingRequests <- req
 }
 
 func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
@@ -186,7 +186,7 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
                 Type: prot.REQ_EDIT,
                 UserID: u.ThisUserID,
             }
-            g.OutgoingMessages <- req
+            g.OutgoingRequests <- req
         }
         // Replace the edit entry with the message content label again
         editEntry.Hide()

@@ -29,7 +29,7 @@ func buttonSendOnPressed(g *ScreenChat, c *chat.ChatCache, u *user.UserCache) {
 		Type:           prot.REQ_ADD,
 		UserID:         u.ThisUserID,
 	}
-	g.OutgoingMessages <- req
+	g.OutgoingRequests <- req
 
     // Clear the text in the message entry
 	g.Widgets.EntryMessage.SetText("")

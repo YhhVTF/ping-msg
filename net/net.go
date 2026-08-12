@@ -171,7 +171,7 @@ func serverSend(conn net.Conn, gui *gui.GUI, done <-chan struct{}, signalDone fu
 	encoder := json.NewEncoder(conn)
 	for {
 		select {
-		case req := <-gui.Chat.OutgoingMessages:
+		case req := <-gui.OutgoingRequests:
 			log.Info.Printf("Sending %s request to server\n", req.Type)
 			if err := encoder.Encode(req); err != nil {
 				log.Error.Printf("Failed to send outgoing request: %s\n", err)

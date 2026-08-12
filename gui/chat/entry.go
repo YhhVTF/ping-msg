@@ -26,7 +26,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, c *chat.ChatCache, u *u
 		Type:           prot.REQ_ADD,
 		UserID:         u.ThisUserID,
 	}
-	g.OutgoingMessages <- req
+	g.OutgoingRequests <- req
 
     // Clear the entry
 	g.Widgets.EntryMessage.SetText("")

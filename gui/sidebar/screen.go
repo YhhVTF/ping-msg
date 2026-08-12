@@ -21,6 +21,7 @@ type ScreenSidebar struct {
 }
 
 type WidgetTableSidebar struct {
+    // List of chat cards which display info about a chat and open that chat when clicked
     ChatsList *widget.List
 }
 
@@ -39,7 +40,7 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
             return createChatCardTemplate()
         },
         func(i widget.ListItemID, o fyne.CanvasObject) {
-            updateChatCard(o.(*widget.Card), c.Chats[1])
+            updateChatCard(o.(*widget.Card), c.Chats[1], s)
         },
     )
 

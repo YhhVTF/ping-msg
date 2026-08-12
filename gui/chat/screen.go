@@ -39,7 +39,7 @@ type ScreenChat struct {
 	Widgets             WidgetTableChat
     // The main window
     Window              fyne.Window
-	OutgoingMessages    chan prot.ChatRequest // Connects to net.go
+	OutgoingRequests    chan prot.ChatRequest // Connects to net.go
 }
 
 // All widgets to be used by the chat screen
@@ -63,13 +63,13 @@ type WidgetTableChat struct {
 func InitScreenChat(
     s *screen.ScreenManager, w fyne.Window, 
     c *chat.ChatCache, u *user.UserCache, opt *options.Options,
+    outgoingRequests chan prot.ChatRequest,
 ) *ScreenChat {
 	log.Info.Printf("Initializing chat screen\n")
 
 	g := &ScreenChat{}
     g.Window = w
-
-	g.OutgoingMessages = make(chan prot.ChatRequest)
+    g.OutgoingRequests = outgoingRequests
 
     g.Widgets.Messages = make(map[int]*Message)
     g.Widgets.RepliedMessages = make(map[int]*RepliedMessage)
@@ -147,5 +147,5 @@ func (g *ScreenChat) SendMessage() {
 		Type:           prot.REQ_ADD,
 	}
 
-	g.OutgoingMessages <- req
+	g.OutgoingRequests <- req
 }
