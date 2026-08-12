@@ -16,10 +16,10 @@
     "entry_message": { "label": "Dotoz o hipilo" },
     "entry_username": { "label": "Dotoz o kosely" },
     "greeting": { 
-        "placeholder_deleted": "greeting.placeholder_deleted",
-        "placeholder_noload": "greeting.placeholder_noload"
+        "placeholder_deleted": "Hidioligy yki hipilo",
+        "placeholder_noload": "Podifoboz yki hipilo"
     },
-    "optioncard_language": { "subtitle": "optioncard_language.subtitle" },
+    "optioncard_language": { "subtitle": "Yki tolo" },
     "window": { "title": "Internetfhalo" },
     "window_options": { "title": "Ykil abulin" }
 }
