@@ -65,7 +65,7 @@ func InitGUI(
     c.ThisChat = c.Chats[1]
 
     // Initialize sidebar
-    g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager)
+    g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager, c)
     // Create split and add sidebar as the leading child
     g.Base = container.NewHSplit(g.Sidebar.Base, container.NewStack())
 
