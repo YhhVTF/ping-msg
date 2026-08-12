@@ -2,13 +2,8 @@ package schat
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
-
-	"fmt"
-	"image/color"
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
@@ -102,50 +97,4 @@ func InitScreenChat(
 		nil, g.Containers.BottomBar, nil, nil, g.Containers.Chat.Base,
 	)
 	return g
-}
-
-// NewDialog: Creates a new custom dialog with the specified title and content set to the default dialog size
-// Parameters:
-//
-//	title (string) - Title of the dialog
-//	content (string) - Text to be set as the dialog content
-//
-// Returns:
-//
-//	*dialog.CustomDialog - The new dialog
-func (g *ScreenChat) NewDialog(title, content string) *dialog.CustomDialog {
-	dialog := dialog.NewCustom(title, "", widget.NewLabel(content), g.Window)
-	dialog.Resize(fyne.NewSize(350, 200))
-	dialog.Show()
-	return dialog
-}
-
-func (g *ScreenChat) ReceiveMessage(rawMsg prot.MessageRaw) {
-	log.Info.Printf("Received message\n")
-
-	msgText := fmt.Sprintf("<User %d> %s", rawMsg.UserID, rawMsg.Content)
-
-	msg := canvas.NewText(msgText, color.NRGBA{255, 255, 255, 255})
-	g.Containers.Chat.VBox.Add(msg)
-	g.Containers.Chat.VScroll.ScrollToBottom()
-}
-
-// UNUSED BUT EXPANDABLE LATER??
-
-// oopie - dash
-
-// huh? Twt
-
-// oopie :P - entie
-func (g *ScreenChat) SendMessage() {
-	log.Info.Printf("Sending message\n")
-
-	req := prot.ChatRequest{
-		ChatID:         0,
-		MessageContent: g.Widgets.EntryMessage.Text,
-		MessageID:      prot.NONE_INT,
-		Type:           prot.REQ_ADD,
-	}
-
-	g.OutgoingRequests <- req
 }
