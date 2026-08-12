@@ -8,6 +8,7 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
+    "github.com/YhhVTF/ping-msg/log"
 )
 
 type ScreenSidebar struct {
@@ -20,7 +21,6 @@ type ScreenSidebar struct {
 }
 
 type WidgetTableSidebar struct {
-    ChatCards []*ChatCard
     ChatsList *widget.List
 }
 
@@ -29,18 +29,17 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
     g.Window = w
     g.ScreenManager = s
 
-    g.Widgets.ChatCards = make([]*ChatCard, 0)
-    g.Widgets.ChatCards = append(g.Widgets.ChatCards, createChatCard(c.Chats[1]))
+    log.Info.Printf("%d chat cards in sidebar\n", len(c.Chats))
 
     g.Widgets.ChatsList = widget.NewList(
         func() int {
-            return len(g.Widgets.ChatCards)
+            return 78
         },
         func() fyne.CanvasObject {
-            return container.NewVBox()
+            return createChatCardTemplate()
         },
         func(i widget.ListItemID, o fyne.CanvasObject) {
-            o.(*fyne.Container).Add(g.Widgets.ChatCards[i].Base)
+            updateChatCard(o.(*widget.Card), c.Chats[1])
         },
     )
 
