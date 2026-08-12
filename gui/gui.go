@@ -73,6 +73,7 @@ func InitGUI(
     g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager, c)
     // Create split and add sidebar as the leading child
     g.Base = container.NewHSplit(g.Sidebar.Base, container.NewStack(sblank.InitScreenBlank()))
+    g.Base.SetOffset(0.25)
 
     // Set window content as the split
     g.Window.SetContent(g.Base)
