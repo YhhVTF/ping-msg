@@ -9,5 +9,5 @@ import (
 func InitScreenBlank() *fyne.Container {
     silly := widget.NewLabel(":P")
     silly.Importance = widget.LowImportance
-    return container.NewStack(silly)
+    return container.NewCenter(silly)
 }
