@@ -90,6 +90,7 @@ func (g *GUI) manageScreens(s *screen.ScreenManager, c *chat.ChatCache, u *user.
         switch <-s.Chan {
         case screen.S_CHAT_FOCUS_DEFAULT:
             fyne.Do(func() {
+                if g.Chat == nil { return }
                 g.Window.Canvas().Focus(g.Chat.Widgets.EntryMessage)
             })
         case screen.S_CHAT_FULL:

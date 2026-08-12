@@ -26,6 +26,8 @@ func updateChatCard(
         fmt.Sprintf("%d", chatCache.Metadata.ID),
     )
     chatCard.Content.(*fyne.Container).Objects[1].(*widget.Button).OnTapped = func() {
+        defer s.ScreenChatFocusDefault()
+
         if c.ThisChat == nil {
             c.ThisChat = chatCache
             s.ScreenChatFull()

@@ -43,6 +43,9 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
             updateChatCard(o.(*widget.Card), c.Chats[1], c, s)
         },
     )
+    g.Widgets.ChatsList.OnSelected = func(_ widget.ListItemID) {
+        s.ScreenChatFocusDefault()
+    }
 
     // Initialize app tabs widget
     g.Base = container.NewAppTabs(
@@ -55,5 +58,8 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
             theme.Icon(theme.IconNameGrid), container.NewStack(g.Widgets.ChatsList),
         ),
     )
+    g.Base.OnSelected = func(_ *container.TabItem) {
+        s.ScreenChatFocusDefault()
+    }
     return g
 }
