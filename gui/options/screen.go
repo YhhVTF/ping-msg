@@ -76,6 +76,6 @@ func (g *ScreenOptions) ExitFloat(
     wMain.Canvas().Content().Refresh()
 
     // Save options
-    opt.SaveGUI("options")
-    opt.SaveNet("options")
+    opt.SaveGUI(".ping/options")
+    opt.SaveNet(".ping/options")
 }

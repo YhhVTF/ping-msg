@@ -61,10 +61,10 @@ func InitGUI(
     g.InnerWindows = container.NewMultipleWindows()
 
     g.Window.SetOnClosed(func() {
-        opt.GUI.Window.Size[0] = g.Window.Canvas().Size().Width
-        opt.GUI.Window.Size[1] = g.Window.Canvas().Size().Height
+        //opt.GUI.Window.Size[0] = g.Window.Canvas().Size().Width
+        //opt.GUI.Window.Size[1] = g.Window.Canvas().Size().Height
         opt.GUI.SplitOffset = g.Base.Offset
-        opt.SaveGUI("options")
+        opt.SaveGUI(".ping/options")
     })
 
     // Start screen management

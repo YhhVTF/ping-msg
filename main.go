@@ -56,13 +56,13 @@ func main() {
     fyne.Do(loadingWindow.Show)
 
     var err error
-    ping.Options, err = options.LoadOptions("options")
+    ping.Options, err = options.LoadOptions(".ping/options")
     if err != nil {
         return
     }
 
     log.Info.Printf("Loading assets\n")
-	iconData, err := os.ReadFile("assets/icons/ping.png")
+	iconData, err := os.ReadFile(".ping/assets/icons/ping.png")
 	if err == nil {
 		a.SetIcon(fyne.NewStaticResource("ping.png", iconData))
 	} else {
