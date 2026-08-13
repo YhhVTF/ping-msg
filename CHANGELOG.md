@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-08-12
+
+### Added
+
+- Sidebar with cards that open their respective chat when pressed
+
+### Changed
+
+- Main window size is now saved in options
+- Options now save upon quiting Ping
+- Ping now starts on a blank screen
+- Sidebar width (split offset) is now saved in options
+- Updated language Gakotolo
+
 ## [0.3.0] - 2026-08-11
 
 ### Added
