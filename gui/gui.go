@@ -60,6 +60,13 @@ func InitGUI(
     g.Window.Resize(fyne.NewSize(opt.GUI.Window.Size[0], opt.GUI.Window.Size[1]))
     g.InnerWindows = container.NewMultipleWindows()
 
+    g.Window.SetOnClosed(func() {
+        opt.GUI.Window.Size[0] = g.Window.Canvas().Size().Width
+        opt.GUI.Window.Size[1] = g.Window.Canvas().Size().Height
+        opt.GUI.SplitOffset = g.Base.Offset
+        opt.SaveGUI("options")
+    })
+
     // Start screen management
     g.ScreenManager = screen.NewScreenManager()
     go g.manageScreens(g.ScreenManager, c, u, opt)
@@ -73,7 +80,7 @@ func InitGUI(
     g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager, c)
     // Create split and add sidebar as the leading child
     g.Base = container.NewHSplit(g.Sidebar.Base, container.NewStack(sblank.InitScreenBlank()))
-    g.Base.SetOffset(0.25)
+    g.Base.SetOffset(opt.GUI.SplitOffset)
 
     // Set window content as the split
     g.Window.SetContent(g.Base)

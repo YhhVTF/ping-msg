@@ -6,6 +6,7 @@
         "size": [350,200]
     },
     "language": "english",
+    "split_offset": 0.25,
     "window": {
         "size": [850,550]
     },

@@ -59,6 +59,7 @@ type GUIOptions struct {
     DialogConnIssues    DialogOptions   `json:"dialog_connection_issues"`
     DialogLogin         DialogOptions   `json:"dialog_login"`
     Language            string          `json:"language"`
+    SplitOffset         float64         `json:"split_offset"`
     Window              WindowOptions   `json:"window"`
     WindowOptions       WindowOptions   `json:"window_options"`
 }
