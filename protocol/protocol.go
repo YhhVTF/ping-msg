@@ -71,20 +71,26 @@ type ChatMetadata struct {
 
 type ChatMetadataRequest struct {
     // ID of the chat involved
-    ChatID      int
-    // New chat metadata, only initialized for REQ_ADD and REQ_EDIT
-    NewMetadata ChatMetadata
+    ChatID      int         `json:"id"`
+    // New chat description
+    Description string      `json:"desc"`
+    // New chat viewability
+    IsPublic    bool        `json:"public"`
+    // New chat name
+    Name        string      `json:"name"`
     // What the request is (e.g., creating new chat, getting metadata, etc.)
-    Type        RequestWhat
+    Type        RequestWhat `json:"req_what"`
+    // ID of user the request is from
+    UserID      int         `json:"user_id"`
 }
 
 type ChatMetadataResponse struct {
     // ID of the chat involved
-    ChatID      int
+    ChatID      int             `json:"id"`
     // Chat metadata the client may have requested
-    Metadata    ChatMetadata
+    Metadata    ChatMetadata    `json:"metadata"`
     // Action that this response fulfilled
-    Type        RequestWhat
+    Type        RequestWhat     `json:"req_what"`
 }
 
 // Collection of raw messages, used for saving and loading messages, not for communication between the client and server
