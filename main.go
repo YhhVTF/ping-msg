@@ -33,8 +33,10 @@ func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
 
     var g *gui.GUI
     onQuit := func() {
-        //opt.GUI.Window.Size[0] = g.Window.Canvas().Size().Width
-        //opt.GUI.Window.Size[1] = g.Window.Canvas().Size().Height
+        if len(os.Args) < 3 { // i3 keeps resetsie the default window size to my screen resolutie su :P
+            opt.GUI.Window.Size[0] = g.Window.Canvas().Size().Width
+            opt.GUI.Window.Size[1] = g.Window.Canvas().Size().Height
+        }
         opt.GUI.SplitOffset = g.Base.Offset
         opt.SaveGUI(".ping/options")
     }
