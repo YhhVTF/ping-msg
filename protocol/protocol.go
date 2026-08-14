@@ -70,8 +70,8 @@ type ChatMetadata struct {
 }
 
 type ChatMetadataRequest struct {
-    // ID of the chat involved
-    ChatID      int         `json:"id"`
+    // IDs of the chats involved
+    ChatID      []int       `json:"id"`
     // New chat description
     Description string      `json:"desc"`
     // New chat viewability
@@ -85,10 +85,8 @@ type ChatMetadataRequest struct {
 }
 
 type ChatMetadataResponse struct {
-    // ID of the chat involved
-    ChatID      int             `json:"id"`
     // Chat metadata the client may have requested
-    Metadata    ChatMetadata    `json:"metadata"`
+    Metadata    []ChatMetadata  `json:"metadata"`
     // Action that this response fulfilled
     Type        RequestWhat     `json:"req_what"`
 }
