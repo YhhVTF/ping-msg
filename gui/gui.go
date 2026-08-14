@@ -45,6 +45,7 @@ type GUI struct {
 //  u (*user.UserCache) - Information pertaining to users
 //	loadingWindow (fyne.Window) - The loading window
 //  opt (*options.Options) - Options/settings
+//  onQuit (func()) - Code to run when quiting Ping (main window closed)
 //
 // Returns:
 //
@@ -52,6 +53,7 @@ type GUI struct {
 func InitGUI(
     a fyne.App, c *chat.ChatCache,
     u *user.UserCache, loadingWindow fyne.Window, opt *options.Options,
+    onQuit func(),
 ) *GUI {
 	log.Info.Printf("Creating GUI\n")
 
@@ -60,12 +62,7 @@ func InitGUI(
     g.Window.Resize(fyne.NewSize(opt.GUI.Window.Size[0], opt.GUI.Window.Size[1]))
     g.InnerWindows = container.NewMultipleWindows()
 
-    g.Window.SetOnClosed(func() {
-        //opt.GUI.Window.Size[0] = g.Window.Canvas().Size().Width
-        //opt.GUI.Window.Size[1] = g.Window.Canvas().Size().Height
-        opt.GUI.SplitOffset = g.Base.Offset
-        opt.SaveGUI(".ping/options")
-    })
+    g.Window.SetOnClosed(onQuit)
 
     // Start screen management
     g.ScreenManager = screen.NewScreenManager()

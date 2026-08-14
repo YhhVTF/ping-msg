@@ -32,8 +32,16 @@ func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
     ping.UserCache = &user.UserCache{Users: make(map[int]user.User)}
 
     var g *gui.GUI
+    onQuit := func() {
+        //opt.GUI.Window.Size[0] = g.Window.Canvas().Size().Width
+        //opt.GUI.Window.Size[1] = g.Window.Canvas().Size().Height
+        opt.GUI.SplitOffset = g.Base.Offset
+        opt.SaveGUI(".ping/options")
+    }
     fyne.DoAndWait(func() {
-        g = gui.InitGUI(a, ping.ChatCache, ping.UserCache, loadingWindow, opt)
+        g = gui.InitGUI(
+            a, ping.ChatCache, ping.UserCache, loadingWindow, opt, onQuit,
+        )
     })
 
 	net.StartNet(g, ping.UserCache, opt)
