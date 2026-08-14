@@ -26,6 +26,25 @@ type WidgetTableOptions struct {
     SelectLanguage  *widget.Select
 }
 
+func (g *ScreenOptions) ExitFloat(
+    wOptions *container.InnerWindow,
+    wMain fyne.Window, innerWindows *container.MultipleWindows,
+    opt *options.Options,
+) {
+    // Set options window size in options to its current size
+    opt.GUI.WindowOptions.Size[0] = wOptions.Size().Width
+    opt.GUI.WindowOptions.Size[1] = wOptions.Size().Height
+
+    // Close the options window
+    wMain.Canvas().Overlays().Remove(innerWindows)
+    wOptions.Hide()
+    wMain.Canvas().Content().Refresh()
+
+    // Save options
+    opt.SaveGUI(".ping/options")
+    opt.SaveNet(".ping/options")
+}
+
 func (g *ScreenOptions) Float(
     wMain fyne.Window, innerWindows *container.MultipleWindows, opt *options.Options,
 ) {
@@ -39,6 +58,12 @@ func (g *ScreenOptions) Float(
         opt.GUI.WindowOptions.Size[0], opt.GUI.WindowOptions.Size[1],
     ))
     w.SetMaximized(false)
+
+    // Center options floating window
+    posX := (wMain.Canvas().Size().Width / 2) - (w.Size().Width / 2)
+    posY := (wMain.Canvas().Size().Height / 2) - (w.Size().Height / 2)
+    w.Move(fyne.NewPos(posX, posY))
+
     w.CloseIntercept = func() {
         g.ExitFloat(w, wMain, innerWindows, opt)
     }
@@ -59,23 +84,4 @@ func InitScreenOptions(
     g.Containers.Base = container.NewVScroll(g.Containers.VBox)
 
     return g
-}
-
-func (g *ScreenOptions) ExitFloat(
-    wOptions *container.InnerWindow,
-    wMain fyne.Window, innerWindows *container.MultipleWindows,
-    opt *options.Options,
-) {
-    // Set options window size in options to its current size
-    opt.GUI.WindowOptions.Size[0] = wOptions.Size().Width
-    opt.GUI.WindowOptions.Size[1] = wOptions.Size().Height
-
-    // Close the options window
-    wMain.Canvas().Overlays().Remove(innerWindows)
-    wOptions.Hide()
-    wMain.Canvas().Content().Refresh()
-
-    // Save options
-    opt.SaveGUI(".ping/options")
-    opt.SaveNet(".ping/options")
 }
