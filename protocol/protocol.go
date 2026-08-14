@@ -45,28 +45,28 @@ const REQ_USER          RequestWhere = "USER"
 // Information about a chat
 type ChatMetadata struct {
 	// Number of messages there are in a block
-	BlockSize int `json:"block_size"`
+	BlockSize int `json:"blk_size"`
 	// UserID of who created the chat
 	Creator int `json:"creator"`
 	// A description of what the chat is about
-	Description string `json:"description"`
+	Description string `json:"desc"`
 	// ID of the chat
 	ID int `json:"id"`
 	// Is the chat public?
 	IsPublic bool `json:"public"`
 	// ID of the last block in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
-	LastBlockID int `json:"last_block"`
+	LastBlockID int `json:"last_blk"`
 	// ID of the last message in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
 
-	LastMessageID int `json:"last_message"`
+	LastMessageID int `json:"last_msg"`
 	// UserIDs of everyone who has access to the chat. This is empty if the chat is public
 	Members []int `json:"members"`
 	// The name of the chat
 	Name string `json:"name"`
 	// Total number of blocks in the chat. This should not be updated while the chat is loaded and instead should be calculated from the field `LastBlockID` when saving metadata
-	NumberOfBlocks int `json:"blocks"`
+	NumberOfBlocks int `json:"blks"`
 	// Total number of messages in the chat. This should not be updated while the chat is loaded and instead should be calculated from the field `LastMessageID` when saving metadata
-	NumberOfMessages int `json:"messages"`
+	NumberOfMessages int `json:"msgs"`
 }
 
 type ChatMetadataRequest struct {
@@ -90,9 +90,9 @@ type ChatMetadataResponse struct {
 // Collection of raw messages, used for saving and loading messages, not for communication between the client and server
 type ChatRaw struct {
     // Protocol version
-    Version string          `json:"version"`
+    Version string          `json:"ver"`
     // Array of all messages in chat
-    Messages []MessageRaw   `json:"messages"`
+    Messages []MessageRaw   `json:"msgs"`
 }
 
 // A request to change something about or get information from a chat (e.g., add a message, delete a message, load and receive a message)
@@ -102,11 +102,11 @@ type ChatRequest struct {
     // Content to be assigned to the given message for editing and adding messages, is empty for `REQ_DEL` and `REQ_GET`
     MessageContent string   `json:"content"`
     // ID of the message involved, is -1 for `REQ_ADD`
-    MessageID int           `json:"message_id"`
+    MessageID int           `json:"msg_id"`
     // IDs of the messages the message sent in this chat request is replying to, is non nil only for REQ_ADD and REQ_EDIT
     RepliedIDs []int        `json:"replied_ids"`
     // What the request is (e.g., message deletion, editing)
-    Type RequestWhat        `json:"chat_request_type"`
+    Type RequestWhat        `json:"req_what"`
     // User ID of who sent the request
     UserID int              `json:"user_id"`
 }
@@ -116,15 +116,15 @@ type ChatResponse struct {
     // ID of the chat involved
     ChatID int              `json:"chat_id"`
     // An error that prevented the request from being fulfilled. Is empty if no error occurred
-    Error string            `json:"error"`
+    Error string            `json:"err"`
     // ID of the message involved
-    MessageID int           `json:"message_id"`
+    MessageID int           `json:"msg_id"`
     // Messages that the client may have requested
-    Messages []MessageRaw   `json:"messages"`
+    Messages []MessageRaw   `json:"msgs"`
     // Public user profiles needed to render message senders
     Users []User            `json:"users"`
     // Action that this response fulfilled
-    Type RequestWhat        `json:"chat_response_type"`
+    Type RequestWhat        `json:"resp_what"`
 }
 
 // Message data sent to and received from the server
