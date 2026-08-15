@@ -18,6 +18,24 @@ func createChatCardTemplate() *widget.Card {
     return widget.NewCard("", "", c)
 }
 
+func (g *ScreenSidebar) InitChatsList(c *chat.ChatCache) {
+    g.Widgets.ChatsList = widget.NewList(
+        func() int {
+            return len(c.Chats)
+        },
+        func() fyne.CanvasObject {
+            return createChatCardTemplate()
+        },
+        func(i widget.ListItemID, o fyne.CanvasObject) {
+            updateChatCard(o.(*widget.Card), c.Chats[1], c, g.ScreenManager)
+        },
+    )
+    g.Widgets.ChatsList.OnSelected = func(_ widget.ListItemID) {
+        g.ScreenManager.ScreenChatFocusDefault()
+    }
+    g.Base.Items[1].Content.(*fyne.Container).Add(g.Widgets.ChatsList)
+}
+
 func updateChatCard(
     chatCard *widget.Card, chatCache *chat.Chat,
     c *chat.ChatCache, s *screen.ScreenManager,

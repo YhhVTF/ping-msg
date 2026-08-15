@@ -46,7 +46,7 @@ func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
         )
     })
 
-	net.StartNet(g, ping.UserCache, opt)
+	net.StartNet(g, ping.UserCache, ping.ChatCache, opt)
 }
 
 func main() {

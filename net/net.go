@@ -14,6 +14,7 @@ import (
 
 	"github.com/coder/websocket"
 
+    "github.com/YhhVTF/ping-msg/chat"
 	ping "github.com/YhhVTF/ping-msg/global"
 	"github.com/YhhVTF/ping-msg/gui"
 	"github.com/YhhVTF/ping-msg/gui/dialogs"
@@ -25,7 +26,9 @@ import (
 
 // StartNet connects to the server, registers the selected username, and then
 // starts the chat request/response loops.
-func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
+func StartNet(
+    gui *gui.GUI, u *user.UserCache, c *chat.ChatCache, opt *options.Options,
+) {
 	fyne.DoAndWait(func() {
         gui.Dialogs.Login =
             dialogs.InitDialogLogin(gui.Window, gui.ScreenManager, u, opt)
@@ -34,6 +37,8 @@ func StartNet(gui *gui.GUI, u *user.UserCache, opt *options.Options) {
 		time.Sleep(10 * time.Millisecond)
 	}
     gui.Dialogs.Login = nil
+
+    fyne.DoAndWait(func() { gui.Sidebar.InitChatsList(c) })
 
 	endpoint := "wss://ping.da5h1n.uk:5555/ws"
 	if len(os.Args) > 1 {
