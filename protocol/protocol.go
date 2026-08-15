@@ -156,6 +156,8 @@ const UserRequestRegister = "REGISTER"
 // User is the public profile data required to render message senders.
 type User struct {
     ID          int     `json:"id"`
+    // IDs of chats the user is a member of
+    MemberOf    []int   `json:"memberof"`
     Username    string  `json:"username"`
 }
 
