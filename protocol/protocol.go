@@ -15,11 +15,13 @@ type RequestWhat string
 // Adds new data provided by the client
 //  REQ_CHAT - Adds a message to the chat
 //  REQ_CHATMETADATA - Creates a new chat
+//  REQ_MEMBER - Makes the user who requested it a member of the specified chat
 //  REQ_USER - Registers a new user
 const REQ_ADD   RequestWhat = "ADD"
 // Deletes existing data
 //  REQ_CHAT - Deletes the a message
 //  REQ_CHATMETADATA - Deletes a chat
+//  REQ_MEMBER - Removes the user's membership of the specified chat
 //  REQ_USER - Deletes a user
 const REQ_DEL   RequestWhat = "DEL"
 // Edits existing data
@@ -30,8 +32,9 @@ const REQ_EDIT  RequestWhat = "EDIT"
 // Sends existing data to the client that requested it
 //  REQ_CHAT - Sends a chat block to the client
 //  REQ_CHATMETADATA - Sends a chat's metadata to the client
+//  REQ_MEMBER - Gets IDs of all the chats the user is a member of
 //  REQ_USER - Sends user information to the client
-const REQ_GET  RequestWhat = "GET"
+const REQ_GET   RequestWhat = "GET"
 
 // What data is the request asking for the action to be done upon
 type RequestWhere string
@@ -39,6 +42,8 @@ type RequestWhere string
 const REQ_CHAT          RequestWhere = "CHAT"
 // Request for chat metadata
 const REQ_CHATMETADATA  RequestWhere = "CHATMETADATA"
+// Request for user's membership of chats
+const REQ_MEMBER        RequestWhere = "MEMBER"
 // Request for user
 const REQ_USER          RequestWhere = "USER"
 
@@ -59,7 +64,7 @@ type ChatMetadata struct {
 	// ID of the last message in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
 
 	LastMessageID int `json:"last_msg"`
-	// UserIDs of everyone who has access to the chat. This is empty if the chat is public
+	// UserIDs of everyone who has access to the chat
 	Members []int `json:"members"`
 	// The name of the chat
 	Name string `json:"name"`
@@ -150,8 +155,8 @@ const UserRequestRegister = "REGISTER"
 
 // User is the public profile data required to render message senders.
 type User struct {
-    ID          int    `json:"id"`
-    Username    string `json:"username"`
+    ID          int     `json:"id"`
+    Username    string  `json:"username"`
 }
 
 // UserRequest is sent before chat traffic to establish a connection identity.
