@@ -150,18 +150,21 @@ const UserRequestRegister = "REGISTER"
 
 // User is the public profile data required to render message senders.
 type User struct {
-    ID       int    `json:"id"`
-    Username string `json:"username"`
+    ID          int    `json:"id"`
+    Username    string `json:"username"`
 }
 
 // UserRequest is sent before chat traffic to establish a connection identity.
 type UserRequest struct {
-    RequestType string `json:"request_type"`
-    Username    string `json:"username"`
+    // ID of user involved, is NONE_INT for REQ_ADD
+    ID          int         `json:"id"`
+    Type        RequestWhat `json:"req_what"`
+    // Username of user, only used with REQ_ADD and REQ_EDIT
+    Username    string      `json:"username"`
 }
 
 // UserResponse is returned for a UserRequest. Error is empty on success.
 type UserResponse struct {
-    Error string `json:"error"`
+    Error string `json:"err"`
     User  User   `json:"user"`
 }
