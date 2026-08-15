@@ -136,6 +136,22 @@ type ChatResponse struct {
     Type RequestWhat        `json:"resp_what"`
 }
 
+// Request to change user's membership status in a chat
+type MemberRequest struct {
+    // ID of the chat to change whether the user is a member of, is NONE_INT for REQ_GET
+    ChatID  int         `json:"chat_id"`
+    Type    RequestWhat `json:"req_what"`
+    UserID  int         `json:"user_id"`
+}
+
+// Response to MemberRequest
+type MemberResponse struct {
+    // IDs of the chats the user is a member of, only used with REQ_GET
+    ChatIDs []int       `json:"chat_ids"`
+    Error   string      `json:"err"`
+    Type    RequestWhat `json:"resp_what"`
+}
+
 // Message data sent to and received from the server
 type MessageRaw struct {
     // What the message says
