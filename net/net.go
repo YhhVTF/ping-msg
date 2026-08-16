@@ -94,7 +94,7 @@ func websocketEndpoint(value string) string {
 }
 
 func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
-	request := prot.UserRequest{Type: prot.REQ_ADD, Username: u.ThisUsername}
+	request := prot.UserRequest{Type: prot.UserRequestRegister, Username: u.ThisUsername}
 	if err := json.NewEncoder(conn).Encode(request); err != nil {
 		return nil, err
 	}
