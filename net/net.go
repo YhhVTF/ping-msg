@@ -134,7 +134,7 @@ func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GU
 	connDone <- true
 }
 
-func cacheUsers(u *user.UserCache, users []prot.User) {
+func cacheUsers(u *user.UserCache, users []prot.UserPublicRaw) {
 	if u.Users == nil {
 		u.Users = make(map[int]user.User)
 	}

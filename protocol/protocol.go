@@ -131,7 +131,7 @@ type ChatResponse struct {
     // Messages that the client may have requested
     Messages []MessageRaw   `json:"msgs"`
     // Public user profiles needed to render message senders
-    Users []User            `json:"users"`
+    Users []UserPublicRaw   `json:"users"`
     // Action that this response fulfilled
     Type RequestWhat        `json:"resp_what"`
 }
@@ -169,11 +169,21 @@ type MessageRaw struct {
 // assigns the numeric ID; clients must not generate their own IDs.
 const UserRequestRegister = "REGISTER"
 
-// User is the public profile data required to render message senders.
-type User struct {
-    ID          int     `json:"id"`
+// UserPrivateRaw - Includes public profile data, along with other data that other users shouldn't access. A user can only get their own private data and no one else's
+type UserPrivateRaw struct {
+    ID              int         `json:"id"`
     // IDs of chats the user is a member of
-    MemberOf    []int   `json:"memberof"`
+    MemberOf        []int       `json:"memberof"`
+    // Number of notifications the user has in each chat
+    //  Key (int) - ChatID
+    //  Val (int) - Number of notifications in the chat
+    Notifications   map[int]int `json:"notif"`
+    Username        string      `json:"username"`
+}
+
+// UserPublicRaw is the public profile data required to render message senders. Any user can get this data from any other user
+type UserPublicRaw struct {
+    ID          int     `json:"id"`
     Username    string  `json:"username"`
 }
 
@@ -188,6 +198,6 @@ type UserRequest struct {
 
 // UserResponse is returned for a UserRequest. Error is empty on success.
 type UserResponse struct {
-    Error string `json:"err"`
-    User  User   `json:"user"`
+    Error   string          `json:"err"`
+    User    UserPublicRaw   `json:"user"`
 }
