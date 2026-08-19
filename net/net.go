@@ -53,7 +53,7 @@ func StartNet(
 			decoder, registerErr := registerUser(conn, u)
 			if registerErr == nil {
 				ping.Connected = true
-				log.Info.Printf("Successfully connected as user %d\n", u.ThisUserID)
+				log.Info.Printf("Successfully connected as user %d\n", u.ThisUsername)
 				if gui.Dialogs.ConnectionIssues != nil {
 					fyne.DoAndWait(func() {
                         gui.Dialogs.ConnectionIssues.Dialog.Dismiss()
@@ -107,16 +107,15 @@ func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
 	if response.Error != "" {
 		return nil, fmt.Errorf("%s", response.Error)
 	}
-	if response.User.ID == prot.SERVER_USER_ID || response.User.Username == "" {
+	if response.User.Username == prot.NONE_STRING || response.User.Username == "" {
 		return nil, fmt.Errorf("server returned an invalid user registration")
 	}
 
-	u.ThisUserID = response.User.ID
 	u.ThisUsername = response.User.Username
 	if u.Users == nil {
-		u.Users = make(map[int]user.User)
+		u.Users = make(map[string]user.User)
 	}
-	u.Users[response.User.ID] = user.User{ID: response.User.ID, Username: response.User.Username}
+	u.Users[response.User.Username] = user.User{Username: response.User.Username}
 	return decoder, nil
 }
 
@@ -136,10 +135,10 @@ func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GU
 
 func cacheUsers(u *user.UserCache, users []prot.UserPublicRaw) {
 	if u.Users == nil {
-		u.Users = make(map[int]user.User)
+		u.Users = make(map[string]user.User)
 	}
 	for _, profile := range users {
-		u.Users[profile.ID] = user.User{ID: profile.ID, Username: profile.Username}
+		u.Users[profile.Username] = user.User{Username: profile.Username}
 	}
 }
 
@@ -189,8 +188,8 @@ func serverSend(conn net.Conn, gui *gui.GUI, done <-chan struct{}, signalDone fu
 	}
 }
 
-func CreateChatRequest(chatID int, reqType prot.RequestWhat, userID int, messageContent string, messageID int) []byte {
-	req := prot.ChatRequest{ChatID: chatID, Type: reqType, UserID: userID, MessageContent: messageContent, MessageID: messageID}
+func CreateChatRequest(chatID int, reqType prot.RequestWhat, username string, messageContent string, messageID int) []byte {
+	req := prot.ChatRequest{ChatID: chatID, Type: reqType, Username: username, MessageContent: messageContent, MessageID: messageID}
 	bytes, err := json.Marshal(req)
 	if err != nil {
 		log.Error.Printf("Failed to marshal chat request: %s\n", err)

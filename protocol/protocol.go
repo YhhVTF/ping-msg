@@ -7,9 +7,6 @@ const NONE_INT = -1
 // Shows that a string field in a request or response is empty
 const NONE_STRING = "##"
 
-// Reserved user ID that will be tied to requests and responses to denote them as server messages
-const SERVER_USER_ID = 0
-
 // What action is being requested. What these do differ depending on the RequestWhere
 type RequestWhat string
 // Adds new data provided by the client

@@ -6,7 +6,6 @@ import (
     "fyne.io/fyne/v2/data/binding"
     "fyne.io/fyne/v2/widget"
 
-    "fmt"
     "slices"
     "time"
 
@@ -40,18 +39,18 @@ type Message struct {
 // messageUsername returns the best available display name for a message.
 // MessageRaw identifies senders by UserID; usernames are held separately in
 // the local user cache.
-func messageUsername(msgRaw *prot.MessageRaw, u *user.UserCache) string {
-    if u != nil {
-        if msgRaw.UserID == u.ThisUserID && u.ThisUsername != "" {
-            return u.ThisUsername
-        }
-        if cachedUser, exists := u.Users[msgRaw.UserID]; exists && cachedUser.Username != "" {
-            return cachedUser.Username
-        }
-    }
-
-    return fmt.Sprintf("User %d", msgRaw.UserID)
-}
+//func messageUsername(msgRaw *prot.MessageRaw, u *user.UserCache) string {
+//    if u != nil {
+//        if msgRaw.UserID == u.ThisUserID && u.ThisUsername != "" {
+//            return u.ThisUsername
+//        }
+//        if cachedUser, exists := u.Users[msgRaw.UserID]; exists && cachedUser.Username != "" {
+//            return cachedUser.Username
+//        }
+//    }
+//
+//    return fmt.Sprintf("User %d", msgRaw.UserID)
+//}
 
 func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.String, chatCache *chat.Chat, u *user.UserCache, opt *options.Options) *Message {
     log.Info.Printf("Creating new message widget\n")
@@ -63,7 +62,7 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.Str
         msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, chatCache, opt)
     }
 
-    msg.Username = widget.NewLabel(messageUsername(msgRaw, u))
+    msg.Username = widget.NewLabel(msgRaw.Username)
 	msg.Username.Wrapping = fyne.TextWrapWord
     msg.Username.TextStyle.Bold = true
 
@@ -87,7 +86,7 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.Str
     var c *fyne.Container
 
     // If the message was sent by the user of this client...
-    if msgRaw.UserID == u.ThisUserID {
+    if msgRaw.Username == u.ThisUsername {
         // Add a delete button
         buttonDelete := widget.NewButton("D", func() {
             messageOnDelete(g, msgRaw.ID, u)
@@ -146,11 +145,11 @@ func messageOnDelete(g *ScreenChat, msgID int, u *user.UserCache) {
 
     // Send new DEL chat request to net.serverSend
     req := prot.ChatRequest{
-        ChatID: 1,
+        ChatID:         1,
         MessageContent: prot.NONE_STRING,
-        MessageID: msgID,
-        Type: prot.REQ_DEL,
-        UserID: u.ThisUserID,
+        MessageID:      msgID,
+        Type:           prot.REQ_DEL,
+        Username:       u.ThisUsername,
     }
     g.OutgoingRequests <- req
 }
@@ -180,11 +179,11 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
         // Send edit request if there was an actual edit
         if text != msg.Content.Text {
             req := prot.ChatRequest{
-                ChatID: 1,
+                ChatID:         1,
                 MessageContent: text,
-                MessageID: msgID,
-                Type: prot.REQ_EDIT,
-                UserID: u.ThisUserID,
+                MessageID:      msgID,
+                Type:           prot.REQ_EDIT,
+                Username:       u.ThisUsername,
             }
             g.OutgoingRequests <- req
         }

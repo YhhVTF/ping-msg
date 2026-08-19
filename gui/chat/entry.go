@@ -24,7 +24,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, c *chat.ChatCache, u *u
 		MessageID:      prot.NONE_INT,
         RepliedIDs:     c.ThisChat.ReplyingTo,
 		Type:           prot.REQ_ADD,
-		UserID:         u.ThisUserID,
+        Username:       u.ThisUsername,
 	}
 	g.OutgoingRequests <- req
 

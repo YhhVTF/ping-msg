@@ -100,6 +100,6 @@ func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.U
     // Update replied message widget for message if there is one
     if repliedMsgWidget, exists := g.Widgets.RepliedMessages[r.MessageID]; exists &&
     r.ChatID == c.ThisChat.Metadata.ID {
-        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[r.Messages[0].UserID].Username, chatCache.Messages[r.MessageID].Content)
+        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[r.Messages[0].Username].Username, chatCache.Messages[r.MessageID].Content)
     }
 }

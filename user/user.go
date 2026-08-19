@@ -7,7 +7,6 @@ import (
 // Data of a user
 type User struct {
     Bio         string
-    ID          int
     Pfp         []byte
     Username    string
 }
@@ -24,14 +23,12 @@ type UserCache struct {
     ThisBio         string
     // The profile picture of this client's user
     ThisPfp         []byte
-    // The user ID of this client's user
-    ThisUserID      int
     // The username of this client's user
     ThisUsername    string
     // Cache of other users' data
-    //  Key (int) - User ID
+    //  Key (string) - Username
     //  Val (User) - User data
-    Users           map[int]User
+    Users           map[string]User
     // Binding to cache of other users' data
-    UsersBind       map[int]UserBind
+    UsersBind       map[string]UserBind
 }

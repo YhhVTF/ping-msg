@@ -37,7 +37,7 @@ func createRepliedMessage(
         repliedText = opt.GUIText.Greeting.PlaceholderUnloaded
     } else {
         repliedText = fmt.Sprintf("%s: %s", 
-            u.Users[repliedMsg.UserID].Username,
+            u.Users[repliedMsg.Username].Username,
             repliedMsg.Content,
         )
     }
