@@ -51,8 +51,8 @@ const REQ_USER          RequestWhere = "USER"
 type ChatMetadata struct {
 	// Number of messages there are in a block
 	BlockSize int `json:"blk_size"`
-	// UserID of who created the chat
-	Creator int `json:"creator"`
+	// Username of who created the chat
+	Creator string `json:"creator"`
 	// A description of what the chat is about
 	Description string `json:"desc"`
 	// ID of the chat
@@ -64,8 +64,8 @@ type ChatMetadata struct {
 	// ID of the last message in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
 
 	LastMessageID int `json:"last_msg"`
-	// UserIDs of everyone who has access to the chat
-	Members []int `json:"members"`
+	// Usernames of everyone who has access to the chat
+	Members []string `json:"members"`
 	// The name of the chat
 	Name string `json:"name"`
 	// Total number of blocks in the chat. This should not be updated while the chat is loaded and instead should be calculated from the field `LastBlockID` when saving metadata
@@ -86,7 +86,7 @@ type ChatMetadataRequest struct {
     // What the request is (e.g., creating new chat, getting metadata, etc.)
     Type        RequestWhat `json:"req_what"`
     // ID of user the request is from
-    UserID      int         `json:"user_id"`
+    Username    string      `json:"username"`
 }
 
 type ChatMetadataResponse struct {
@@ -116,8 +116,8 @@ type ChatRequest struct {
     RepliedIDs []int        `json:"replied_ids"`
     // What the request is (e.g., message deletion, editing)
     Type RequestWhat        `json:"req_what"`
-    // User ID of who sent the request
-    UserID int              `json:"user_id"`
+    // Username of who sent the request
+    Username string         `json:"username"`
 }
 
 // A response to a chat request after the request is fulfuilled
@@ -139,9 +139,9 @@ type ChatResponse struct {
 // Request to change user's membership status in a chat
 type MemberRequest struct {
     // ID of the chat to change whether the user is a member of, is NONE_INT for REQ_GET
-    ChatID  int         `json:"chat_id"`
-    Type    RequestWhat `json:"req_what"`
-    UserID  int         `json:"user_id"`
+    ChatID      int         `json:"chat_id"`
+    Type        RequestWhat `json:"req_what"`
+    Username    string      `json:"username"`
 }
 
 // Response to MemberRequest
@@ -162,8 +162,8 @@ type MessageRaw struct {
     RepliedIDs []int    `json:"replied_ids"`
     // Time at which the message was sent (unix format)
     Time int64          `json:"time"`
-    // User ID of who sent the message
-    UserID int          `json:"user_id"`
+    // Username of who sent the message
+    Username string     `json:"username"`
 }
 // UserRequestRegister registers a username on a new connection. The server
 // assigns the numeric ID; clients must not generate their own IDs.
@@ -171,7 +171,6 @@ const UserRequestRegister = "REGISTER"
 
 // UserPrivateRaw - Includes public profile data, along with other data that other users shouldn't access. A user can only get their own private data and no one else's
 type UserPrivateRaw struct {
-    ID              int         `json:"id"`
     // IDs of chats the user is a member of
     MemberOf        []int       `json:"memberof"`
     // Number of notifications the user has in each chat
@@ -183,14 +182,11 @@ type UserPrivateRaw struct {
 
 // UserPublicRaw is the public profile data required to render message senders. Any user can get this data from any other user
 type UserPublicRaw struct {
-    ID          int     `json:"id"`
     Username    string  `json:"username"`
 }
 
 // UserRequest is sent before chat traffic to establish a connection identity.
 type UserRequest struct {
-    // ID of user involved, is NONE_INT for REQ_ADD
-    ID          int         `json:"id"`
     Type        RequestWhat `json:"req_what"`
     // Username of user, only used with REQ_ADD and REQ_EDIT
     Username    string      `json:"username"`
