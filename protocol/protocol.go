@@ -166,20 +166,16 @@ type MessageRaw struct {
 // assigns the numeric ID; clients must not generate their own IDs.
 const UserRequestRegister = "REGISTER"
 
-// UserPrivateRaw - Includes public profile data, along with other data that other users shouldn't access. A user can only get their own private data and no one else's
-type UserPrivateRaw struct {
-    // IDs of chats the user is a member of
+// UserRaw - Includes public profile data, along with other data that other users shouldn't access. A user can only get their own private data and no one else's
+type UserRaw struct {
+    // IDs of chats the user is a member of - private by default
     MemberOf        []int       `json:"memberof"`
-    // Number of notifications the user has in each chat
+    // Number of notifications the user has in each chat - private by default
     //  Key (int) - ChatID
     //  Val (int) - Number of notifications in the chat
     Notifications   map[int]int `json:"notif"`
+    // User's username - public
     Username        string      `json:"username"`
-}
-
-// UserPublicRaw is the public profile data required to render message senders. Any user can get this data from any other user
-type UserPublicRaw struct {
-    Username    string  `json:"username"`
 }
 
 // UserRequest is sent before chat traffic to establish a connection identity.
@@ -191,6 +187,6 @@ type UserRequest struct {
 
 // UserResponse is returned for a UserRequest. Error is empty on success.
 type UserResponse struct {
-    Error   string          `json:"err"`
-    User    UserPublicRaw   `json:"user"`
+    Error   string  `json:"err"`
+    User    UserRaw `json:"user"`
 }
