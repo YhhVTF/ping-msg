@@ -166,22 +166,24 @@ type MessageRaw struct {
 // assigns the numeric ID; clients must not generate their own IDs.
 const UserRequestRegister = "REGISTER"
 
-// UserRaw - Includes public profile data, along with other data that other users shouldn't access. A user can only get their own private data and no one else's
+// UserRaw - Includes profile data along with other data associated with the user, wwhich users can access what data is specified by the Visibility fields
 type UserRaw struct {
     // String of text written by the uesr, usually to describe themselves - private by default
-    Bio             string      `json:"bio"`
+    Bio             string          `json:"bio"`
     // IDs of chats the user is a member of - private by default
-    MemberOf        []int       `json:"memberof"`
+    MemberOf        []int           `json:"memberof"`
     // Number of notifications the user has in each chat - private by default
     //  Key (int) - ChatID
     //  Val (int) - Number of notifications in the chat
-    Notifications   map[int]int `json:"notif"`
+    Notifications   map[int]int     `json:"notif"`
     // Whether or not the user currently has ping open - private by default
-    Online          bool        `json:"online"`
+    Online          bool            `json:"online"`
     // Small string of text written by the user, generally to describe their current state - private by default
-    Status          string      `json:"status"`
+    Status          string          `json:"status"`
     // User's username - public
-    Username        string      `json:"username"`
+    Username        string          `json:"username"`
+    // Defines which users can access each field of this user
+    Visibility      UserVisibility  `json:"visibility"`
 }
 
 // UserRequest is sent before chat traffic to establish a connection identity.
@@ -195,4 +197,17 @@ type UserRequest struct {
 type UserResponse struct {
     Error   string  `json:"err"`
     User    UserRaw `json:"user"`
+}
+
+const UserVisibilityPrivate = 0
+const UserVisibilityFriendsOnly = 1
+const UserVisibilityPublic = 2
+
+// Defines which users should be able to access which fields, each can be either UserVisibilityPrivate, UserVisibilityFriendsOnly, or UserVisibilityPublic. Username is not present here as it must be public
+type UserVisibility struct {
+    Bio             int `json:"bio"`
+    MemberOf        int `json:"memberof"`
+    Notifications   int `json:"notif"`
+    Online          int `json:"online"`
+    Status          int `json:"status"`
 }
