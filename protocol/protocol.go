@@ -168,12 +168,18 @@ const UserRequestRegister = "REGISTER"
 
 // UserRaw - Includes public profile data, along with other data that other users shouldn't access. A user can only get their own private data and no one else's
 type UserRaw struct {
+    // String of text written by the uesr, usually to describe themselves - private by default
+    Bio             string      `json:"bio"`
     // IDs of chats the user is a member of - private by default
     MemberOf        []int       `json:"memberof"`
     // Number of notifications the user has in each chat - private by default
     //  Key (int) - ChatID
     //  Val (int) - Number of notifications in the chat
     Notifications   map[int]int `json:"notif"`
+    // Whether or not the user currently has ping open - private by default
+    Online          bool        `json:"online"`
+    // Small string of text written by the user, generally to describe their current state - private by default
+    Status          string      `json:"status"`
     // User's username - public
     Username        string      `json:"username"`
 }
