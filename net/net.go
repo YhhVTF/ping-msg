@@ -112,10 +112,11 @@ func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
 	}
 
 	u.ThisUsername = response.User.Username
-	if u.Users == nil {
-		u.Users = make(map[string]user.User)
-	}
-	u.Users[response.User.Username] = user.User{Username: response.User.Username}
+	//if u.Users == nil {
+	//	u.Users = make(map[string]user.User)
+	//}
+    u.CacheUser(response.User)
+	//u.Users[response.User.Username] = user.User{Username: response.User.Username}
 	return decoder, nil
 }
 
@@ -133,14 +134,14 @@ func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GU
 	connDone <- true
 }
 
-func cacheUsers(u *user.UserCache, users []prot.UserRaw) {
-	if u.Users == nil {
-		u.Users = make(map[string]user.User)
-	}
-	for _, profile := range users {
-		u.Users[profile.Username] = user.User{Username: profile.Username}
-	}
-}
+//func cacheUsers(u *user.UserCache, users []prot.UserRaw) {
+//	if u.Users == nil {
+//		u.Users = make(map[string]user.User)
+//	}
+//	for _, profile := range users {
+//		u.Users[profile.Username] = user.User{Username: profile.Username}
+//	}
+//}
 
 func serverRecieve(
     decoder *json.Decoder, gui *gui.GUI, u *user.UserCache,
@@ -158,10 +159,9 @@ func serverRecieve(
 			continue
 		}
 
-		cacheUsers(u, resp.Users)
-
 		switch resp.Type {
 		case prot.REQ_ADD:
+            u.CacheUsernames(resp.Users) // Cache the usernames of users involved
 			fyne.Do(func() { gui.Chat.RespAdd(&resp, ping.ChatCache, u, opt) })
 		case prot.REQ_DEL:
 			fyne.Do(func() { gui.Chat.RespDel(&resp, ping.ChatCache, opt) })

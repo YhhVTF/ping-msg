@@ -2,6 +2,8 @@ package user
 
 import (
     "fyne.io/fyne/v2/data/binding"
+
+    "github.com/YhhVTF/ping-msg/protocol"
 )
 
 // Data of a user
@@ -31,6 +33,19 @@ type UserCache struct {
     Users           map[string]*User
     // Binding to cache of other users' data
     UsersBind       map[string]*UserBind
+}
+
+func (u *UserCache) CacheUser(rawUser prot.UserRaw) {
+    user, exists := u.Users[rawUser.Username]
+    if !exists { 
+        user = &User{}
+        u.UsersBind[rawUser.Username] = &UserBind{}
+        user.Username = rawUser.Username
+        u.UsersBind[user.Username].Username = binding.BindString(&user.Username)
+    } else {
+        u.UsersBind[user.Username].Username.Set(rawUser.Username)
+    }
+    user.Bio = rawUser.Bio
 }
 
 func (u *UserCache) CacheUsernames(usernames []string) {
