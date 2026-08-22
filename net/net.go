@@ -53,7 +53,7 @@ func StartNet(
 			decoder, registerErr := registerUser(conn, u)
 			if registerErr == nil {
 				ping.Connected = true
-				log.Info.Printf("Successfully connected as user %d\n", u.ThisUsername)
+				log.Info.Printf("Successfully connected as user %s\n", u.ThisUsername)
 				if gui.Dialogs.ConnectionIssues != nil {
 					fyne.DoAndWait(func() {
                         gui.Dialogs.ConnectionIssues.Dialog.Dismiss()
@@ -133,7 +133,7 @@ func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GU
 	connDone <- true
 }
 
-func cacheUsers(u *user.UserCache, users []prot.UserPublicRaw) {
+func cacheUsers(u *user.UserCache, users []prot.UserRaw) {
 	if u.Users == nil {
 		u.Users = make(map[string]user.User)
 	}
