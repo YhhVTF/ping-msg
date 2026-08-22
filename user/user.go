@@ -43,3 +43,10 @@ func (u *UserCache) CacheUsernames(usernames []string) {
         }
     }
 }
+
+func NewUserCache() *UserCache {
+    return &UserCache{
+        Users:      make(map[string]*User),
+        UsersBind:  make(map[string]*UserBind),
+    }
+}

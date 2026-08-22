@@ -29,7 +29,7 @@ func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
     ping.Connected = false
     ping.Quit = false
     ping.ScreenManager = screen.NewScreenManager()
-    ping.UserCache = &user.UserCache{Users: make(map[string]user.User)}
+    ping.UserCache = user.NewUserCache()
 
     var g *gui.GUI
     onQuit := func() {
