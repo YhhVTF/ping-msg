@@ -28,7 +28,18 @@ type UserCache struct {
     // Cache of other users' data
     //  Key (string) - Username
     //  Val (User) - User data
-    Users           map[string]User
+    Users           map[string]*User
     // Binding to cache of other users' data
-    UsersBind       map[string]UserBind
+    UsersBind       map[string]*UserBind
+}
+
+func (u *UserCache) CacheUsernames(usernames []string) {
+    for _, username := range usernames {
+        if user, exists := u.Users[username]; !exists {
+            user = &User{Username: username}
+            u.UsersBind[username] = &UserBind{
+                Username: binding.BindString(&user.Username),
+            }
+        }
+    }
 }
