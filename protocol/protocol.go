@@ -127,8 +127,8 @@ type ChatResponse struct {
     MessageID int           `json:"msg_id"`
     // Messages that the client may have requested
     Messages []MessageRaw   `json:"msgs"`
-    // Public user profiles needed to render message senders
-    Users []UserRaw         `json:"users"`
+    // Usernames of users who sent the messages in the Messages field
+    Users []string          `json:"users"`
     // Action that this response fulfilled
     Type RequestWhat        `json:"resp_what"`
 }
