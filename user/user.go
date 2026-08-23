@@ -3,6 +3,7 @@ package user
 import (
     "fyne.io/fyne/v2/data/binding"
 
+    "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/protocol"
 )
 
@@ -36,6 +37,8 @@ type UserCache struct {
 }
 
 func (u *UserCache) CacheUser(rawUser prot.UserRaw) {
+    log.Info.Printf("Caching back user data of %s\n", rawUser.Username)
+
     user, exists := u.Users[rawUser.Username]
     if !exists { 
         user = &User{}
@@ -51,6 +54,8 @@ func (u *UserCache) CacheUser(rawUser prot.UserRaw) {
 func (u *UserCache) CacheUsernames(usernames []string) {
     for _, username := range usernames {
         if user, exists := u.Users[username]; !exists {
+            log.Info.Printf("Caching front user data of %s\n", username)
+
             user = &User{Username: username}
             u.UsersBind[username] = &UserBind{
                 Username: binding.BindString(&user.Username),

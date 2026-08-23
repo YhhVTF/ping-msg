@@ -14,8 +14,8 @@ type Chat struct {
     Attachments     []io.Reader
     // Data for each message in the chat
     //  Key (int) - Message ID
-    //  Val (*prot.MessageRaw) - Message data
-    Messages        map[int]*prot.MessageRaw
+    //  Val (Message) - Message data
+    Messages        map[int]*Message
     MessagesBind    map[int]binding.String
     // Chat metadata
     Metadata        prot.ChatMetadata
@@ -31,10 +31,23 @@ type ChatCache struct {
     ThisChat    *Chat
 }
 
+type Message struct {
+    Content     string
+    ID          int
+    RepliedIDs  []int
+    Time        int64
+    Username    *string
+}
+
+func (chat *Chat) CacheMessages(messages []prot.MessageRaw) {
+    for _, msg := range messages {
+    }
+}
+
 func NewChatCache() *Chat {
     return &Chat{
         Attachments:        make([]io.Reader, 0),
-        Messages:           make(map[int]*prot.MessageRaw),
+        Messages:           make(map[int]*Message),
         MessagesBind:       make(map[int]binding.String),
         Metadata:           prot.ChatMetadata{ ID: 1, },
         ReplyingTo:         make([]int, 0),

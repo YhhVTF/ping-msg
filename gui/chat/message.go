@@ -62,7 +62,8 @@ func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.Str
         msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, chatCache, opt)
     }
 
-    msg.Username = widget.NewLabel(msgRaw.Username)
+    msg.Username = widget.NewLabelWithData(u.UsersBind[msgRaw.Username].Username)
+
 	msg.Username.Wrapping = fyne.TextWrapWord
     msg.Username.TextStyle.Bold = true
 
