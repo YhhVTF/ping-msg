@@ -10,7 +10,6 @@ import (
     "time"
 
     "github.com/YhhVTF/ping-msg/chat"
-    "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
@@ -52,77 +51,78 @@ type Message struct {
 //    return fmt.Sprintf("User %d", msgRaw.UserID)
 //}
 
-func createMessage(g *ScreenChat, msgRaw *prot.MessageRaw, cacheBind binding.String, chatCache *chat.Chat, u *user.UserCache, opt *options.Options) *Message {
+func createMessage(g *ScreenChat, msg *chat.Message, cacheBind binding.String, chat *chat.Chat, u *user.UserCache, opt *options.Options) *Message {
     log.Info.Printf("Creating new message widget\n")
 
-    msg := &Message{}
+    msgWidget := &Message{}
 
-    if len(msgRaw.RepliedIDs) > 0 {
+    if len(msg.RepliedIDs) > 0 {
         // Replied messages are added to ScreenChat.RepliedMessages in createRepliedSection
-        msg.RepliedSection = createRepliedSection(g, msgRaw.RepliedIDs, chatCache, opt)
+        msgWidget.RepliedSection = createRepliedSection(g, msg.RepliedIDs, chat, u, opt)
     }
 
-    msg.Username = widget.NewLabelWithData(u.UsersBind[msgRaw.Username].Username)
+    msgWidget.Username = widget.NewLabelWithData(u.UsersBind[*msg.Username].Username)
 
-	msg.Username.Wrapping = fyne.TextWrapWord
-    msg.Username.TextStyle.Bold = true
+	msgWidget.Username.Wrapping = fyne.TextWrapWord
+    msgWidget.Username.TextStyle.Bold = true
 
-    msg.Time = widget.NewLabel(time.Unix(msgRaw.Time, 0).Format("3:04 PM"))
+    msgWidget.Time = widget.NewLabel(time.Unix(msg.Time, 0).Format("3:04 PM"))
 
     // Add a reply button
     buttonReply := widget.NewButton("R", func() {
-        messageOnReply(g, msgRaw.ID, chatCache)
+        messageOnReply(g, msg.ID, chat)
     })
 
     // Add a copy button
     buttonCopy := widget.NewButton("C", func() {
-        log.Info.Printf("Copied message %d\n", msgRaw.ID)
+        log.Info.Printf("Copied message %d\n", msg.ID)
 
         // Give focus back to the message entry when done
         defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
         // Copy the message contents
-        fyne.CurrentApp().Clipboard().SetContent(msg.Content.Text)
+        fyne.CurrentApp().Clipboard().SetContent(msgWidget.Content.Text)
     })
 
     var c *fyne.Container
 
     // If the message was sent by the user of this client...
-    if msgRaw.Username == u.ThisUsername {
+    if *msg.Username == u.ThisUsername {
         // Add a delete button
         buttonDelete := widget.NewButton("D", func() {
-            messageOnDelete(g, msgRaw.ID, u)
+            messageOnDelete(g, msg.ID, u)
         })
 
         // Add an edit button, upon pressing...
         buttonEdit := widget.NewButton("E", func() {
-            messageOnEdit(g, msg, msgRaw.ID, u)
+            messageOnEdit(g, msgWidget, msg.ID, u)
         })
         c = container.NewHBox(
-            buttonReply, buttonCopy, buttonEdit, buttonDelete, msg.Time,
+            buttonReply, buttonCopy, buttonEdit, buttonDelete, msgWidget.Time,
         )
     } else {
-        c = container.NewHBox(buttonReply, buttonCopy, msg.Time)
+        c = container.NewHBox(buttonReply, buttonCopy, msgWidget.Time)
     }
 
-    msg.Border = container.NewBorder(nil, nil, msg.Username, c, nil)
+    msgWidget.Border = container.NewBorder(nil, nil, msgWidget.Username, c, nil)
 
-    msg.Content = widget.NewLabelWithData(cacheBind)
-    msg.Content.Wrapping = fyne.TextWrapWord
+    msgWidget.Content = widget.NewLabelWithData(chat.MessagesBind[msg.ID])
+    msgWidget.Content.Wrapping = fyne.TextWrapWord
 
-    msg.VBox = container.NewVBox(msg.Border, msg.Content)
+    msgWidget.VBox = container.NewVBox(msgWidget.Border, msgWidget.Content)
 
-	msg.Card = widget.NewCard("", "", msg.VBox)
+	msgWidget.Card = widget.NewCard("", "", msgWidget.VBox)
 
-    if msg.RepliedSection == nil {
-        msg.Base = container.NewVBox(msg.Card)
+    if msgWidget.RepliedSection == nil {
+        msgWidget.Base = container.NewVBox(msgWidget.Card)
     } else {
-        msg.Base = container.NewVBox(msg.RepliedSection, msg.Card)
+        msgWidget.Base = container.NewVBox(msgWidget.RepliedSection, msgWidget.Card)
     }
-	return msg
+	return msgWidget
 }
 
 func createRepliedSection(
-    g *ScreenChat, repliedIDs []int, chatCache *chat.Chat, opt *options.Options,
+    g *ScreenChat, repliedIDs []int, chat *chat.Chat,
+    u *user.UserCache, opt *options.Options,
 ) *fyne.Container {
     vbox := container.NewVBox()
 
@@ -130,7 +130,7 @@ func createRepliedSection(
     for _, repliedID := range repliedIDs {
         if _, exists := g.Widgets.RepliedMessages[repliedID]; !exists {
             g.Widgets.RepliedMessages[repliedID] =
-                createRepliedMessage(chatCache.Messages[repliedID], repliedID, ping.UserCache, opt)
+                createRepliedMessage(chat.Messages[repliedID], repliedID, u, opt)
         }
         vbox.Add(g.Widgets.RepliedMessages[repliedID].Base)
     }

@@ -6,6 +6,7 @@ import (
     "io"
 
     "github.com/YhhVTF/ping-msg/protocol"
+    "github.com/YhhVTF/ping-msg/user"
 )
 
 // Cache and data for a chat
@@ -39,17 +40,40 @@ type Message struct {
     Username    *string
 }
 
-func (chat *Chat) CacheMessages(messages []prot.MessageRaw) {
-    for _, msg := range messages {
+func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache) {
+    // Go through each raw message provided
+    for _, msgRaw := range messagesRaw {
+        // Initialize the cache for that message if it isn't already and fill in the data
+        if _, exists := chat.Messages[msgRaw.ID]; !exists {
+            chat.Messages[msgRaw.ID] = &Message{
+                Content:    msgRaw.Content,
+                ID:         msgRaw.ID,
+                RepliedIDs: msgRaw.RepliedIDs,
+                Time:       msgRaw.Time,
+                Username:   &u.Users[msgRaw.Username].Username,
+            }
+            chat.MessagesBind[msgRaw.ID] =
+                binding.BindString(&chat.Messages[msgRaw.ID].Content)
+        // If the message is already present in cache, assign the new Content and RepliedIDs to it
+        } else {
+            chat.MessagesBind[msgRaw.ID].Set(msgRaw.Content)
+            chat.Messages[msgRaw.ID].RepliedIDs = msgRaw.RepliedIDs
+        }
     }
 }
 
-func NewChatCache() *Chat {
+func NewChat() *Chat {
     return &Chat{
         Attachments:        make([]io.Reader, 0),
         Messages:           make(map[int]*Message),
         MessagesBind:       make(map[int]binding.String),
         Metadata:           prot.ChatMetadata{ ID: 1, },
         ReplyingTo:         make([]int, 0),
+    }
+}
+
+func NewChatCache() *ChatCache {
+    return &ChatCache{
+        Chats: make(map[int]*Chat),
     }
 }

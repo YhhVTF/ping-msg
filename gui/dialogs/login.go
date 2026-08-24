@@ -47,6 +47,7 @@ func InitDialogLogin(
             return
         }
         u.ThisUsername = d.Entry.Text
+        u.CacheUsernames([]string { d.Entry.Text })
 
         // Dismiss the dialog and set it as nil
         d.Dialog.Dismiss()
@@ -76,6 +77,7 @@ func InitDialogLogin(
             return
         }
         u.ThisUsername = d.Entry.Text
+        u.CacheUsernames([]string { d.Entry.Text })
 
         // Dismiss the dialog and set it as nil in the dialog table
         d.Dialog.Dismiss()

@@ -3,7 +3,6 @@ package schat
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
 
     "fmt"
 
@@ -47,25 +46,27 @@ func NewChat() Chat {
 func (g *ScreenChat) RespAdd(
     r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache, opt *options.Options,
 ) {
-    chatCache := c.Chats[r.ChatID]
+    chat := c.Chats[r.ChatID]
 
-    for _, msg := range r.Messages {
+    for _, msgRaw := range r.Messages {
         log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
 
         // Update chat cache with the data from the new message
-        chatCache.Messages[msg.ID] = &msg
-        msgCache := chatCache.Messages[msg.ID]
-        chatCache.MessagesBind[msg.ID] = binding.BindString(&msgCache.Content)
+        //chat.Messages[msg.ID] = &msg
+        //msgCache := chat.Messages[msg.ID]
+        //chat.MessagesBind[msg.ID] = binding.BindString(&msgCache.Content)
 
         // Cache the usernames in the response
         u.CacheUsernames(r.Users)
+        // Cache the new message
+        chat.CacheMessages(r.Messages, u)
 
         // Create new message widget if the chat involved is currently on screen
         if r.ChatID == c.ThisChat.Metadata.ID {
             msgWidget := createMessage(
-                g, msgCache, chatCache.MessagesBind[msg.ID], chatCache, u, opt,
+                g, chat.Messages[msgRaw.ID], chat.MessagesBind[msgRaw.ID], chat, u, opt,
             )
-            g.Widgets.Messages[msg.ID] = msgWidget
+            g.Widgets.Messages[msgRaw.ID] = msgWidget
             g.Containers.Chat.VBox.Add(msgWidget.Base)
 
             g.Containers.Chat.VBox.Refresh()
@@ -89,20 +90,20 @@ func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache, opt *optio
     }
     log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
     // Delete message in cache
-    chatCache := c.Chats[r.ChatID]
-    delete(chatCache.MessagesBind, r.MessageID)
-    delete(chatCache.Messages, r.MessageID)
+    chat := c.Chats[r.ChatID]
+    delete(chat.MessagesBind, r.MessageID)
+    delete(chat.Messages, r.MessageID)
 }
 
 func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
     log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
     // Edit message in cache
-    chatCache := c.Chats[r.ChatID]
-    chatCache.MessagesBind[r.MessageID].Set(r.Messages[0].Content)
+    chat := c.Chats[r.ChatID]
+    chat.MessagesBind[r.MessageID].Set(r.Messages[0].Content)
 
     // Update replied message widget for message if there is one
     if repliedMsgWidget, exists := g.Widgets.RepliedMessages[r.MessageID]; exists &&
     r.ChatID == c.ThisChat.Metadata.ID {
-        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[r.Messages[0].Username].Username, chatCache.Messages[r.MessageID].Content)
+        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[r.Messages[0].Username].Username, chat.Messages[r.MessageID].Content)
     }
 }

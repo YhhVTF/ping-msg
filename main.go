@@ -25,7 +25,7 @@ import (
 //	loadingWindow (fyne.Window) - argument for InitGUI
 //  opt (*options.Options) - options/settings
 func StartPing(a fyne.App, loadingWindow fyne.Window, opt *options.Options) {
-    ping.ChatCache = &chat.ChatCache{Chats: make(map[int]*chat.Chat)}
+    ping.ChatCache = chat.NewChatCache()
     ping.Connected = false
     ping.Quit = false
     ping.ScreenManager = screen.NewScreenManager()

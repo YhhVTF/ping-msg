@@ -10,9 +10,9 @@ import (
     "fmt"
     "image/color"
 
+    "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
-    "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
 
@@ -25,7 +25,7 @@ type RepliedMessage struct {
 }
 
 func createRepliedMessage(
-    repliedMsg *prot.MessageRaw, repliedID int, u *user.UserCache, opt *options.Options,
+    repliedMsg *chat.Message, repliedID int, u *user.UserCache, opt *options.Options,
 ) *RepliedMessage {
     log.Info.Printf("Creating replied message widget for message %d\n", repliedID)
 
@@ -37,7 +37,7 @@ func createRepliedMessage(
         repliedText = opt.GUIText.Greeting.PlaceholderUnloaded
     } else {
         repliedText = fmt.Sprintf("%s: %s", 
-            u.Users[repliedMsg.Username].Username,
+            *repliedMsg.Username,
             repliedMsg.Content,
         )
     }

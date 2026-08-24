@@ -53,12 +53,12 @@ func (u *UserCache) CacheUser(rawUser prot.UserRaw) {
 
 func (u *UserCache) CacheUsernames(usernames []string) {
     for _, username := range usernames {
-        if user, exists := u.Users[username]; !exists {
+        if _, exists := u.Users[username]; !exists {
             log.Info.Printf("Caching front user data of %s\n", username)
 
-            user = &User{Username: username}
+            u.Users[username] = &User{Username: username}
             u.UsersBind[username] = &UserBind{
-                Username: binding.BindString(&user.Username),
+                Username: binding.BindString(&u.Users[username].Username),
             }
         }
     }
