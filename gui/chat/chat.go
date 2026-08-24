@@ -51,10 +51,12 @@ func (g *ScreenChat) RespAdd(
     for _, msgRaw := range r.Messages {
         log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
 
-        // Cache the usernames in the response
-        u.CacheUsernames(r.Users)
         // Cache the new message
-        chat.CacheMessages(r.Messages, u)
+        err := chat.CacheMessages(r.Messages, u)
+        if err != nil {
+            log.Error.Printf("Failed to cache messages: %s\n", err)
+            return
+        }
 
         // Create new message widget if the chat involved is currently on screen
         if r.ChatID == c.ThisChat.Metadata.ID {

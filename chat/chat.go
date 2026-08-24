@@ -3,6 +3,8 @@ package chat
 import (
     "fyne.io/fyne/v2/data/binding"
 
+    "errors"
+    "fmt"
     "io"
 
     "github.com/YhhVTF/ping-msg/protocol"
@@ -40,9 +42,14 @@ type Message struct {
     Username    *string
 }
 
-func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache) {
+func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache) error {
     // Go through each raw message provided
     for _, msgRaw := range messagesRaw {
+        if _, exists := u.Users[msgRaw.Username]; !exists {
+            return errors.New(
+                fmt.Sprintf("User %s (sender of message %d) not present in user cache", msgRaw.Username, msgRaw.ID),
+            )
+        }
         // Initialize the cache for that message if it isn't already and fill in the data
         if _, exists := chat.Messages[msgRaw.ID]; !exists {
             chat.Messages[msgRaw.ID] = &Message{
@@ -60,6 +67,7 @@ func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache
             chat.Messages[msgRaw.ID].RepliedIDs = msgRaw.RepliedIDs
         }
     }
+    return nil
 }
 
 func NewChat() *Chat {
