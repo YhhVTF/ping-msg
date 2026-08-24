@@ -35,22 +35,6 @@ type Message struct {
     Time *widget.Label
 }
 
-// messageUsername returns the best available display name for a message.
-// MessageRaw identifies senders by UserID; usernames are held separately in
-// the local user cache.
-//func messageUsername(msgRaw *prot.MessageRaw, u *user.UserCache) string {
-//    if u != nil {
-//        if msgRaw.UserID == u.ThisUserID && u.ThisUsername != "" {
-//            return u.ThisUsername
-//        }
-//        if cachedUser, exists := u.Users[msgRaw.UserID]; exists && cachedUser.Username != "" {
-//            return cachedUser.Username
-//        }
-//    }
-//
-//    return fmt.Sprintf("User %d", msgRaw.UserID)
-//}
-
 func createMessage(g *ScreenChat, msg *chat.Message, cacheBind binding.String, chat *chat.Chat, u *user.UserCache, opt *options.Options) *Message {
     log.Info.Printf("Creating new message widget\n")
 

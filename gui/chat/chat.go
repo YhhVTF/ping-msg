@@ -51,11 +51,6 @@ func (g *ScreenChat) RespAdd(
     for _, msgRaw := range r.Messages {
         log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
 
-        // Update chat cache with the data from the new message
-        //chat.Messages[msg.ID] = &msg
-        //msgCache := chat.Messages[msg.ID]
-        //chat.MessagesBind[msg.ID] = binding.BindString(&msgCache.Content)
-
         // Cache the usernames in the response
         u.CacheUsernames(r.Users)
         // Cache the new message
