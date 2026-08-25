@@ -9,6 +9,7 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
+    "github.com/YhhVTF/ping-msg/user"
 )
 
 // Chat card - A card with information about a chat. It will open said chat in the chat screen upon being clicked
@@ -18,16 +19,16 @@ func createChatCardTemplate() *widget.Card {
     return widget.NewCard("", "", c)
 }
 
-func (g *ScreenSidebar) InitChatsList(c *chat.ChatCache) {
+func (g *ScreenSidebar) InitChatsList(c *chat.ChatCache, u *user.UserCache) {
     g.Widgets.ChatsList = widget.NewList(
         func() int {
-            return len(c.Chats)
+            return len(u.ThisMemberOf)
         },
         func() fyne.CanvasObject {
             return createChatCardTemplate()
         },
         func(i widget.ListItemID, o fyne.CanvasObject) {
-            updateChatCard(o.(*widget.Card), c.Chats[1], c, g.ScreenManager)
+            updateChatCard(o.(*widget.Card), c.Chats[u.ThisMemberOf[i]], c, g.ScreenManager)
         },
     )
     g.Widgets.ChatsList.OnSelected = func(_ widget.ListItemID) {

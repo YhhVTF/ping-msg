@@ -38,8 +38,6 @@ func StartNet(
 	}
     gui.Dialogs.Login = nil
 
-    fyne.DoAndWait(func() { gui.Sidebar.InitChatsList(c) })
-
 	endpoint := "wss://ping.da5h1n.uk:5555/ws"
 	if len(os.Args) > 1 {
 		endpoint = websocketEndpoint(os.Args[1])
@@ -54,6 +52,9 @@ func StartNet(
 			if registerErr == nil {
 				ping.Connected = true
 				log.Info.Printf("Successfully connected as user %s\n", u.ThisUsername)
+
+                fyne.DoAndWait(func() { gui.Sidebar.InitChatsList(c, u) })
+
 				if gui.Dialogs.ConnectionIssues != nil {
 					fyne.DoAndWait(func() {
                         gui.Dialogs.ConnectionIssues.Dialog.Dismiss()
