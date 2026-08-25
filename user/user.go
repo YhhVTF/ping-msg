@@ -3,6 +3,9 @@ package user
 import (
     "fyne.io/fyne/v2/data/binding"
 
+    "errors"
+    "fmt"
+
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/protocol"
 )
@@ -24,20 +27,14 @@ type UserBind struct {
 
 // Data about the client's user and other user data received from the server
 type UserCache struct {
-    // The bio of this client's user
-    ThisBio         string
-    // IDs of chats this client's user is apart of
-    ThisMemberOf    []int
-    // The profile picture of this client's user
-    ThisPfp         []byte
-    // The username of this client's user
-    ThisUsername    string
+    // Cache of this client's user, this same pointer should also be present in Users at any time after logging in
+    ThisUser    *User
     // Cache of other users' data
     //  Key (string) - Username
     //  Val (User) - User data
-    Users           map[string]*User
+    Users       map[string]*User
     // Binding to cache of other users' data
-    UsersBind       map[string]*UserBind
+    UsersBind   map[string]*UserBind
 }
 
 // Caches all avaliable data of a user
@@ -78,4 +75,12 @@ func NewUserCache() *UserCache {
         Users:      make(map[string]*User),
         UsersBind:  make(map[string]*UserBind),
     }
+}
+
+func (u *UserCache) SetThisUser(username string) error {
+    if _, exists := u.Users[username]; !exists {
+        return errors.New(fmt.Sprintf("User %s does not exist in cache", username))
+    }
+    u.ThisUser = u.Users[username]
+    return nil
 }

@@ -51,7 +51,7 @@ func StartNet(
 			decoder, registerErr := registerUser(conn, u)
 			if registerErr == nil {
 				ping.Connected = true
-				log.Info.Printf("Successfully connected as user %s\n", u.ThisUsername)
+				log.Info.Printf("Successfully connected as user %s\n", u.ThisUser.Username)
 
                 fyne.DoAndWait(func() { gui.Sidebar.InitChatsList(c, u) })
 
@@ -95,7 +95,7 @@ func websocketEndpoint(value string) string {
 }
 
 func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
-	request := prot.UserRequest{Type: prot.UserRequestRegister, Username: u.ThisUsername}
+	request := prot.UserRequest{Type: prot.UserRequestRegister, Username: u.ThisUser.Username}
 	if err := json.NewEncoder(conn).Encode(request); err != nil {
 		return nil, err
 	}
@@ -112,8 +112,8 @@ func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
 		return nil, fmt.Errorf("server returned an invalid user registration")
 	}
 
-	u.ThisUsername = response.User.Username
     u.CacheUserBack(response.User)
+    u.SetThisUser(response.User.Username)
 	return decoder, nil
 }
 

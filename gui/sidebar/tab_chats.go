@@ -22,13 +22,13 @@ func createChatCardTemplate() *widget.Card {
 func (g *ScreenSidebar) InitChatsList(c *chat.ChatCache, u *user.UserCache) {
     g.Widgets.ChatsList = widget.NewList(
         func() int {
-            return len(u.ThisMemberOf)
+            return len(u.ThisUser.MemberOf)
         },
         func() fyne.CanvasObject {
             return createChatCardTemplate()
         },
         func(i widget.ListItemID, o fyne.CanvasObject) {
-            updateChatCard(o.(*widget.Card), c.Chats[u.ThisMemberOf[i]], c, g.ScreenManager)
+            updateChatCard(o.(*widget.Card), c.Chats[u.ThisUser.MemberOf[i]], c, g.ScreenManager)
         },
     )
     g.Widgets.ChatsList.OnSelected = func(_ widget.ListItemID) {

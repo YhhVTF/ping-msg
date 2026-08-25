@@ -46,8 +46,8 @@ func InitDialogLogin(
             d.Prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
             return
         }
-        u.ThisUsername = d.Entry.Text
         u.CacheUserFront([]string { d.Entry.Text })
+        u.SetThisUser(d.Entry.Text)
 
         // Dismiss the dialog and set it as nil
         d.Dialog.Dismiss()
@@ -57,7 +57,7 @@ func InitDialogLogin(
         // Set focus on message entry in chat screen now that dialog is dismissed
         s.ScreenChatFocusDefault()
 
-        log.Info.Printf("Username set as %s\n", u.ThisUsername)
+        log.Info.Printf("Username set as %s\n", u.ThisUser.Username)
         log.Info.Printf("Dialog Login dismissed\n")
     })
 
@@ -76,15 +76,15 @@ func InitDialogLogin(
             d.Prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
             return
         }
-        u.ThisUsername = d.Entry.Text
         u.CacheUserFront([]string { d.Entry.Text })
+        u.SetThisUser(d.Entry.Text)
 
         // Dismiss the dialog and set it as nil in the dialog table
         d.Dialog.Dismiss()
         d.Dialog.Hide()
         d.Dialog = nil
 
-        log.Info.Printf("Username set as %s\n", u.ThisUsername)
+        log.Info.Printf("Username set as %s\n", u.ThisUser.Username)
 		log.Info.Printf("Dialog Login dismissed\n")
     }
     return d

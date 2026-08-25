@@ -27,7 +27,7 @@ func buttonSendOnPressed(g *ScreenChat, c *chat.ChatCache, u *user.UserCache) {
 		MessageID:      prot.NONE_INT,
         RepliedIDs:     c.ThisChat.ReplyingTo,
 		Type:           prot.REQ_ADD,
-		Username:       u.ThisUsername,
+		Username:       u.ThisUser.Username,
 	}
 	g.OutgoingRequests <- req
 
