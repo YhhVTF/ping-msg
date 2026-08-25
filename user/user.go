@@ -10,8 +10,10 @@ import (
 // Data of a user
 type User struct {
     Bio         string
+    MemberOf    []int
     Pfp         []byte
     Username    string
+    Visibility  prot.UserVisibility
 }
 
 // Bindings to data of a user
@@ -25,7 +27,7 @@ type UserCache struct {
     // The bio of this client's user
     ThisBio         string
     // IDs of chats this client's user is apart of
-    ThisMembership  []int
+    ThisMemberOf    []int
     // The profile picture of this client's user
     ThisPfp         []byte
     // The username of this client's user
@@ -38,22 +40,27 @@ type UserCache struct {
     UsersBind       map[string]*UserBind
 }
 
-func (u *UserCache) CacheUser(rawUser prot.UserRaw) {
-    log.Info.Printf("Caching back user data of %s\n", rawUser.Username)
+// Caches all avaliable data of a user
+func (u *UserCache) CacheUserBack(userRaw prot.UserRaw) {
+    log.Info.Printf("Caching back user data of %s\n", userRaw.Username)
 
-    user, exists := u.Users[rawUser.Username]
+    user, exists := u.Users[userRaw.Username]
     if !exists { 
         user = &User{}
-        u.UsersBind[rawUser.Username] = &UserBind{}
-        user.Username = rawUser.Username
+        u.UsersBind[userRaw.Username] = &UserBind{}
+        user.Username = userRaw.Username
         u.UsersBind[user.Username].Username = binding.BindString(&user.Username)
+        u.Users[userRaw.Username] = user
     } else {
-        u.UsersBind[user.Username].Username.Set(rawUser.Username)
+        u.UsersBind[user.Username].Username.Set(userRaw.Username)
     }
-    user.Bio = rawUser.Bio
+    user.Bio = userRaw.Bio
+    user.MemberOf = userRaw.MemberOf
+    user.Visibility = userRaw.Visibility
 }
 
-func (u *UserCache) CacheUsernames(usernames []string) {
+// Caches only the data of a user required to render a message from or card of them
+func (u *UserCache) CacheUserFront(usernames []string) {
     for _, username := range usernames {
         if _, exists := u.Users[username]; !exists {
             log.Info.Printf("Caching front user data of %s\n", username)

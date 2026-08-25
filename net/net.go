@@ -112,7 +112,7 @@ func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
 	}
 
 	u.ThisUsername = response.User.Username
-    u.CacheUser(response.User)
+    u.CacheUserBack(response.User)
 	return decoder, nil
 }
 
@@ -148,7 +148,7 @@ func serverRecieve(
 
 		switch resp.Type {
 		case prot.REQ_ADD:
-            u.CacheUsernames(resp.Users) // Cache the usernames of users involved
+            u.CacheUserFront(resp.Users) // Cache the usernames of users involved
 			fyne.Do(func() { gui.Chat.RespAdd(&resp, ping.ChatCache, u, opt) })
 		case prot.REQ_DEL:
 			fyne.Do(func() { gui.Chat.RespDel(&resp, ping.ChatCache, opt) })
