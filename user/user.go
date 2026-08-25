@@ -24,6 +24,8 @@ type UserBind struct {
 type UserCache struct {
     // The bio of this client's user
     ThisBio         string
+    // IDs of chats this client's user is apart of
+    ThisMembership  []int
     // The profile picture of this client's user
     ThisPfp         []byte
     // The username of this client's user
