@@ -8,7 +8,6 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
-    "github.com/YhhVTF/ping-msg/log"
 )
 
 type ScreenSidebar struct {
@@ -29,8 +28,6 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
     g := &ScreenSidebar{}
     g.Window = w
     g.ScreenManager = s
-
-    log.Info.Printf("%d chat cards in sidebar\n", len(c.Chats))
 
     // Initialize app tabs widget
     g.Base = container.NewAppTabs(
