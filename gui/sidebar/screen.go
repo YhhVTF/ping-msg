@@ -8,15 +8,18 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
+    "github.com/YhhVTF/ping-msg/protocol"
 )
 
 type ScreenSidebar struct {
     // Tabs for DMs, Chats, and Friends in that order
-    Base            *container.AppTabs
-    ScreenManager   *screen.ScreenManager
+    Base                        *container.AppTabs
+    outgoingReqChatMetadata     chan prot.ChatMetadataRequest
+    outgoingReqMember           chan prot.MemberRequest
+    ScreenManager               *screen.ScreenManager
     // All widgets used in the sidebar
-    Widgets         WidgetTableSidebar
-    Window          fyne.Window
+    Widgets                     WidgetTableSidebar
+    Window                      fyne.Window
 }
 
 type WidgetTableSidebar struct {
