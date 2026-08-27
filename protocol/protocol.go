@@ -87,6 +87,8 @@ type ChatMetadataRequest struct {
 }
 
 type ChatMetadataResponse struct {
+    // IDs of the chats involved
+    ChatID      []int           `json:"id"`
     // Chat metadata the client may have requested
     Metadata    []ChatMetadata  `json:"metadata"`
     // Action that this response fulfilled
