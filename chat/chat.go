@@ -21,7 +21,7 @@ type Chat struct {
     Messages        map[int]*Message
     MessagesBind    map[int]binding.String
     // Chat metadata
-    Metadata        prot.ChatMetadata
+    Metadata        ChatMetadata
     ReplyingTo      []int
 }
 
@@ -32,6 +32,23 @@ type ChatCache struct {
     Chats       map[int]*Chat
     // Cache and data for chat currently shown on screen, is null if there is no chat on screen
     ThisChat    *Chat
+}
+
+type ChatMetadata struct {
+	// A description of what the chat is about
+	Description         string
+	// ID of the chat
+	ID                  int
+	// Is the chat public?
+	IsPublic            bool
+	// ID of the last message in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
+	LastMessageID       int
+	// Usernames of everyone who has access to the chat
+	Members             []string
+	// The name of the chat
+	Name                string
+	// Total number of messages in the chat. This should not be updated while the chat is loaded and instead should be calculated from the field `LastMessageID` when saving metadata
+	NumberOfMessages    int
 }
 
 type Message struct {
@@ -70,12 +87,22 @@ func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache
     return nil
 }
 
-func NewChat() *Chat {
+func NewChat(metadataRaw prot.ChatMetadata) *Chat {
+    metadata := ChatMetadata{
+        Description:        metadataRaw.Description,
+        ID:                 metadataRaw.ID,
+        IsPublic:           metadataRaw.IsPublic,
+        LastMessageID:      metadataRaw.LastMessageID,
+        Members:            metadataRaw.Members,
+        Name:               metadataRaw.Name,
+        NumberOfMessages:   metadataRaw.NumberOfMessages,
+    }
+
     return &Chat{
         Attachments:        make([]io.Reader, 0),
         Messages:           make(map[int]*Message),
         MessagesBind:       make(map[int]binding.String),
-        Metadata:           prot.ChatMetadata{ ID: 1, },
+        Metadata:           metadata,
         ReplyingTo:         make([]int, 0),
     }
 }
