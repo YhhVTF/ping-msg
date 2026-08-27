@@ -87,7 +87,7 @@ func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache
     return nil
 }
 
-func NewChat(metadataRaw prot.ChatMetadata) *Chat {
+func NewChat(metadataRaw *prot.ChatMetadata) *Chat {
     metadata := ChatMetadata{
         Description:        metadataRaw.Description,
         ID:                 metadataRaw.ID,

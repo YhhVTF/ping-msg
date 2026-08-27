@@ -8,4 +8,7 @@ import (
 func (g *ScreenSidebar) ChatMetadataRespGet(
     resp prot.ChatMetadataResponse, c *chat.ChatCache,
 ) {
+    for _, chatMD := range resp.Metadata {
+        c.Chats[chatMD.ID] = chat.NewChat(&chatMD)
+    }
 }
