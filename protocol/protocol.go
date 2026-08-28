@@ -164,8 +164,7 @@ type MessageRaw struct {
     // Username of who sent the message
     Username string     `json:"username"`
 }
-// UserRequestRegister registers a username on a new connection. The server
-// assigns the numeric ID; clients must not generate their own IDs.
+// UserRequestRegister registers a username on a new connection.
 const UserRequestRegister = "REGISTER"
 
 // UserRaw - Includes profile data along with other data associated with the user, wwhich users can access what data is specified by the Visibility fields
