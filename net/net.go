@@ -142,7 +142,7 @@ func serverRecieve(
 			return
 		}
 
-		if resp.Error != prot.NONE_STRING {
+		if resp.Error != prot.NONE_STRING || resp.Error != "" {
 			log.Error.Printf("Server returned error: %s\n", resp.Error)
 			continue
 		}
