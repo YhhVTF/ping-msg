@@ -3,10 +3,10 @@ package dialogs
 import (
     "fyne.io/fyne/v2"
     "fyne.io/fyne/v2/container"
-    "fyne.io/fyne/v2/data/binding"
     "fyne.io/fyne/v2/dialog"
     "fyne.io/fyne/v2/widget"
 
+    "errors"
     "strconv"
 
     "github.com/YhhVTF/ping-msg/log"
@@ -33,40 +33,38 @@ func createJoinChatButtonCancel(
 }
 
 func createJoinChatButtonJoin(
-    d *DialogJoinChat, done chan int, entryBind binding.String,
-    promptBind binding.String, opt *options.Options,
+    d *DialogJoinChat, entryW *widget.Entry, opt *options.Options,
 ) *widget.Button {
     return widget.NewButton("Join", func() {
-        text, _ := entryBind.Get()
-        chatID, err := strconv.Atoi(text)
-        if err != nil {
-            promptBind.Set("Not a valid chat ID, try again")
-            return
-        }
-        done <- chatID
-        d.Dialog.Dismiss()
+        entryW.OnSubmitted(entryW.Text)
     })
 }
 
 func createJoinChatEntry(
-    d *DialogJoinChat, done chan int, entryBind binding.String, opt *options.Options,
+    d *DialogJoinChat, done chan int, promptW *widget.Label, opt *options.Options,
 ) *widget.Entry {
-    entryW := widget.NewEntryWithData(entryBind)
+    entryW := widget.NewEntry()
     entryW.OnSubmitted = func(text string) {
-        defer d.Dialog.Dismiss()
-        chatID, err := strconv.Atoi(text)
-        if err != nil {
-            done <- prot.NONE_INT
+        if err := entryW.Validate(); err != nil {
+            promptW.SetText(err.Error())
             return
         }
+        chatID, _ := strconv.Atoi(text)
         done <- chatID
+        d.Dialog.Dismiss()
+    }
+    entryW.Validator = func(text string) error {
+        _, err := strconv.Atoi(text)
+        if err != nil {
+            return errors.New("Not a valid chat ID, try again")
+        }
+        return nil
     }
     return entryW
 }
 
-func createJoinChatPrompt(promptBind binding.String, opt *options.Options) *widget.Label {
-    promptBind.Set("Enter the ID of the chat you want to join")
-    return widget.NewLabelWithData(promptBind)
+func createJoinChatPrompt(opt *options.Options) *widget.Label {
+    return widget.NewLabel("Enter the ID of the chat you want to join")
 }
 
 func InitDialogJoinChat(
@@ -75,15 +73,11 @@ func InitDialogJoinChat(
     log.Info.Printf("Creating dialog JoinChat\n")
     d := &DialogJoinChat{}
 
-    promptText := ""
-    promptBind := binding.BindString(&promptText)
-    d.Prompt = createJoinChatPrompt(promptBind, opt)
+    d.Prompt = createJoinChatPrompt(opt)
 
-    entryText := ""
-    entryBind := binding.BindString(&entryText)
-    d.Entry = createJoinChatEntry(d, done, entryBind, opt)
+    d.Entry = createJoinChatEntry(d, done, d.Prompt, opt)
 
-    d.ButtonJoin = createJoinChatButtonJoin(d, done, entryBind, promptBind, opt)
+    d.ButtonJoin = createJoinChatButtonJoin(d, d.Entry, opt)
 
     d.ButtonCancel = createJoinChatButtonCancel(d, done, opt)
 
