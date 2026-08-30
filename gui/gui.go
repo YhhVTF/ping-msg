@@ -74,7 +74,7 @@ func InitGUI(
 
     // Initialize sidebar
     log.Info.Printf("Initializing sidebar\n")
-    g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager, c)
+    g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager, c, u, opt)
     // Create split and add sidebar as the leading child
     g.Base = container.NewHSplit(g.Sidebar.Base, container.NewStack(sblank.InitScreenBlank()))
     g.Base.SetOffset(opt.GUI.SplitOffset)

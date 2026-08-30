@@ -8,7 +8,9 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
+    "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
+    "github.com/YhhVTF/ping-msg/user"
 )
 
 type ScreenSidebar struct {
@@ -23,14 +25,18 @@ type ScreenSidebar struct {
 }
 
 type WidgetTableSidebar struct {
+    // Prompts the user to enter the ID of a chat they want to join
+    ButtonJoinChat  *widget.Button
     // List of chat cards which display info about a chat and open that chat when clicked
-    ChatsList *widget.List
+    ChatsList       *widget.List
 }
 
-func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache) *ScreenSidebar {
+func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache, u *user.UserCache, opt *options.Options) *ScreenSidebar {
     g := &ScreenSidebar{}
     g.Window = w
     g.ScreenManager = s
+
+    g.Widgets.ButtonJoinChat = createButtonJoin(g, w, u, opt)
 
     // Initialize app tabs widget
     g.Base = container.NewAppTabs(
@@ -40,7 +46,9 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
         ),
         // Chats tab
         container.NewTabItemWithIcon("", 
-            theme.Icon(theme.IconNameGrid), container.NewStack(),
+            theme.Icon(theme.IconNameGrid), container.NewBorder(
+                nil, container.NewHBox(g.Widgets.ButtonJoinChat), nil, nil, nil,
+            ),
         ),
     )
     g.Base.OnSelected = func(_ *container.TabItem) {

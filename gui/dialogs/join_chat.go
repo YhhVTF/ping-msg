@@ -9,6 +9,7 @@ import (
 
     "strconv"
 
+    "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
 )
@@ -71,6 +72,7 @@ func createJoinChatPrompt(promptBind binding.String, opt *options.Options) *widg
 func InitDialogJoinChat(
     w fyne.Window, done chan int, opt *options.Options,
 ) *DialogJoinChat {
+    log.Info.Printf("Creating dialog JoinChat\n")
     d := &DialogJoinChat{}
 
     promptText := ""
@@ -83,11 +85,14 @@ func InitDialogJoinChat(
 
     d.ButtonJoin = createJoinChatButtonJoin(d, done, entryBind, promptBind, opt)
 
+    d.ButtonCancel = createJoinChatButtonCancel(d, done, opt)
+
     d.Dialog =
         dialog.NewCustom("Join chat", "", container.NewVBox(d.Prompt, d.Entry), w)
 
     d.Dialog.SetButtons([]fyne.CanvasObject{
         d.ButtonJoin, d.ButtonCancel,
     })
+    d.Dialog.Show()
     return d
 }
