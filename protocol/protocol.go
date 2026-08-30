@@ -114,7 +114,7 @@ type ChatRequest struct {
     // IDs of the messages the message sent in this chat request is replying to, is non nil only for REQ_ADD and REQ_EDIT
     RepliedIDs []int        `json:"replied_ids"`
     // What the request is (e.g., message deletion, editing)
-    Type RequestWhat        `json:"req_what"`
+    Type RequestWhat        `json:"chatreq_what"`
     // Username of who sent the request
     Username string         `json:"username"`
 }
@@ -132,14 +132,14 @@ type ChatResponse struct {
     // Usernames of users who sent the messages in the Messages field
     Users []string          `json:"users"`
     // Action that this response fulfilled
-    Type RequestWhat        `json:"resp_what"`
+    Type RequestWhat        `json:"chatresp_what"`
 }
 
 // Request to change user's membership status in a chat
 type MemberRequest struct {
     // ID of the chat to change whether the user is a member of, is NONE_INT for REQ_GET
     ChatID      int         `json:"chat_id"`
-    Type        RequestWhat `json:"req_what"`
+    Type        RequestWhat `json:"memreq_what"`
     Username    string      `json:"username"`
 }
 
@@ -148,7 +148,7 @@ type MemberResponse struct {
     // IDs of the chats the user is a member of, only used with REQ_GET
     ChatIDs []int       `json:"chat_ids"`
     Error   string      `json:"err"`
-    Type    RequestWhat `json:"resp_what"`
+    Type    RequestWhat `json:"memresp_what"`
 }
 
 // Message data sent to and received from the server
@@ -189,15 +189,16 @@ type UserRaw struct {
 
 // UserRequest is sent before chat traffic to establish a connection identity.
 type UserRequest struct {
-    Type        RequestWhat `json:"req_what"`
+    Type        RequestWhat `json:"userreq_what"`
     // Username of user, only used with REQ_ADD and REQ_EDIT
     Username    string      `json:"username"`
 }
 
 // UserResponse is returned for a UserRequest. Error is empty on success.
 type UserResponse struct {
-    Error   string  `json:"err"`
-    User    UserRaw `json:"user"`
+    Error   string      `json:"err"`
+    Type    RequestWhat `json:"userresp_what"`
+    User    UserRaw     `json:"user"`
 }
 
 const UserVisibilityPrivate = 0
