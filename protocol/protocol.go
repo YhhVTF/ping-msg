@@ -71,6 +71,15 @@ type ChatMetadata struct {
 	NumberOfMessages int `json:"msgs"`
 }
 
+// ChatMetadataRequestCreate creates a new chat with the provided chat metadata, with the user who made the request initially being its sole member
+const ChatMetadataRequestCreate = "CHATMD_CREATE"
+// ChatMetadataRequestGet gives the client the metadata for the chats its user is a member of
+const ChatMetadataRequestGet    = "CHATMD_GET"
+// ChatMetadataRequestJoin makes the user of the client who made the request a member of the specified chat along with giving the client the metadata for that chat
+const ChatMetadataRequestJoin   = "CHATMD_JOIN"
+// ChatMetadataRequestLeave revokes the user of the client who made the resquest's membership of the specified chat
+const ChatMetadataRequestLeave  = "CHATMD_LEAVE"
+
 type ChatMetadataRequest struct {
     // IDs of the chats involved
     ChatID      []int       `json:"id"`
