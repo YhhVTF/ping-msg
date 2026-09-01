@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+    "slices"
 	"strings"
 	"sync"
 	"time"
@@ -174,14 +175,24 @@ func serverRecieve(
             }
 
             switch chatMDResp.Type {
-            case prot.REQ_ADD:
+            case prot.ChatMetadataRequestCreate:
                 c.Chats[chatMDResp.ChatID[0]] = chat.NewChat(&chatMDResp.Metadata[0])
                 u.ThisUser.MemberOf = append(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
                 fyne.Do(func() {})
-            case prot.REQ_GET:
+            case prot.ChatMetadataRequestGet:
                 for _, chatMD := range chatMDResp.Metadata {
                     c.Chats[chatMD.ID] = chat.NewChat(&chatMD)
                 }
+                fyne.Do(func() { gui.Sidebar.Widgets.ChatsList.Refresh() })
+            case prot.ChatMetadataRequestJoin:
+                c.Chats[chatMDResp.ChatID[0]] = chat.NewChat(&chatMDResp.Metadata[0])
+                u.ThisUser.MemberOf = append(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
+                fyne.Do(func() {})
+            case prot.ChatMetadataRequestLeave:
+                delete(c.Chats, chatMDResp.ChatID[0])
+                i := slices.Index(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
+                u.ThisUser.MemberOf = slices.Delete(u.ThisUser.MemberOf, i, i+1)
+
                 fyne.Do(func() { gui.Sidebar.Widgets.ChatsList.Refresh() })
             }
         }
