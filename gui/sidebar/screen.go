@@ -16,8 +16,8 @@ import (
 type ScreenSidebar struct {
     // Tabs for DMs, Chats, and Friends in that order
     Base                        *container.AppTabs
-    outgoingReqChatMetadata     chan prot.ChatMetadataRequest
-    outgoingReqMember           chan prot.MemberRequest
+    OutgoingReqChatMetadata     chan prot.ChatMetadataRequest
+    OutgoingReqMember           chan prot.MemberRequest
     ScreenManager               *screen.ScreenManager
     // All widgets used in the sidebar
     Widgets                     WidgetTableSidebar

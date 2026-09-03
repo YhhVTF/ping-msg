@@ -145,6 +145,8 @@ func serverRecieve(
 
         var chatResp prot.ChatResponse
         if err := json.Unmarshal(raw, &chatResp); err == nil && chatResp.Type != "" {
+            log.Info.Printf("Received %s from server\n", chatResp.Type)
+
             if chatResp.Error != prot.NONE_STRING && chatResp.Error != "" {
                 log.Error.Printf("Server returned error: %s\n", chatResp.Error)
                 continue
@@ -162,6 +164,8 @@ func serverRecieve(
         }
         var userResp prot.UserResponse
         if err := json.Unmarshal(raw, &userResp); err == nil && userResp.Type != "" {
+            log.Info.Printf("Received %s from server\n", userResp.Type)
+
             if userResp.Error != prot.NONE_STRING && userResp.Error != "" {
                 log.Error.Printf("Server returned error: %s\n", chatResp.Error)
                 continue
@@ -169,6 +173,8 @@ func serverRecieve(
         }
         var chatMDResp prot.ChatMetadataResponse
         if err := json.Unmarshal(raw, &chatMDResp); err == nil && chatMDResp.Type != "" {
+            log.Info.Printf("Received %s from server\n", chatMDResp.Type)
+
             if chatMDResp.Error != prot.NONE_STRING && chatMDResp.Error != "" {
                 log.Error.Printf("Server returned error: %s\n", chatResp.Error)
                 continue
@@ -203,7 +209,7 @@ func serverSend(conn net.Conn, gui *gui.GUI, done <-chan struct{}, signalDone fu
 	encoder := json.NewEncoder(conn)
 	for {
 		select {
-		case req := <-gui.OutgoingRequests:
+		case req := <-gui.Chat.OutgoingRequests:
 			log.Info.Printf("Sending %s request to server\n", req.Type)
 			if err := encoder.Encode(req); err != nil {
 				log.Error.Printf("Failed to send outgoing request: %s\n", err)

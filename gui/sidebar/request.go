@@ -6,7 +6,7 @@ import (
 )
 
 func (g *ScreenSidebar) ChatMetadataRequestCreate(chatID int, u *user.UserCache) {
-    g.outgoingReqChatMetadata <- prot.ChatMetadataRequest{
+    g.OutgoingReqChatMetadata <- prot.ChatMetadataRequest{
         ChatID:     []int{ chatID },
         Type:       prot.ChatMetadataRequestCreate,
         Username:   u.ThisUser.Username,
@@ -14,7 +14,7 @@ func (g *ScreenSidebar) ChatMetadataRequestCreate(chatID int, u *user.UserCache)
 }
 
 func (g *ScreenSidebar) ChatMetadataRequestGet(chatIDs []int, u *user.UserCache) {
-    g.outgoingReqChatMetadata <- prot.ChatMetadataRequest{
+    g.OutgoingReqChatMetadata <- prot.ChatMetadataRequest{
         ChatID:     chatIDs,
         Type:       prot.ChatMetadataRequestGet,
         Username:   u.ThisUser.Username,
@@ -22,7 +22,7 @@ func (g *ScreenSidebar) ChatMetadataRequestGet(chatIDs []int, u *user.UserCache)
 }
 
 func (g *ScreenSidebar) ChatMetadataRequestJoin(chatID int, u *user.UserCache) {
-    g.outgoingReqChatMetadata <- prot.ChatMetadataRequest{
+    g.OutgoingReqChatMetadata <- prot.ChatMetadataRequest{
         ChatID:     []int{ chatID },
         Type:       prot.ChatMetadataRequestJoin,
         Username:   u.ThisUser.Username,
@@ -30,7 +30,7 @@ func (g *ScreenSidebar) ChatMetadataRequestJoin(chatID int, u *user.UserCache) {
 }
 
 func (g *ScreenSidebar) MemberRequestGet(u *user.UserCache) {
-    g.outgoingReqMember <- prot.MemberRequest{
+    g.OutgoingReqMember <- prot.MemberRequest{
         ChatID:     prot.NONE_INT,
         Type:       prot.REQ_GET,
         Username:   u.ThisUser.Username,
@@ -38,7 +38,7 @@ func (g *ScreenSidebar) MemberRequestGet(u *user.UserCache) {
 }
 
 func (g *ScreenSidebar) MemberRequestToggle(chatID int, u *user.UserCache) {
-    g.outgoingReqMember <- prot.MemberRequest{
+    g.OutgoingReqMember <- prot.MemberRequest{
         ChatID:     chatID,
         Type:       prot.REQ_GET,
         Username:   u.ThisUser.Username,
