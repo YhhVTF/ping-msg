@@ -5,10 +5,26 @@ import (
     "github.com/YhhVTF/ping-msg/user"
 )
 
+func (g *ScreenSidebar) ChatMetadataRequestCreate(chatID int, u *user.UserCache) {
+    g.outgoingReqChatMetadata <- prot.ChatMetadataRequest{
+        ChatID:     []int{ chatID },
+        Type:       prot.ChatMetadataRequestCreate,
+        Username:   u.ThisUser.Username,
+    }
+}
+
 func (g *ScreenSidebar) ChatMetadataRequestGet(chatIDs []int, u *user.UserCache) {
     g.outgoingReqChatMetadata <- prot.ChatMetadataRequest{
         ChatID:     chatIDs,
         Type:       prot.ChatMetadataRequestGet,
+        Username:   u.ThisUser.Username,
+    }
+}
+
+func (g *ScreenSidebar) ChatMetadataRequestJoin(chatID int, u *user.UserCache) {
+    g.outgoingReqChatMetadata <- prot.ChatMetadataRequest{
+        ChatID:     []int{ chatID },
+        Type:       prot.ChatMetadataRequestJoin,
         Username:   u.ThisUser.Username,
     }
 }
