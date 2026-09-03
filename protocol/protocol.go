@@ -45,7 +45,7 @@ const REQ_MEMBER        RequestWhere = "MEMBER"
 const REQ_USER          RequestWhere = "USER"
 
 // Information about a chat
-type ChatMetadata struct {
+type ChatMetadataRaw struct {
 	// Number of messages there are in a block
 	BlockSize int `json:"blk_size"`
 	// Username of who created the chat
@@ -97,12 +97,12 @@ type ChatMetadataRequest struct {
 
 type ChatMetadataResponse struct {
     // IDs of the chats involved
-    ChatID      []int           `json:"id"`
-    Error       string          `json:"err"`
+    ChatID      []int               `json:"id"`
+    Error       string              `json:"err"`
     // Chat metadata the client may have requested
-    Metadata    []ChatMetadata  `json:"metadata"`
+    Metadata    []ChatMetadataRaw   `json:"metadata"`
     // Action that this response fulfilled
-    Type        RequestWhat     `json:"req_what"`
+    Type        RequestWhat         `json:"req_what"`
 }
 
 // Collection of raw messages, used for saving and loading messages, not for communication between the client and server

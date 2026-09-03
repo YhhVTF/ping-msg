@@ -17,6 +17,6 @@ func DoDebugNewChat(
     chatsListW *widget.List, c *chat.ChatCache, u *user.UserCache,
 ) {
     u.ThisUser.MemberOf = []int{ 1 }
-    c.Chats[1] = chat.NewChat(&prot.ChatMetadata{ID: 1})
+    c.Chats[1] = chat.NewChat(&prot.ChatMetadataRaw{ID: 1})
     chatsListW.Refresh()
 }
