@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-09-03
+
+### Added
+
+- Custom shortcuts
+- Join chat button in the chats tab on the sidebar (not yet functional)
+- Shortcut Ctrl+Alt+N: makes the generic chat appear in the sidebar chats tab
+- Sidebar screen can now make chat metadata requests
+
+### Changed
+
+- Generic chat is now not visible in the sidebar chats tab by default
+- Overhauled how users are handled
+
+### Removed
+
+- User IDs
+
 ## [0.3.2] - 2026-08-13
 
 ### Changed
