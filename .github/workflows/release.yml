@@ -1,13 +1,10 @@
-name: Build Client
+name: Build and Release Client
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-
   build-windows:
     name: Build Windows Client
     runs-on: windows-latest
@@ -22,12 +19,12 @@ jobs:
 
     - name: Build Client (Windows)
       run: |
-        set CGO_ENABLED=1
-        set GOOS=windows
-        set GOARCH=amd64
+        $env:CGO_ENABLED="1"
+        $env:GOOS="windows"
+        $env:GOARCH="amd64"
         go build -v -o ping-windows.exe .
 
-    - name: Upload Client
+    - name: Upload Windows Artifact
       uses: actions/upload-artifact@v4
       with:
         name: ping-client-windows
@@ -54,8 +51,40 @@ jobs:
       run: |
         CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -v -o ping-linux .
 
-    - name: Upload Client
+    - name: Upload Linux Artifact
       uses: actions/upload-artifact@v4
       with:
         name: ping-client-linux
         path: ping-linux
+
+  release:
+    name: Publish Release
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download Windows Build
+      uses: actions/download-artifact@v4
+      with:
+        name: ping-client-windows
+        path: ./dist
+
+    - name: Download Linux Build
+      uses: actions/download-artifact@v4
+      with:
+        name: ping-client-linux
+        path: ./dist
+
+    - name: Release to GitHub
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: latest
+        name: "Latest Development Build"
+        body: "Automated build generated from the latest push to the main branch."
+        files: |
+          ./dist/ping-windows.exe
+          ./dist/ping-linux
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
