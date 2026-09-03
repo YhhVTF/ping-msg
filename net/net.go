@@ -184,7 +184,7 @@ func serverRecieve(
             case prot.ChatMetadataRequestCreate:
                 c.Chats[chatMDResp.ChatID[0]] = chat.NewChat(&chatMDResp.Metadata[0])
                 u.ThisUser.MemberOf = append(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
-                fyne.Do(func() {})
+                fyne.Do(func() { gui.Sidebar.ChatMetadataRespCreate(u) })
             case prot.ChatMetadataRequestGet:
                 for _, chatMD := range chatMDResp.Metadata {
                     c.Chats[chatMD.ID] = chat.NewChat(&chatMD)
@@ -193,7 +193,7 @@ func serverRecieve(
             case prot.ChatMetadataRequestJoin:
                 c.Chats[chatMDResp.ChatID[0]] = chat.NewChat(&chatMDResp.Metadata[0])
                 u.ThisUser.MemberOf = append(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
-                fyne.Do(func() {})
+                fyne.Do(func() { gui.Sidebar.ChatMetadataRespJoin(u) })
             case prot.ChatMetadataRequestLeave:
                 delete(c.Chats, chatMDResp.ChatID[0])
                 i := slices.Index(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
