@@ -36,6 +36,9 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
     g.Window = w
     g.ScreenManager = s
 
+    g.OutgoingReqChatMetadata = make(chan prot.ChatMetadataRequest)
+    g.OutgoingReqMember = make(chan prot.MemberRequest)
+
     g.Widgets.ButtonJoinChat = createButtonJoin(g, w, u, opt)
 
     // Initialize app tabs widget
