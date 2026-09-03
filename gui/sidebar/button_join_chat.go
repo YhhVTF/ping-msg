@@ -24,7 +24,7 @@ func createButtonJoin(
         go func() {
             chatID := <-dialogDone
             if chatID != prot.NONE_INT {
-                g.ChatMetadataRequestGet([]int{ chatID }, u)
+                g.ChatMetadataRequestJoin(chatID, u)
             }
         }()
     })
