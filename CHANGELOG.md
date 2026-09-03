@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-09-03
+
+### Added
+
+- Ability to create chats
+- Ability to join chats
+- Create chat button in the sidebar chats tab
+- Labels at the top of the sidebar DMs and chats tab to designate them as such
+
+### Fixed
+
+- Not joining chat after a valid chat ID is submitted in the JoinChat dialog
+
+### Removed
+
+- Hardcoded generic chat 1
+- Shortcut Ctrl+Alt+N
+
 ## [0.4.0] - 2026-09-03
 
 ### Added
