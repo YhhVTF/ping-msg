@@ -8,7 +8,7 @@ import (
 func (g *ScreenSidebar) ChatMetadataRequestGet(chatIDs []int, u *user.UserCache) {
     g.outgoingReqChatMetadata <- prot.ChatMetadataRequest{
         ChatID:     chatIDs,
-        Type:       prot.REQ_GET,
+        Type:       prot.ChatMetadataRequestGet,
         Username:   u.ThisUser.Username,
     }
 }
