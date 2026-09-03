@@ -8,6 +8,7 @@ import (
 func (g *ScreenSidebar) ChatMetadataRequestCreate(u *user.UserCache) {
     g.OutgoingReqChatMetadata <- prot.ChatMetadataRequest{
         ChatID:     nil,
+        IsPublic:   true,
         Type:       prot.ChatMetadataRequestCreate,
         Username:   u.ThisUser.Username,
     }
