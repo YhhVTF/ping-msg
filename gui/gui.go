@@ -70,8 +70,6 @@ func InitGUI(
 
     g.OutgoingRequests = make(chan prot.ChatRequest)
 
-    c.Chats[1] = chat.NewChat(&prot.ChatMetadataRaw{ID: 1})
-
     // Initialize sidebar
     log.Info.Printf("Initializing sidebar\n")
     g.Sidebar = sside.InitScreenSidebar(g.Window, g.ScreenManager, c, u, opt)
