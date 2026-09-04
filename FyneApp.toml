@@ -4,5 +4,5 @@ Website = "ping.da5h1n.uk"
 Icon = "assets/icons/ping.png"
 Name = "Ping"
 ID = "org.interface{}.ping"
-Version = "0.3.0"
+Version = "0.4.2"
 Build = 2
