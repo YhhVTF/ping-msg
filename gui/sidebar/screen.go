@@ -61,11 +61,7 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
         // Chats tab
         container.NewTabItemWithIcon("", 
             theme.Icon(theme.IconNameGrid), container.NewBorder(
-<<<<<<< HEAD
                 g.Widgets.LabelChats,
-=======
-                nil,
->>>>>>> 142f6b6 (added create chat button)
                 container.NewStack(container.NewHBox(
                     container.NewStack(g.Widgets.ButtonJoinChat),
                     container.NewStack(g.Widgets.ButtonCreateChat),
