@@ -1,5 +1,7 @@
 {
     "button_attach": { "label": "Attach" },
+    "button_create_chat": { "label": "Create" },
+    "button_join_chat": { "label": "Join" },
     "button_options": { "label": "Options" },
     "button_send": { "label": "Send" },
     "dialog_connection_issues": {
@@ -7,6 +9,12 @@
         "prompt": "Failed to connect to server. The server may be down or your internet connection could be unstable",
         "title": "Connection Issues"
     },
+    "dialog_join_chat": {
+        "buttons": [{ "label": "Join" }, { "label": "Cancel" }],
+        "prompt": "Enter the ID of the chat you want to join",
+        "title": "Join chat"
+    },
+    "dialog_join_chat_altprompt": "Not a valid chat ID, try again",
     "dialog_login": {
         "buttons": [{ "label": "Login" }],
         "prompt": "Enter a username to login as",
@@ -19,6 +27,8 @@
         "placeholder_deleted": "Message deleted",
         "placeholder_noload": "Could not load message"
     },
+    "label_chats": "Chats",
+    "label_dms": "Direct Messages",
     "optioncard_language": { "subtitle": "Language" },
     "window": { "title": "Ping" },
     "window_options": { "title": "Options" }

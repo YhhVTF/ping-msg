@@ -1,5 +1,7 @@
 {
     "button_attach": { "label": "Monoz" },
+    "button_create_chat": { "label": "Create" },
+    "button_join_chat": { "label": "Join" },
     "button_options": { "label": "Ykil abulin" },
     "button_send": { "label": "Toloz" },
     "dialog_connection_issues": {
@@ -7,6 +9,12 @@
         "prompt": "Difa didebin yki kilisigo dezol. Podifoz yki kilisigo rrelis, serib yki internetfhalo",
         "title": "Yki Fhalobeto"
     },
+    "dialog_join_chat": {
+        "buttons": [{ "label": "Join" }, { "label": "Cancel" }],
+        "prompt": "Enter the ID of the chat you want to join",
+        "title": "Join chat"
+    },
+    "dialog_join_chat_altprompt": "Not a valid chat ID, try again",
     "dialog_login": {
         "buttons": [{ "label": "Retis" }],
         "prompt": "Dotoz o kosely yki retis los",
@@ -19,6 +27,8 @@
         "placeholder_deleted": "Hidioligy yki hipilo",
         "placeholder_noload": "Podifoboz yki hipilo"
     },
+    "label_chats": "Chats",
+    "label_dms": "Direct Messages",
     "optioncard_language": { "subtitle": "Yki tolo" },
     "window": { "title": "Internetfhalo" },
     "window_options": { "title": "Ykil abulin" }

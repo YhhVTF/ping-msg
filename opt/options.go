@@ -37,14 +37,20 @@ type EntryOptions struct {}
 
 type GUITextOptions struct {
     ButtonAttach            ButtonTextOptions   `json:"button_attach"`
+    ButtonCreateChat        ButtonTextOptions   `json:"button_create_chat"`
+    ButtonJoinChat          ButtonTextOptions   `json:"button_join_chat"`
     ButtonOptions           ButtonTextOptions   `json:"button_options"`
     ButtonSend              ButtonTextOptions   `json:"button_send"`
     DialogConnIssues        DialogTextOptions   `json:"dialog_connection_issues"`
+    DialogJoinChat          DialogTextOptions   `json:"dialog_join_chat"`
+    DialogJoinChatAltPrompt string              `json:"dialog_join_chat_altprompt"`
     DialogLogin             DialogTextOptions   `json:"dialog_login"`
     DialogLoginAltPrompt    string              `json:"dialog_login_altprompt"`
     EntryMessage            EntryTextOptions    `json:"entry_message"`
     EntryUsername           EntryTextOptions    `json:"entry_username"`
     Greeting                GreetingTextOptions `json:"greeting"`
+    LabelChats              string              `json:"label_chats"`
+    LabelDMs                string              `json:"label_dms"`
     OptionCardLanguage      CardTextOptions     `json:"optioncard_language"`
     Window                  WindowTextOptions   `json:"window"`
     WindowOptions           WindowTextOptions   `json:"window_options"`
@@ -57,6 +63,7 @@ type GreetingTextOptions struct {
 
 type GUIOptions struct {
     DialogConnIssues    DialogOptions   `json:"dialog_connection_issues"`
+    DialogJoinChat      DialogOptions   `json:"dialog_join_chat"`
     DialogLogin         DialogOptions   `json:"dialog_login"`
     Language            string          `json:"language"`
     SplitOffset         float64         `json:"split_offset"`

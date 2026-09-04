@@ -45,8 +45,8 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
     g.OutgoingReqChatMetadata = make(chan prot.ChatMetadataRequest)
     g.OutgoingReqMember = make(chan prot.MemberRequest)
 
-    g.Widgets.LabelDMs = widget.NewLabel("Direct Messages")
-    g.Widgets.LabelChats = widget.NewLabel("Chats")
+    g.Widgets.LabelDMs = widget.NewLabel(opt.GUIText.LabelDMs)
+    g.Widgets.LabelChats = widget.NewLabel(opt.GUIText.LabelChats)
 
     g.Widgets.ButtonJoinChat = createButtonJoin(g, w, u, opt)
 
