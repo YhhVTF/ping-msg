@@ -26,7 +26,7 @@ type DialogJoinChat struct {
 func createJoinChatButtonCancel(
     d *DialogJoinChat, done chan int, opt *options.Options,
 ) *widget.Button {
-    return widget.NewButton("Cancel", func() {
+    return widget.NewButton(opt.GUIText.DialogJoinChat.Buttons[1].Label, func() {
         defer d.Dialog.Dismiss()
         done <- prot.NONE_INT
     })
@@ -35,7 +35,7 @@ func createJoinChatButtonCancel(
 func createJoinChatButtonJoin(
     d *DialogJoinChat, entryW *widget.Entry, opt *options.Options,
 ) *widget.Button {
-    return widget.NewButton("Join", func() {
+    return widget.NewButton(opt.GUIText.DialogJoinChat.Buttons[0].Label, func() {
         entryW.OnSubmitted(entryW.Text)
     })
 }
@@ -56,7 +56,7 @@ func createJoinChatEntry(
     entryW.Validator = func(text string) error {
         _, err := strconv.Atoi(text)
         if err != nil {
-            return errors.New("Not a valid chat ID, try again")
+            return errors.New(opt.GUIText.DialogJoinChatAltPrompt)
         }
         return nil
     }
@@ -64,7 +64,7 @@ func createJoinChatEntry(
 }
 
 func createJoinChatPrompt(opt *options.Options) *widget.Label {
-    return widget.NewLabel("Enter the ID of the chat you want to join")
+    return widget.NewLabel(opt.GUIText.DialogJoinChat.Prompt)
 }
 
 func InitDialogJoinChat(
@@ -82,7 +82,7 @@ func InitDialogJoinChat(
     d.ButtonCancel = createJoinChatButtonCancel(d, done, opt)
 
     d.Dialog =
-        dialog.NewCustom("Join chat", "", container.NewVBox(d.Prompt, d.Entry), w)
+        dialog.NewCustom(opt.GUIText.DialogJoinChat.Title, "", container.NewVBox(d.Prompt, d.Entry), w)
 
     d.Dialog.SetButtons([]fyne.CanvasObject{
         d.ButtonJoin, d.ButtonCancel,

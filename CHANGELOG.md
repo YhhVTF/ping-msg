@@ -5,18 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2026-09-04
+
+### Added
+
+- Options for the new join chat dialog, chat tab buttons and sidebar labels
+
+### Changed
+
+- Join and Create buttons, sidebar labels, and JoinChat dialog now use options
+- Updated language english
+- Updated language entish
+
 ## [0.4.1] - 2026-09-03
 
 ### Added
 
 - Ability to create chats
 - Ability to join chats
-- Create chat button in the sidebar chats tab
-- Labels at the top of the sidebar DMs and chats tab to designate them as such
+- Create chat button in sidebar chats tab
+- Labels at the top of each sidebar tab that show what each tab contains
 
 ### Fixed
 
-- Not joining chat after a valid chat ID is submitted in the JoinChat dialog
+- Not joining chat after a valid chat ID has been submitted in the JoinChat dialog
 
 ### Removed
 

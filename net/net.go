@@ -39,7 +39,7 @@ func StartNet(
 	}
     gui.Dialogs.Login = nil
 
-	endpoint := "wss://ping.da5h1n.uk:5555/ws"
+	endpoint := "wss://ping.da5h1n.uk/ws"
 	if len(os.Args) > 1 {
 		endpoint = websocketEndpoint(os.Args[1])
 	}

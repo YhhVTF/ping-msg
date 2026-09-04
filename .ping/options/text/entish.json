@@ -1,5 +1,7 @@
 {
     "button_attach": { "label": "延滞罪！ :O" },
+    "button_create_chat": { "label": "neogeneral :o" },
+    "button_join_chat": { "label": "ethernet explodesie >:3c" },
     "button_options": { "label": "nerdlarpsie kinda :P" },
     "button_send": { "label": "weeeeee >w<" },
     "dialog_connection_issues": {
@@ -7,6 +9,12 @@
         "prompt": "idk where servie issie it mait be deadsie or yr wifi explodesie or smth ;w;'",
         "title": "buh where servie 3:"
     },
+    "dialog_join_chat": {
+        "buttons": [{ "label": "wwweeeeeee >w<" }, { "label": "buh nvm :P" }],
+        "prompt": "whar id of chat yuu wann :3c",
+        "title": "ethernet explodesie >:3"
+    },
+    "dialog_join_chat_altprompt": "o nu i meant like chat idsie das nu idsie Twt'",
     "dialog_login": {
         "buttons": [{ "label": "yyyyee ^^" }],
         "prompt": "whar yr usernamesie :3c",
@@ -19,6 +27,8 @@
         "placeholder_deleted": "oop- message gu baiibaii TwT",
         "placeholder_noload": "guh where messagie ;w;'"
     },
+    "label_chats": "yappies ^^",
+    "label_dms": "fweaky >;3",
     "optioncard_language": { "subtitle": "whar langie :3c" },
     "window": { "title": "pingieee >w<" },
     "window_options": { "title": "assemblie :o" }

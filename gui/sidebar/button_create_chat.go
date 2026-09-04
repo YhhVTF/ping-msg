@@ -9,7 +9,7 @@ import (
 )
 
 func createButtonCreate(g *ScreenSidebar, u *user.UserCache, opt *options.Options) *widget.Button {
-    return widget.NewButton("Create", func() {
+    return widget.NewButton(opt.GUIText.ButtonCreateChat.Label, func() {
         log.Info.Printf("Widget ButtonCreateChat pressed\n")
         g.ChatMetadataRequestCreate(u)
     })
