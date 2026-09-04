@@ -22,7 +22,7 @@ func buttonSendOnPressed(g *ScreenChat, c *chat.ChatCache, u *user.UserCache) {
 
     // Send a new ADD chat request to net.serverSend
 	req := prot.ChatRequest{
-		ChatID:         1,
+		ChatID:         c.ThisChat.Metadata.ID,
 		MessageContent: text,
 		MessageID:      prot.NONE_INT,
         RepliedIDs:     c.ThisChat.ReplyingTo,

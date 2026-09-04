@@ -19,7 +19,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, c *chat.ChatCache, u *u
 
     // Send new ADD chat request net.serverSend
 	req := prot.ChatRequest{
-		ChatID:         1,
+		ChatID:         c.ThisChat.Metadata.ID,
 		MessageContent: text,
 		MessageID:      prot.NONE_INT,
         RepliedIDs:     c.ThisChat.ReplyingTo,

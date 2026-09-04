@@ -9,7 +9,6 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/gui/screen"
-    "github.com/YhhVTF/ping-msg/gui/shortcuts"
     "github.com/YhhVTF/ping-msg/user"
 )
 
@@ -36,10 +35,6 @@ func (g *ScreenSidebar) InitChatsList(c *chat.ChatCache, u *user.UserCache) {
         g.ScreenManager.ScreenChatFocusDefault()
     }
     g.Base.Items[1].Content.(*fyne.Container).Add(g.Widgets.ChatsList)
-
-    g.Window.Canvas().AddShortcut(shortcuts.ShortcutDebugNewChat, func(_ fyne.Shortcut) {
-        shortcuts.DoDebugNewChat(g.Widgets.ChatsList, c, u)
-    })
 }
 
 func updateChatCard(
