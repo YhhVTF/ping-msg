@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] - 2026-09-04
+
+### Added
+
+- Options for the new join chat dialog, chat tab buttons and sidebar labels
+
+### Changed
+
+- Join and Create buttons, sidebar labels, and JoinChat dialog now use options
+- Updated language english
+- Updated language entish
+
 ## [0.4.2] - 2026-09-04
 
 ### Added
