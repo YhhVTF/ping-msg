@@ -131,30 +131,6 @@ func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GU
 	connDone <- true
 }
 
-func serverSend(conn net.Conn, gui *gui.GUI, done <-chan struct{}, signalDone func()) {
-	encoder := json.NewEncoder(conn)
-	for {
-		select {
-		case req := <-gui.OutgoingRequests:
-			if err := encoder.Encode(req); err != nil {
-				log.Error.Printf("Failed to send outgoing request %s: %s\n", req.Type, err)
-				signalDone()
-				return
-			}
-            log.Info.Printf("Sent request %s to server\n", req.Type)
-        case req := <-gui.Sidebar.OutgoingReqChatMetadata:
-            if err := encoder.Encode(req); err != nil {
-                log.Error.Printf("Failed to send outgoing request %s: %s\n", req.Type, err)
-                signalDone()
-                return
-            }
-            log.Info.Printf("Sent request %s to server\n", req.Type)
-		case <-done:
-			return
-		}
-	}
-}
-
 func CreateChatRequest(chatID int, reqType prot.RequestWhat, username string, messageContent string, messageID int) []byte {
 	req := prot.ChatRequest{ChatID: chatID, Type: reqType, Username: username, MessageContent: messageContent, MessageID: messageID}
 	bytes, err := json.Marshal(req)
