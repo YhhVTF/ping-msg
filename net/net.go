@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-    "slices"
 	"strings"
 	"sync"
 	"time"
@@ -130,79 +129,6 @@ func HandleServerCommunication(conn net.Conn, decoder *json.Decoder, gui *gui.GU
 
 	<-done
 	connDone <- true
-}
-
-func serverRecieve(
-    decoder *json.Decoder, gui *gui.GUI, c *chat.ChatCache, u *user.UserCache,
-    opt *options.Options, signalDone func(),
-) {
-	for {
-        var raw json.RawMessage
-		if err := decoder.Decode(&raw); err != nil {
-			signalDone()
-			return
-		}
-
-        var chatResp prot.ChatResponse
-        if err := json.Unmarshal(raw, &chatResp); err == nil && chatResp.Type != "" {
-            log.Info.Printf("Received %s from server\n", chatResp.Type)
-
-            if chatResp.Error != prot.NONE_STRING && chatResp.Error != "" {
-                log.Error.Printf("Server returned error: %s\n", chatResp.Error)
-                continue
-            }
-
-            switch chatResp.Type {
-            case prot.REQ_ADD:
-                u.CacheUserFront(chatResp.Users) // Cache the usernames of users involved
-                fyne.Do(func() { gui.Chat.RespAdd(&chatResp, ping.ChatCache, u, opt) })
-            case prot.REQ_DEL:
-                fyne.Do(func() { gui.Chat.RespDel(&chatResp, ping.ChatCache, opt) })
-            case prot.REQ_EDIT:
-                fyne.Do(func() { gui.Chat.RespEdit(&chatResp, ping.ChatCache, u) })
-            }
-        }
-        var userResp prot.UserResponse
-        if err := json.Unmarshal(raw, &userResp); err == nil && userResp.Type != "" {
-            log.Info.Printf("Received %s from server\n", userResp.Type)
-
-            if userResp.Error != prot.NONE_STRING && userResp.Error != "" {
-                log.Error.Printf("Server returned error: %s\n", chatResp.Error)
-                continue
-            }
-        }
-        var chatMDResp prot.ChatMetadataResponse
-        if err := json.Unmarshal(raw, &chatMDResp); err == nil && chatMDResp.Type != "" {
-            log.Info.Printf("Received %s from server\n", chatMDResp.Type)
-
-            if chatMDResp.Error != prot.NONE_STRING && chatMDResp.Error != "" {
-                log.Error.Printf("Server returned error: %s\n", chatResp.Error)
-                continue
-            }
-
-            switch chatMDResp.Type {
-            case prot.ChatMetadataRequestCreate:
-                c.Chats[chatMDResp.ChatID[0]] = chat.NewChat(&chatMDResp.Metadata[0])
-                u.ThisUser.MemberOf = append(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
-                fyne.Do(func() { gui.Sidebar.ChatMetadataRespCreate(u) })
-            case prot.ChatMetadataRequestGet:
-                for _, chatMD := range chatMDResp.Metadata {
-                    c.Chats[chatMD.ID] = chat.NewChat(&chatMD)
-                }
-                fyne.Do(func() { gui.Sidebar.Widgets.ChatsList.Refresh() })
-            case prot.ChatMetadataRequestJoin:
-                c.Chats[chatMDResp.ChatID[0]] = chat.NewChat(&chatMDResp.Metadata[0])
-                u.ThisUser.MemberOf = append(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
-                fyne.Do(func() { gui.Sidebar.ChatMetadataRespJoin(u) })
-            case prot.ChatMetadataRequestLeave:
-                delete(c.Chats, chatMDResp.ChatID[0])
-                i := slices.Index(u.ThisUser.MemberOf, chatMDResp.ChatID[0])
-                u.ThisUser.MemberOf = slices.Delete(u.ThisUser.MemberOf, i, i+1)
-
-                fyne.Do(func() { gui.Sidebar.Widgets.ChatsList.Refresh() })
-            }
-        }
-	}
 }
 
 func serverSend(conn net.Conn, gui *gui.GUI, done <-chan struct{}, signalDone func()) {
