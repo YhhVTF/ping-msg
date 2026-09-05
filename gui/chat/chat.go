@@ -3,14 +3,6 @@ package schat
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-
-    "fmt"
-
-    "github.com/YhhVTF/ping-msg/chat"
-    "github.com/YhhVTF/ping-msg/log"
-    "github.com/YhhVTF/ping-msg/opt"
-    "github.com/YhhVTF/ping-msg/protocol"
-    "github.com/YhhVTF/ping-msg/user"
 )
 
 // Wrapper struct containing all containers that compose the chat section of the screen
@@ -41,66 +33,4 @@ func NewChat() Chat {
 	c.Base = container.NewStack(c.VScroll)
 
 	return c
-}
-
-func (g *ScreenChat) RespAdd(
-    r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache, opt *options.Options,
-) {
-    chat := c.Chats[r.ChatID]
-
-    for _, msgRaw := range r.Messages {
-        log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
-
-        // Cache the new message
-        err := chat.CacheMessages(r.Messages, u)
-        if err != nil {
-            log.Error.Printf("Failed to cache messages: %s\n", err)
-            return
-        }
-
-        // Create new message widget if the chat involved is currently on screen
-        if r.ChatID == c.ThisChat.Metadata.ID {
-            msgWidget := createMessage(
-                g, chat.Messages[msgRaw.ID], chat.MessagesBind[msgRaw.ID], chat, u, opt,
-            )
-            g.Widgets.Messages[msgRaw.ID] = msgWidget
-            g.Containers.Chat.VBox.Add(msgWidget.Base)
-
-            g.Containers.Chat.VBox.Refresh()
-            g.Containers.Chat.VScroll.ScrollToBottom()
-        }
-    }
-}
-
-func (g *ScreenChat) RespDel(r *prot.ChatResponse, c *chat.ChatCache, opt *options.Options) {
-    // Delete corresponding message widget if it exists
-    if msgWidget, exists := g.Widgets.Messages[r.MessageID]; exists &&
-    r.ChatID == c.ThisChat.Metadata.ID {
-        // Replace replied message widget text
-        if repliedMsg, exists := g.Widgets.RepliedMessages[r.MessageID]; exists {
-            repliedMsg.Text.Text = opt.GUIText.Greeting.PlaceholderDeleted
-        }
-        // Deallocate message widget
-        msgWidget.Base.Hide()
-        delete(g.Widgets.Messages, r.MessageID)
-        g.Containers.Chat.VScroll.Refresh()
-    }
-    log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
-    // Delete message in cache
-    chat := c.Chats[r.ChatID]
-    delete(chat.MessagesBind, r.MessageID)
-    delete(chat.Messages, r.MessageID)
-}
-
-func (g *ScreenChat) RespEdit(r *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache) {
-    log.Info.Printf("Updating message %d cache (%s)\n", r.MessageID, r.Type)
-    // Edit message in cache
-    chat := c.Chats[r.ChatID]
-    chat.MessagesBind[r.MessageID].Set(r.Messages[0].Content)
-
-    // Update replied message widget for message if there is one
-    if repliedMsgWidget, exists := g.Widgets.RepliedMessages[r.MessageID]; exists &&
-    r.ChatID == c.ThisChat.Metadata.ID {
-        repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[r.Messages[0].Username].Username, chat.Messages[r.MessageID].Content)
-    }
 }

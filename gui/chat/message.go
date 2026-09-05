@@ -10,9 +10,9 @@ import (
     "time"
 
     "github.com/YhhVTF/ping-msg/chat"
+    "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
-    "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
 
@@ -73,12 +73,12 @@ func createMessage(g *ScreenChat, msg *chat.Message, cacheBind binding.String, c
     if *msg.Username == u.ThisUser.Username {
         // Add a delete button
         buttonDelete := widget.NewButton("D", func() {
-            messageOnDelete(g, msg.ID, u)
+            messageOnDelete(g, msg.ID, ping.ChatCache, u)
         })
 
         // Add an edit button, upon pressing...
         buttonEdit := widget.NewButton("E", func() {
-            messageOnEdit(g, msgWidget, msg.ID, u)
+            messageOnEdit(g, msgWidget, msg.ID, ping.ChatCache, u)
         })
         c = container.NewHBox(
             buttonReply, buttonCopy, buttonEdit, buttonDelete, msgWidget.Time,
@@ -122,24 +122,17 @@ func createRepliedSection(
     return c
 }
 
-func messageOnDelete(g *ScreenChat, msgID int, u *user.UserCache) {
+func messageOnDelete(g *ScreenChat, msgID int, c *chat.ChatCache, u *user.UserCache) {
     log.Info.Printf("Delete button on message %d pressed\n", msgID)
 
     // Give focus back to the message entry when done
     defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
     // Send new DEL chat request to net.serverSend
-    req := prot.ChatRequest{
-        ChatID:         1,
-        MessageContent: prot.NONE_STRING,
-        MessageID:      msgID,
-        Type:           prot.REQ_DEL,
-        Username:       u.ThisUser.Username,
-    }
-    g.OutgoingRequests <- req
+    g.ChatRequestDelete(msgID, c, u)
 }
 
-func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
+func messageOnEdit(g *ScreenChat, msg *Message, msgID int, c *chat.ChatCache, u *user.UserCache) {
     log.Info.Printf("Edit button on message %d pressed\n", msgID)
 
     // Replace the message content label with an entry to allow editing
@@ -163,14 +156,7 @@ func messageOnEdit(g *ScreenChat, msg *Message, msgID int, u *user.UserCache) {
 
         // Send edit request if there was an actual edit
         if text != msg.Content.Text {
-            req := prot.ChatRequest{
-                ChatID:         1,
-                MessageContent: text,
-                MessageID:      msgID,
-                Type:           prot.REQ_EDIT,
-                Username:       u.ThisUser.Username,
-            }
-            g.OutgoingRequests <- req
+            g.ChatRequestEdit(msgID, text, c, u)
         }
         // Replace the edit entry with the message content label again
         editEntry.Hide()

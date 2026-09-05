@@ -27,14 +27,14 @@ type ContainerTableChat struct {
 
 // A collection of all GUI elements to be used chat screen
 type ScreenChat struct {
-    ChatID              int
+    ChatID          int
 	// All containers
-	Containers          ContainerTableChat
+	Containers      ContainerTableChat
 	// All widgets
-	Widgets             WidgetTableChat
+	Widgets         WidgetTableChat
     // The main window
-    Window              fyne.Window
-	OutgoingRequests    chan prot.ChatRequest // Connects to net.go
+    Window          fyne.Window
+	OutgoingReqChat chan prot.ChatRequest // Connects to net.go
 }
 
 // All widgets to be used by the chat screen
@@ -64,7 +64,7 @@ func InitScreenChat(
 
 	g := &ScreenChat{}
     g.Window = w
-    g.OutgoingRequests = outgoingRequests
+    g.OutgoingReqChat = outgoingRequests
 
     g.Widgets.Messages = make(map[int]*Message)
     g.Widgets.RepliedMessages = make(map[int]*RepliedMessage)

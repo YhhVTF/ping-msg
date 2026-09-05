@@ -7,7 +7,6 @@ import (
     "github.com/YhhVTF/ping-msg/global"
     "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/opt"
-    "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
 
@@ -18,15 +17,7 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, c *chat.ChatCache, u *u
 	if text == "" || !ping.Connected { return }
 
     // Send new ADD chat request net.serverSend
-	req := prot.ChatRequest{
-		ChatID:         c.ThisChat.Metadata.ID,
-		MessageContent: text,
-		MessageID:      prot.NONE_INT,
-        RepliedIDs:     c.ThisChat.ReplyingTo,
-		Type:           prot.REQ_ADD,
-        Username:       u.ThisUser.Username,
-	}
-	g.OutgoingRequests <- req
+    g.ChatRequestAdd(text, c, u)
 
     // Clear the entry
 	g.Widgets.EntryMessage.SetText("")
