@@ -9,29 +9,6 @@ const NONE_STRING = "##"
 
 // What action is being requested. What these do differ depending on the RequestWhere
 type RequestWhat string
-// Adds new data provided by the client
-//  REQ_CHAT - Adds a message to the chat
-//  REQ_CHATMETADATA - Creates a new chat
-//  REQ_MEMBER - Makes the user who requested it a member of the specified chat
-//  REQ_USER - Registers a new user
-const REQ_ADD   RequestWhat = "ADD"
-// Deletes existing data
-//  REQ_CHAT - Deletes the a message
-//  REQ_CHATMETADATA - Deletes a chat
-//  REQ_MEMBER - Removes the user's membership of the specified chat
-//  REQ_USER - Deletes a user
-const REQ_DEL   RequestWhat = "DEL"
-// Edits existing data
-//  REQ_CHAT - Edits a message
-//  REQ_CHATMETADATA - Edits a chat's metadata
-//  REQ_USER - Edits user information
-const REQ_EDIT  RequestWhat = "EDIT"
-// Sends existing data to the client that requested it
-//  REQ_CHAT - Sends a chat block to the client
-//  REQ_CHATMETADATA - Sends a chat's metadata to the client
-//  REQ_MEMBER - Gets IDs of all the chats the user is a member of
-//  REQ_USER - Sends user information to the client
-const REQ_GET   RequestWhat = "GET"
 
 // Information about a chat
 type ChatMetadataRaw struct {
