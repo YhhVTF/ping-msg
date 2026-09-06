@@ -48,7 +48,6 @@ type ChatMetadataRaw struct {
 	// ID of the last block in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
 	LastBlockID int `json:"last_blk"`
 	// ID of the last message in the chat. Should be set to -1 and not 0 when creating a chat to prevent and off by 1 error
-
 	LastMessageID int `json:"last_msg"`
 	// Usernames of everyone who has access to the chat
 	Members []string `json:"members"`
@@ -101,6 +100,15 @@ type ChatRaw struct {
     // Array of all messages in chat
     Messages []MessageRaw   `json:"msgs"`
 }
+
+// ChatRequestAdd adds a new message to the specified chat
+const ChatRequestAdd    = "CHAT_ADD"
+// ChatRequestDelete deletes the desired message from the specified chat
+const ChatRequestDelete = "CHAT_DEL"
+// ChatRequestEdit edits to content or greetings of the desired message
+const ChatRequestEdit   = "CHAT_EDIT"
+// ChatRequestGet sends a block of messages from the specified chat to the client who made the request
+const ChatRequestGet    = "CHAT_GET"
 
 // A request to change something about or get information from a chat (e.g., add a message, delete a message, load and receive a message)
 type ChatRequest struct {
@@ -163,8 +171,6 @@ type MessageRaw struct {
     // Username of who sent the message
     Username string     `json:"username"`
 }
-// UserRequestRegister registers a username on a new connection.
-const UserRequestRegister = "REGISTER"
 
 // UserRaw - Includes profile data along with other data associated with the user, wwhich users can access what data is specified by the Visibility fields
 type UserRaw struct {
@@ -185,6 +191,9 @@ type UserRaw struct {
     // Defines which users can access each field of this user
     Visibility      UserVisibility  `json:"visibility"`
 }
+
+// UserRequestRegister registers a username on a new connection.
+const UserRequestRegister = "USER_REG"
 
 // UserRequest is sent before chat traffic to establish a connection identity.
 type UserRequest struct {
