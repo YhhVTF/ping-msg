@@ -30,18 +30,18 @@ func (g *ScreenSidebar) ChatMetadataRequestJoin(chatID int, u *user.UserCache) {
     }
 }
 
-func (g *ScreenSidebar) MemberRequestGet(u *user.UserCache) {
-    g.OutgoingReqMember <- prot.MemberRequest{
-        ChatID:     prot.NONE_INT,
-        Type:       prot.REQ_GET,
-        Username:   u.ThisUser.Username,
-    }
-}
-
-func (g *ScreenSidebar) MemberRequestToggle(chatID int, u *user.UserCache) {
-    g.OutgoingReqMember <- prot.MemberRequest{
-        ChatID:     chatID,
-        Type:       prot.REQ_GET,
-        Username:   u.ThisUser.Username,
-    }
-}
+//func (g *ScreenSidebar) MemberRequestGet(u *user.UserCache) {
+//    g.OutgoingReqMember <- prot.MemberRequest{
+//        ChatID:     prot.NONE_INT,
+//        Type:       prot.REQ_GET,
+//        Username:   u.ThisUser.Username,
+//    }
+//}
+//
+//func (g *ScreenSidebar) MemberRequestToggle(chatID int, u *user.UserCache) {
+//    g.OutgoingReqMember <- prot.MemberRequest{
+//        ChatID:     chatID,
+//        Type:       prot.REQ_GET,
+//        Username:   u.ThisUser.Username,
+//    }
+//}
