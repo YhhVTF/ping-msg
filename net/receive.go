@@ -47,12 +47,12 @@ func handleChatResponse(
     resp *prot.ChatResponse, gui *gui.GUI, c *chat.ChatCache, u *user.UserCache, opt *options.Options,
 ) {
     switch resp.Type {
-    case prot.REQ_ADD:
+    case prot.ChatRequestAdd:
         u.CacheUserFront(resp.Users) // Cache the usernames of users involved
         fyne.Do(func() { gui.Chat.RespAdd(resp, c, u, opt) })
-    case prot.REQ_DEL:
+    case prot.ChatRequestDelete:
         fyne.Do(func() { gui.Chat.RespDel(resp, c, opt) })
-    case prot.REQ_EDIT:
+    case prot.ChatRequestEdit:
         fyne.Do(func() { gui.Chat.RespEdit(resp, c, u) })
     }
 }

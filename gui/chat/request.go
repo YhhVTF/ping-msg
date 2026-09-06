@@ -12,7 +12,7 @@ func (g *ScreenChat) ChatRequestAdd(msgContent string, c *chat.ChatCache, u *use
         MessageContent: msgContent,
         MessageID:      prot.NONE_INT,
         RepliedIDs:     c.ThisChat.ReplyingTo,
-        Type:           prot.REQ_ADD,
+        Type:           prot.ChatRequestAdd,
         Username:       u.ThisUser.Username,
     }
 }
@@ -21,7 +21,7 @@ func (g *ScreenChat) ChatRequestDelete(msgID int, c *chat.ChatCache, u *user.Use
     g.OutgoingReqChat <- prot.ChatRequest{
         ChatID:         c.ThisChat.Metadata.ID,
         MessageID:      msgID,
-        Type:           prot.REQ_DEL,
+        Type:           prot.ChatRequestDelete,
         Username:       u.ThisUser.Username,
     }
 }
@@ -31,7 +31,7 @@ func (g *ScreenChat) ChatRequestEdit(msgID int, msgContent string, c *chat.ChatC
         ChatID:         c.ThisChat.Metadata.ID,
         MessageContent: msgContent,
         MessageID:      msgID,
-        Type:           prot.REQ_EDIT,
+        Type:           prot.ChatRequestEdit,
         Username:       u.ThisUser.Username,
     }
 }
