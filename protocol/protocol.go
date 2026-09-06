@@ -1,6 +1,6 @@
 package prot
 
-const PROTOCOL_VER_LATEST = "4"
+const PROTOCOL_VER_LATEST = "5"
 
 // Shows that an integer field in a request or response is empty
 const NONE_INT = -1
@@ -32,17 +32,6 @@ const REQ_EDIT  RequestWhat = "EDIT"
 //  REQ_MEMBER - Gets IDs of all the chats the user is a member of
 //  REQ_USER - Sends user information to the client
 const REQ_GET   RequestWhat = "GET"
-
-// What data is the request asking for the action to be done upon
-type RequestWhere string
-// Request for chat
-const REQ_CHAT          RequestWhere = "CHAT"
-// Request for chat metadata
-const REQ_CHATMETADATA  RequestWhere = "CHATMETADATA"
-// Request for user's membership of chats
-const REQ_MEMBER        RequestWhere = "MEMBER"
-// Request for user
-const REQ_USER          RequestWhere = "USER"
 
 // Information about a chat
 type ChatMetadataRaw struct {
