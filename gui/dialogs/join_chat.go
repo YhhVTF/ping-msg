@@ -54,8 +54,8 @@ func createJoinChatEntry(
         d.Dialog.Dismiss()
     }
     entryW.Validator = func(text string) error {
-        _, err := strconv.Atoi(text)
-        if err != nil {
+        chatID, err := strconv.Atoi(text)
+        if err != nil || chatID < 0 {
             return errors.New(opt.GUIText.DialogJoinChatAltPrompt)
         }
         return nil
