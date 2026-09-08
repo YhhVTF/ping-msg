@@ -105,7 +105,7 @@ func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
 	if err := decoder.Decode(&response); err != nil {
 		return nil, err
 	}
-	if response.Error != "" {
+	if response.Error != prot.NO_ERR {
 		return nil, fmt.Errorf("%s", response.Error)
 	}
 	if response.User.Username == prot.SERVER_USERNAME || response.User.Username == "" {
