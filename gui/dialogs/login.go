@@ -42,7 +42,7 @@ func InitDialogLogin(
     d.ButtonLogin = widget.NewButton(opt.GUIText.DialogLogin.Buttons[0].Label, func() {
         // Set the text in the d.Entry as the username if it isn't a reserved username or empty
         if d.Entry.Text == "" { return }
-        if d.Entry.Text == prot.NONE_STRING {
+        if d.Entry.Text == prot.SERVER_USERNAME {
             d.Prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
             return
         }
@@ -72,7 +72,7 @@ func InitDialogLogin(
     d.Entry.OnSubmitted = func(text string) {
         // Set the text in the d.Entry as the username if it isn't a reserved username or empty
         if d.Entry.Text == "" { return }
-        if d.Entry.Text == prot.NONE_STRING {
+        if d.Entry.Text == prot.SERVER_USERNAME {
             d.Prompt.SetText(opt.GUIText.DialogLoginAltPrompt)
             return
         }

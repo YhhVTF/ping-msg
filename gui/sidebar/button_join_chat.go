@@ -23,7 +23,7 @@ func createButtonJoin(
 
         go func() {
             chatID := <-dialogDone
-            if chatID != prot.NONE_INT {
+            if chatID != prot.NO_ID {
                 g.ChatMetadataRequestJoin(chatID, u)
             }
         }()

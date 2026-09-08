@@ -72,7 +72,7 @@ func serverRecieve(
         if err := json.Unmarshal(raw, &chatResp); err == nil && chatResp.Type != "" {
             log.Info.Printf("Received %s from server\n", chatResp.Type)
 
-            if chatResp.Error != prot.NONE_STRING && chatResp.Error != "" {
+            if chatResp.Error != prot.NO_ERR {
                 log.Error.Printf("Server returned error: %s\n", chatResp.Error)
                 continue
             }
@@ -82,7 +82,7 @@ func serverRecieve(
         if err := json.Unmarshal(raw, &userResp); err == nil && userResp.Type != "" {
             log.Info.Printf("Received %s from server\n", userResp.Type)
 
-            if userResp.Error != prot.NONE_STRING && userResp.Error != "" {
+            if userResp.Error != prot.NO_ERR { 
                 log.Error.Printf("Server returned error: %s\n", chatResp.Error)
                 continue
             }
@@ -91,7 +91,7 @@ func serverRecieve(
         if err := json.Unmarshal(raw, &chatMDResp); err == nil && chatMDResp.Type != "" {
             log.Info.Printf("Received %s from server\n", chatMDResp.Type)
 
-            if chatMDResp.Error != prot.NONE_STRING && chatMDResp.Error != "" {
+            if chatMDResp.Error != prot.NO_ERR {
                 log.Error.Printf("Server returned error: %s\n", chatResp.Error)
                 continue
             }

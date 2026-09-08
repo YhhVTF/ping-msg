@@ -108,7 +108,7 @@ func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {
 	if response.Error != "" {
 		return nil, fmt.Errorf("%s", response.Error)
 	}
-	if response.User.Username == prot.NONE_STRING || response.User.Username == "" {
+	if response.User.Username == prot.SERVER_USERNAME || response.User.Username == "" {
 		return nil, fmt.Errorf("server returned an invalid user registration")
 	}
 

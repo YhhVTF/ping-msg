@@ -2,10 +2,12 @@ package prot
 
 const PROTOCOL_VER_LATEST = "5"
 
-// Shows that an integer field in a request or response is empty
-const NONE_INT = -1
-// Shows that a string field in a request or response is empty
-const NONE_STRING = "##"
+// Shows that an integer id field in a request or response is empty
+const NO_ID = -1
+// Shows that an error field in a request or response is empty
+const NO_ERR = "##"
+// Reserved username for server messages
+const SERVER_USERNAME = "\n"
 
 // What action is being requested. What these do differ depending on the RequestWhere
 type RequestWhat string

@@ -10,7 +10,7 @@ func (g *ScreenChat) ChatRequestAdd(msgContent string, c *chat.ChatCache, u *use
     g.OutgoingReqChat <- prot.ChatRequest{
         ChatID:         c.ThisChat.Metadata.ID,
         MessageContent: msgContent,
-        MessageID:      prot.NONE_INT,
+        MessageID:      prot.NO_ID,
         RepliedIDs:     c.ThisChat.ReplyingTo,
         Type:           prot.ChatRequestAdd,
         Username:       u.ThisUser.Username,

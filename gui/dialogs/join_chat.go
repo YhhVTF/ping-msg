@@ -28,7 +28,7 @@ func createJoinChatButtonCancel(
 ) *widget.Button {
     return widget.NewButton(opt.GUIText.DialogJoinChat.Buttons[1].Label, func() {
         defer d.Dialog.Dismiss()
-        done <- prot.NONE_INT
+        done <- prot.NO_ID
     })
 }
 
