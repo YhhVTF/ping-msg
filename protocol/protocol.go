@@ -46,6 +46,8 @@ const ChatMetadataRequestGet    = "CHATMD_GET"
 const ChatMetadataRequestJoin   = "CHATMD_JOIN"
 // ChatMetadataRequestLeave revokes the user of the client who made the resquest's membership of the specified chat
 const ChatMetadataRequestLeave  = "CHATMD_LEAVE"
+// ChatMetadataRequestStart tells the server to start the specified chat if it hasn't already
+const ChatMetadataRequestStart  = "CHATMD_START"
 
 type ChatMetadataRequest struct {
     // IDs of the chats involved
