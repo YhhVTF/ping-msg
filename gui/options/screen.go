@@ -9,10 +9,8 @@ import (
 )
 
 type ContainerTableOptions struct {
-	// Base container of the options sceen, makes the child container scrollable
-	Base *container.Scroll
-	// Contains widgets for changing options
-	VBox *fyne.Container
+	// holds tab container for all options
+	Base *container.AppTabs
 }
 
 type ScreenOptions struct {
@@ -83,7 +81,11 @@ func InitScreenOptions(
 	g.Widgets.CardLanguage =
 		widget.NewCard("", opt.GUIText.OptionCardLanguage.Subtitle, g.Widgets.SelectLanguage)
 
-	g.Widgets.CheckAudioEn = widget.NewCheck("Enable Sound Effects", func(checked bool) {
+	generalContainer := container.NewVBox(g.Widgets.CardLanguage)
+	generalScroll := container.NewVScroll(generalContainer)
+	tabGeneral := container.NewTabItem(opt.GUIText.Tabs.General, generalScroll)
+
+	g.Widgets.CheckAudioEn = widget.NewCheck(opt.GUIText.OptionCardAudio.CheckEnabled, func(checked bool) {
 		opt.GUI.Audio.Enabled = checked
 		opt.SaveGUI(".ping/options")
 	})
@@ -97,15 +99,21 @@ func InitScreenOptions(
 		opt.SaveGUI(".ping/options")
 	}
 
-	audioContainer := container.NewVBox(
+	audioContent := container.NewVBox(
 		g.Widgets.CheckAudioEn,
-		widget.NewLabel("Volume"),
+		widget.NewLabel(opt.GUIText.OptionCardAudio.LabelVolume),
 		g.Widgets.SliderVolume,
 	)
-	g.Widgets.CardAudio = widget.NewCard("Audio Settings", "Configure client sound effects", audioContainer)
+	g.Widgets.CardAudio = widget.NewCard(opt.GUIText.OptionCardAudio.CardTitle, opt.GUIText.OptionCardAudio.CardSubtitle, audioContent)
 
-	g.Containers.VBox = container.NewVBox(g.Widgets.CardLanguage, g.Widgets.CardAudio)
-	g.Containers.Base = container.NewVScroll(g.Containers.VBox)
+	audioContainer := container.NewVBox(g.Widgets.CardAudio)
+	audioScroll := container.NewVScroll(audioContainer)
+	tabAudio := container.NewTabItem(opt.GUIText.Tabs.Audio, audioScroll)
+
+	//assemble tabs into container
+	tabs := container.NewAppTabs(tabGeneral, tabAudio)
+	tabs.SetTabLocation(container.TabLocationTop)
+	g.Containers.Base = tabs
 
 	return g
 }

@@ -30,6 +30,16 @@
     "label_chats": "Chats",
     "label_dms": "Direct Messages",
     "optioncard_language": { "subtitle": "Language" },
+    "optioncard_audio": {
+        "card_title": "Audio Settings",
+        "card_subtitle": "Configure client sound effects",
+        "check_enabled": "Enable Sound Effects",
+        "label_volume": "Volume"
+    },
+    "tabs": {
+        "general": "General",
+        "audio": "Audio"
+    },
     "window": { "title": "Ping" },
     "window_options": { "title": "Options" }
 }

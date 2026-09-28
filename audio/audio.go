@@ -20,8 +20,6 @@ var (
 	GetAudioConfig func() (enabled bool, volume float64)
 )
 
-// REMINDER TO CHANGE THE HARDCODED OPTION NAMES IN THE GUI!!!!
-
 // InitGlobalAudio explicitly initializes the audio subsystem at startup
 func InitGlobalAudio() {
 	speakerInitOnce.Do(func() {
