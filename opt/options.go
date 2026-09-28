@@ -1,11 +1,11 @@
 package options
 
 import (
-    "encoding/json"
-    "fmt"
-    "os"
+	"encoding/json"
+	"fmt"
+	"os"
 
-    "github.com/YhhVTF/ping-msg/log"
+	"github.com/YhhVTF/ping-msg/log"
 )
 
 type ButtonTextOptions struct {
@@ -61,7 +61,13 @@ type GreetingTextOptions struct {
     PlaceholderUnloaded string  `json:"placeholder_noload"`
 }
 
+type AudioOptions struct {
+    Enabled     bool    `json:"enabled"`
+    Volume      float64 `json:"volume"`
+}
+
 type GUIOptions struct {
+    Audio               AudioOptions    `json:"audio"`
     DialogConnIssues    DialogOptions   `json:"dialog_connection_issues"`
     DialogJoinChat      DialogOptions   `json:"dialog_join_chat"`
     DialogLogin         DialogOptions   `json:"dialog_login"`

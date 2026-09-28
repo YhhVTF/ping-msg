@@ -8,6 +8,7 @@ import (
 
 	"os"
 
+	"github.com/YhhVTF/ping-msg/audio"
 	"github.com/YhhVTF/ping-msg/chat"
 	ping "github.com/YhhVTF/ping-msg/global"
 	"github.com/YhhVTF/ping-msg/gui"
@@ -69,6 +70,13 @@ func main() {
 	ping.Options, err = options.LoadOptions(".ping/options")
 	if err != nil {
 		return
+	}
+
+	audio.GetAudioConfig = func() (bool, float64) {
+		if ping.Options == nil {
+			return true, 1.0
+		}
+		return ping.Options.GUI.Audio.Enabled, ping.Options.GUI.Audio.Volume
 	}
 
 	log.Info.Printf("Loading assets\n")
