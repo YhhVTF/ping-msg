@@ -1,51 +1,81 @@
 package schat
 
 import (
-    "fyne.io/fyne/v2"
-    "fyne.io/fyne/v2/canvas"
-    "fyne.io/fyne/v2/container"
-    "fyne.io/fyne/v2/theme"
-    "fyne.io/fyne/v2/widget"
+	"regexp"
+	"strings"
 
-    "fmt"
-    "image/color"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/binding"
+	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 
-    "github.com/YhhVTF/ping-msg/chat"
-    "github.com/YhhVTF/ping-msg/log"
-    "github.com/YhhVTF/ping-msg/opt"
-    "github.com/YhhVTF/ping-msg/user"
+	"fmt"
+
+	"github.com/YhhVTF/ping-msg/chat"
+	"github.com/YhhVTF/ping-msg/log"
+	options "github.com/YhhVTF/ping-msg/opt"
+	"github.com/YhhVTF/ping-msg/user"
 )
 
 // A widget representing a reply to a message. Is a component of Message widgets that reply to other messages
 type RepliedMessage struct {
-    Base        *fyne.Container
-    Icon        *widget.Icon
-    MessageID   int
-    Text        *canvas.Text
+	Base        *fyne.Container
+	Icon        *widget.Icon
+	MessageID   int
+	UsernameLbl *widget.Label
+	Text        *widget.RichText
 }
 
 func createRepliedMessage(
-    repliedMsg *chat.Message, repliedID int, u *user.UserCache, opt *options.Options,
+	repliedMsg *chat.Message, repliedID int, chat *chat.Chat, u *user.UserCache, opt *options.Options,
 ) *RepliedMessage {
-    log.Info.Printf("Creating replied message widget for message %d\n", repliedID)
+	log.Info.Printf("Creating replied message widget for message %d\n", repliedID)
 
-    repliedMsgWidget := &RepliedMessage{}
-    repliedMsgWidget.MessageID = repliedID
+	repliedMsgWidget := &RepliedMessage{}
+	repliedMsgWidget.MessageID = repliedID
 
-    var repliedText string
-    if repliedMsg == nil {
-        repliedText = opt.GUIText.Greeting.PlaceholderUnloaded
-    } else {
-        repliedText = fmt.Sprintf("%s: %s", 
-            *repliedMsg.Username,
-            repliedMsg.Content,
-        )
-    }
+	formatContent := func(raw string) string {
+		re := regexp.MustCompile(`(?m)^#{1,6}\s*`)
+		cleanedContent := re.ReplaceAllString(raw, "")
+		return "**" + strings.TrimSpace(cleanedContent) + "**"
+	}
 
-    repliedMsgWidget.Icon = widget.NewIcon(theme.Current().Icon(theme.IconNameMailReply))
-    repliedMsgWidget.Text = canvas.NewText(repliedText, color.NRGBA{ 255, 255, 255, 255 })
+	var usernameStr, contentStr string
+	if repliedMsg == nil {
+		usernameStr = ""
+		contentStr = opt.GUIText.Greeting.PlaceholderUnloaded
+	} else {
+		usernameStr = fmt.Sprintf("%s:", *repliedMsg.Username)
+		contentStr = formatContent(repliedMsg.Content)
+	}
 
-    repliedMsgWidget.Base = container.NewHBox(repliedMsgWidget.Icon, repliedMsgWidget.Text)
+	repliedMsgWidget.Icon = widget.NewIcon(theme.Current().Icon(theme.IconNameMailReply))
 
-    return repliedMsgWidget
+	//Username container label
+	repliedMsgWidget.UsernameLbl = widget.NewLabel(usernameStr)
+	repliedMsgWidget.UsernameLbl.TextStyle.Bold = true // MAKE USERNAME BOLD :3
+
+	// Richtext content
+	repliedMsgWidget.Text = widget.NewRichTextFromMarkdown(contentStr)
+	repliedMsgWidget.Text.Wrapping = fyne.TextWrapWord
+
+	if chat != nil && chat.MessagesBind[repliedID] != nil {
+		chat.MessagesBind[repliedID].AddListener(binding.NewDataListener(func() {
+			updatedContent, _ := chat.MessagesBind[repliedID].Get()
+
+			formattedUpdate := formatContent(updatedContent)
+
+			repliedMsgWidget.Text.ParseMarkdown(formattedUpdate)
+			repliedMsgWidget.Text.Refresh()
+		}))
+	}
+
+	repliedMsgWidget.Base = container.NewHBox(
+		repliedMsgWidget.Icon,
+		repliedMsgWidget.UsernameLbl,
+		repliedMsgWidget.Text,
+	)
+
+	return repliedMsgWidget
 }

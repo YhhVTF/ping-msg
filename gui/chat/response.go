@@ -47,9 +47,11 @@ func (g *ScreenChat) RespDel(resp *prot.ChatResponse, c *chat.ChatCache, opt *op
 	// Delete corresponding message widget if it exists
 	if msgWidget, exists := g.Widgets.Messages[resp.MessageID]; exists &&
 		resp.ChatID == c.ThisChat.Metadata.ID {
-		// Replace replied message widget text
+		// Replace replied message widget text using ParseMarkdown and Refresh
 		if repliedMsg, exists := g.Widgets.RepliedMessages[resp.MessageID]; exists {
-			repliedMsg.Text.Text = opt.GUIText.Greeting.PlaceholderDeleted
+			repliedMsg.UsernameLbl.SetText("")
+			repliedMsg.Text.ParseMarkdown(opt.GUIText.Greeting.PlaceholderDeleted)
+			repliedMsg.Text.Refresh()
 		}
 		// Deallocate message widget
 		msgWidget.Base.Hide()
@@ -70,8 +72,10 @@ func (g *ScreenChat) RespEdit(resp *prot.ChatResponse, c *chat.ChatCache, u *use
 	chat.MessagesBind[resp.MessageID].Set(resp.Messages[0].Content)
 
 	// Update replied message widget for message if there is one
-	if repliedMsgWidget, exists := g.Widgets.RepliedMessages[resp.MessageID]; exists &&
-		resp.ChatID == c.ThisChat.Metadata.ID {
-		repliedMsgWidget.Text.Text = fmt.Sprintf("%s: %s", u.Users[resp.Messages[0].Username].Username, chat.Messages[resp.MessageID].Content)
+	if repliedMsgWidget, exists := g.Widgets.RepliedMessages[resp.MessageID]; exists && resp.ChatID == c.ThisChat.Metadata.ID {
+
+		repliedMsgWidget.UsernameLbl.SetText(fmt.Sprintf("%s:", u.Users[resp.Messages[0].Username].Username))
+		repliedMsgWidget.Text.ParseMarkdown(chat.Messages[resp.MessageID].Content)
+		repliedMsgWidget.Text.Refresh()
 	}
 }
