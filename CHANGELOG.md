@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-11-04
+
+### Added
+
+- Audio engine
+- Markup formatting for message contents
+- Option for sound effects volume
+- Option for toggling sound effects
+- Sound effect error - plays whenever an error is logged
+
+### Changed
+
+- Missing text in language jsons have their English equivalents in their place during runtime
+
 ## [0.4.3] - 2026-09-04
 
 ### Added
