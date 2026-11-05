@@ -31,9 +31,6 @@ func (g *ScreenSidebar) InitChatsList(c *chat.ChatCache, u *user.UserCache) {
             updateChatCard(o.(*widget.Card), c.Chats[u.ThisUser.MemberOf[i]], c, g.ScreenManager)
         },
     )
-    g.Widgets.ChatsList.OnSelected = func(_ widget.ListItemID) {
-        g.ScreenManager.ScreenChatFocusDefault()
-    }
     g.Base.Items[1].Content.(*fyne.Container).Add(g.Widgets.ChatsList)
 }
 
