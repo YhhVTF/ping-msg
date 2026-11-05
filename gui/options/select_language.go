@@ -12,7 +12,7 @@ func selectLanguageOnChanged(language string, opt *options.Options) {
 
 func createSelectLanguage(opt *options.Options) *widget.Select {
     sel := widget.NewSelect([]string{
-        "english", "entish", "gakotolo",
+        "english", "entish", "gakotolo", "Jeu de Rôle Grandeur Nature de Français",
     }, func(language string) {
         selectLanguageOnChanged(language, opt)
     })
