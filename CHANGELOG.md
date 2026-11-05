@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Message contents and replied message contents are now rich text
 - Missing text in language jsons have their English equivalents in their place during runtime
 
 ## [0.4.3] - 2026-09-04
