@@ -142,7 +142,6 @@ func messageOnDelete(g *ScreenChat, msgID int, c *chat.ChatCache, u *user.UserCa
 
 func messageOnEdit(g *ScreenChat, msg *Message, msgID int, chat *chat.Chat, c *chat.ChatCache, u *user.UserCache) {
 	log.Info.Printf("Edit button on message %d pressed\n", msgID)
-	defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
 	currentText, _ := chat.MessagesBind[msgID].Get()
 
