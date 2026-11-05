@@ -1,0 +1,45 @@
+{
+    "button_attach": { "label": "Attacher" },
+    "button_create_chat": { "label": "Créer" },
+    "button_join_chat": { "label": "Rejoindre" },
+    "button_options": { "label": "Paramétres" },
+    "button_send": { "label": "Jeté dans l’abîme" },
+    "dialog_connection_issues": {
+        "buttons": [{ "label": "d'Accord" }],
+        "prompt": "Ne succès pas de le connecter de le moyeu. Le moyeu c'est potentiellement inactif, ou ton connexion de l'internet c'est l'instable.",
+        "title": "Problémes de Connexion"
+    },
+    "dialog_join_chat": {
+        "buttons": [{ "label": "Rejoindre" }, { "label": "Annuler" }],
+        "prompt": "Entrer l'ID de le moyeu de le intention de toi de le rejoindre",
+        "title": "Rejoindre le moyeu"
+    },
+    "dialog_join_chat_altprompt": "Invalide ID de le moyeu, effecteur tentative plus",
+    "dialog_login": {
+        "buttons": [{ "label": "Entrée de le systéme" }],
+        "prompt": "Entrer le nom de l'utilisatuer pour le entrée de le systéme",
+        "title": "Entrée de le systéme"
+    },
+    "dialog_login_altprompt": "Le nom de l'utilisateur c'est ne disponible pas",
+    "entry_message": { "label": "Écrire un correspondance..." },
+    "entry_username": { "label": "Entrer le nom de l'utilisateur" },
+    "greeting": { 
+        "placeholder_deleted": "Correspondance c'est de le rien",
+        "placeholder_noload": "Ne pourrait pas récupérer de le correspondance"
+    },
+    "label_chats": "Moyeux",
+    "label_dms": "Correspondance d'Ininterrompu",
+    "optioncard_language": { "subtitle": "Langue" },
+    "optioncard_audio": {
+        "card_title": "Paramétres Auditif",
+        "card_subtitle": "Ajustement de le bruitage de l'utilisateur individuel",
+        "check_enabled": "Activer le bruitage",
+        "label_volume": "Amplitude d'Onde"
+    },
+    "tabs": {
+        "general": "Générale",
+        "audio": "Audio"
+    },
+    "window": { "title": "Retard de le Vitesse de l'Internet" },
+    "window_options": { "title": "Paramétres" }
+}
