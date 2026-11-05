@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Focus now shifts to editing entry after pressing the edit button on a message
+- Join and create buttons in the Chats tab of the sidebar now fill all avaliable horizontal space
 
 ## [0.5.0] - 2026-11-04
 
