@@ -3,6 +3,7 @@ package schat
 import (
 	"fmt"
 
+	"github.com/YhhVTF/ping-msg/audio"
 	"github.com/YhhVTF/ping-msg/chat"
 	"github.com/YhhVTF/ping-msg/log"
 	options "github.com/YhhVTF/ping-msg/opt"
@@ -10,24 +11,26 @@ import (
 	"github.com/YhhVTF/ping-msg/user"
 )
 
-//NEED to import for audio :
-// "github.com/YhhVTF/ping-msg/audio"
-
 func (g *ScreenChat) RespAdd(
 	resp *prot.ChatResponse, c *chat.ChatCache, u *user.UserCache, opt *options.Options,
 ) {
 	chat := c.Chats[resp.ChatID]
 
+	err := chat.CacheMessages(resp.Messages, u)
+	if err != nil {
+		log.Error.Printf("Failed to cache messages: %s\n", err)
+		return
+	}
+
+	for _, msgRaw := range resp.Messages {
+		if msgRaw.Username != u.ThisUser.Username {
+			audio.PlaySound("msgin.wav")
+			break
+		}
+	}
+
 	for _, msgRaw := range resp.Messages {
 		log.Info.Printf("Updating message %d cache (%s)\n", resp.MessageID, resp.Type)
-		//audio.PlaySound("msgin.wav")
-
-		// Cache the new message
-		err := chat.CacheMessages(resp.Messages, u)
-		if err != nil {
-			log.Error.Printf("Failed to cache messages: %s\n", err)
-			return
-		}
 
 		// Create new message widget if the chat involved is currently on screen
 		if resp.ChatID == c.ThisChat.Metadata.ID {
