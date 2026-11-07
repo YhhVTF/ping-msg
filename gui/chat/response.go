@@ -26,7 +26,9 @@ func (g *ScreenChat) RespAdd(
 		if msgRaw.Username != u.ThisUser.Username {
 			audio.PlaySound("msgin.wav")
 			break
-		}
+		} else if msgRaw.Username == u.ThisUser.Username {
+            audio.PlaySound("msgout.wav")
+        }
 	}
 
 	for _, msgRaw := range resp.Messages {
