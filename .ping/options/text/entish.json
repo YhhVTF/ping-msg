@@ -29,6 +29,16 @@
     "label_chats": "yappies ^^",
     "label_dms": "fweaky >;3",
     "optioncard_language": { "subtitle": "whar langie :3c" },
+    "optioncard_audio": {
+        "card_title": "*door creakies at 250,000 Db*",
+        "card_subtitle": "soundsie larpsie =w=",
+        "check_enabled": "screamsie >:3c",
+        "label_volume": "screamsie hau loudsie :o"
+    },
+    "tabs": {
+        "general": "neogeneral :O",
+        "audio": "250K Db"
+    },
     "window": { "title": "pingieee >w<" },
     "window_options": { "title": "assemblie :o" }
 }
