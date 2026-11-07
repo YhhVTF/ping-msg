@@ -53,7 +53,13 @@ func StartNet(
 				ping.Connected = true
 				log.Info.Printf("Successfully connected as user %s\n", u.ThisUser.Username)
 
-                fyne.DoAndWait(func() { gui.Sidebar.InitChatsList(c, u) })
+                // Get metadata for chats this user has joined from the server and initialized sidebar chats list
+                getJoinedChatsErr := getJoinedChats(conn, c, u)
+                if getJoinedChatsErr != nil {
+                    log.Error.Printf("Failed to get joined chats: %s\n", getJoinedChatsErr)
+                } else {
+                    fyne.DoAndWait(func() { gui.Sidebar.InitChatsList(c, u) })
+                }
 
 				if gui.Dialogs.ConnectionIssues != nil {
 					fyne.DoAndWait(func() {
@@ -92,6 +98,30 @@ func websocketEndpoint(value string) string {
 		value += "/ws"
 	}
 	return value
+}
+
+func getJoinedChats(conn net.Conn, c *chat.ChatCache, u *user.UserCache) error {
+    // -- Get metadata for all chats the user has joined -- //
+    request := prot.ChatMetadataRequest{
+        ChatID:     u.ThisUser.MemberOf,
+        Type:       prot.ChatMetadataRequestGet,
+        Username:   u.ThisUser.Username,
+    }
+
+    if err := json.NewEncoder(conn).Encode(request); err != nil {
+        return err
+    }
+
+    var response prot.ChatMetadataResponse
+    if err := json.NewDecoder(conn).Decode(&response); err != nil {
+        return err
+    }
+
+    // Cache metadata for these chats
+    for _, chatMD := range response.Metadata {
+        c.Chats[chatMD.ID] = chat.NewChat(&chatMD)
+    }
+    return nil
 }
 
 func registerUser(conn net.Conn, u *user.UserCache) (*json.Decoder, error) {

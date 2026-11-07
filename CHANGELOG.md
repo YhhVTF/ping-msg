@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [] -
 
+### Added
+
+- Remembering previous chats the user was in based on their username
+
 ### Changed
 
 - Updated language gakotolo
+
+### Fixed
+
+- No longer crashes upon clicking the chats tab when logged in as a username that has previously joined chats
 
 ## [0.5.2] - 2026-11-06
 
