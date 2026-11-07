@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Button options is now an icon button
 - Button options is now in the bottom left corner of sidebar
+- Inverted Ping icon
 
 ### Removed
 
