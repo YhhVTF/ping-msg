@@ -41,7 +41,6 @@ type GUITextOptions struct {
 	ButtonAttach            ButtonTextOptions   `json:"button_attach"`
 	ButtonCreateChat        ButtonTextOptions   `json:"button_create_chat"`
 	ButtonJoinChat          ButtonTextOptions   `json:"button_join_chat"`
-	ButtonOptions           ButtonTextOptions   `json:"button_options"`
 	ButtonSend              ButtonTextOptions   `json:"button_send"`
 	DialogConnIssues        DialogTextOptions   `json:"dialog_connection_issues"`
 	DialogJoinChat          DialogTextOptions   `json:"dialog_join_chat"`

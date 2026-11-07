@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sound effect msgin - plays when client receives a message from another user
 - Sound effect msgout - plays when client successfully sends a message
 
+### Changed
+
+- Button options is now an icon button
+- Button options is now in the bottom left corner of sidebar
+
+### Removed
+
+- Text option button_options
+
 ## [0.5.1] - 2026-11-05
 
 ### Added

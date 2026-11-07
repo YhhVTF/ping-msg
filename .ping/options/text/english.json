@@ -2,7 +2,6 @@
     "button_attach": { "label": "Attach" },
     "button_create_chat": { "label": "Create" },
     "button_join_chat": { "label": "Join" },
-    "button_options": { "label": "Options" },
     "button_send": { "label": "Send" },
     "dialog_connection_issues": {
         "buttons": [{ "label": "Ok" }],

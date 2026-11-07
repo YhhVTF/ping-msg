@@ -2,7 +2,6 @@
     "button_attach": { "label": "Monoz" },
     "button_create_chat": { "label": "Create" },
     "button_join_chat": { "label": "Join" },
-    "button_options": { "label": "Ykil abulin" },
     "button_send": { "label": "Toloz" },
     "dialog_connection_issues": {
         "buttons": [{ "label": "Fisi" }],

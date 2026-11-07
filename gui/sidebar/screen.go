@@ -29,6 +29,8 @@ type WidgetTableSidebar struct {
     ButtonCreateChat    *widget.Button
     // Prompts the user to enter the ID of a chat they want to join
     ButtonJoinChat      *widget.Button
+    // Opens options inner window
+    ButtonOptions       *widget.Button
     // List of chat cards which display info about a chat and open that chat when clicked
     ChatsList           *widget.List
     // Labels the chats tab as chats, sits at the tob of the tab container
@@ -51,20 +53,28 @@ func InitScreenSidebar(w fyne.Window, s *screen.ScreenManager, c *chat.ChatCache
     g.Widgets.ButtonJoinChat = createButtonJoin(g, w, u, opt)
 
     g.Widgets.ButtonCreateChat = createButtonCreate(g, u, opt)
+    
+    g.Widgets.ButtonOptions = createButtonOptions(s)
 
     // Initialize app tabs widget
     g.Base = container.NewAppTabs(
         // DMs tab
         container.NewTabItemWithIcon("", 
-            theme.Icon(theme.IconNameMailCompose), container.NewVBox(g.Widgets.LabelDMs),
+            theme.Icon(theme.IconNameMailCompose), container.NewBorder(
+                g.Widgets.LabelDMs,
+                container.NewBorder(nil, nil, g.Widgets.ButtonOptions, nil, nil),
+                nil, nil, nil,
+            ),
         ),
         // Chats tab
         container.NewTabItemWithIcon("", 
             theme.Icon(theme.IconNameGrid), container.NewBorder(
                 g.Widgets.LabelChats,
-                container.NewGridWithRows(1, // 1 row
-                    g.Widgets.ButtonJoinChat,
-                    g.Widgets.ButtonCreateChat,
+                container.NewBorder(nil, nil, g.Widgets.ButtonOptions, nil,
+                    container.NewGridWithRows(1, // 1 row
+                        g.Widgets.ButtonJoinChat,
+                        g.Widgets.ButtonCreateChat,
+                    ),
                 ),
                 nil, nil, nil,
             ),

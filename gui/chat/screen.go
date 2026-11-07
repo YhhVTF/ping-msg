@@ -45,8 +45,6 @@ type WidgetTableChat struct {
 	EntryMessage *widget.Entry
     // Button in the bottom left for attaching files to messages
     ButtonAttach *widget.Button
-    // Button in the bottom right of the screen for opening a settings window
-    ButtonOptions *widget.Button
     // Messages in the chat containers
     Messages map[int]*Message
     // Widgets that show replying to a message
@@ -80,15 +78,13 @@ func InitScreenChat(
     // Set focus on message entry
     g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    g.Widgets.ButtonOptions = createButtonOptions(g, s, opt)
-
 	// Initialize chat containers
 	g.Containers.Chat = NewChat()
 
 	// Initialize bottom bar container and add the message entry and send button
 	g.Containers.BottomBar = container.NewBorder(
 		// top, bottom, left, right, center
-		nil, nil, g.Containers.BottomLeftCluster, g.Widgets.ButtonOptions, g.Widgets.EntryMessage,
+		nil, nil, g.Containers.BottomLeftCluster, nil, g.Widgets.EntryMessage,
 	)
 
 	// Initialize the base container and add the chat scroll container and bottom bar
