@@ -1,7 +1,7 @@
 {
     "button_attach": { "label": "Monoz" },
-    "button_create_chat": { "label": "Create" },
-    "button_join_chat": { "label": "Join" },
+    "button_create_chat": { "label": "Kidyl" },
+    "button_join_chat": { "label": "Emofiz" },
     "button_send": { "label": "Toloz" },
     "dialog_connection_issues": {
         "buttons": [{ "label": "Fisi" }],
@@ -9,11 +9,11 @@
         "title": "Yki Fhalobeto"
     },
     "dialog_join_chat": {
-        "buttons": [{ "label": "Join" }, { "label": "Cancel" }],
-        "prompt": "Enter the ID of the chat you want to join",
-        "title": "Join chat"
+        "buttons": [{ "label": "Emofiz" }, { "label": "Hidiolify" }],
+        "prompt": "Tolofiz yki hipigak yki tolodoly pi",
+        "title": "Emofiz yki tolodoly"
     },
-    "dialog_join_chat_altprompt": "Not a valid chat ID, try again",
+    "dialog_join_chat_altprompt": "Difa fidomoz o tolodoly yki Ping zhep, zizofiz",
     "dialog_login": {
         "buttons": [{ "label": "Retis" }],
         "prompt": "Dotoz o kosely yki retis los",
@@ -26,9 +26,19 @@
         "placeholder_deleted": "Hidioligy yki hipilo",
         "placeholder_noload": "Podifoboz yki hipilo"
     },
-    "label_chats": "Chats",
-    "label_dms": "Direct Messages",
+    "label_chats": "Yki tolodoly",
+    "label_dms": "Toloz reu",
     "optioncard_language": { "subtitle": "Yki tolo" },
+    "optioncard_audio": {
+        "card_title": "Yki abulin yki to los",
+        "card_subtitle": "Bbanefen yki nosi yki kolito",
+        "check_enabled": "Kidify yki kolito",
+        "label_volume": "Yki togalo"
+    },
+    "tabs": {
+        "general": "Yki mil",
+        "audio": "Yki to"
+    },
     "window": { "title": "Internetfhalo" },
     "window_options": { "title": "Ykil abulin" }
 }
