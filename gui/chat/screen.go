@@ -39,14 +39,16 @@ type ScreenChat struct {
 
 // All widgets to be used by the chat screen
 type WidgetTableChat struct {
-	// Button in the bottom bar that sends the contents of EntryMessage when pressed
-	ButtonSend *widget.Button
-	// Entry in the bottom bar used to type and send messages
-	EntryMessage *widget.Entry
     // Button in the bottom left for attaching files to messages
-    ButtonAttach *widget.Button
+    ButtonAttach    *widget.Button
+	// Button in the bottom bar that sends the contents of EntryMessage when pressed
+	ButtonSend      *widget.Button
+	// Entry in the bottom bar used to type and send messages
+	EntryMessage    *widget.Entry
+    // Cached list of message cards in the chat
+    MessagesList    *widget.List
     // Messages in the chat containers
-    Messages map[int]*Message
+    Messages        map[int]*Message
     // Widgets that show replying to a message
     //  Key (int) - Message ID
     //  Val (*RepliedMessage) - Replied message
