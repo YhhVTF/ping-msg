@@ -6,6 +6,7 @@ import (
     "errors"
     "fmt"
     "io"
+    "slices"
 
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
@@ -15,6 +16,8 @@ import (
 type Chat struct {
     // Readers for files to be attached to the next message the client sends in this chat
     Attachments     []io.Reader
+    // List of all islands. Earlier islands are earlier in the last and so for later ones
+    Islands         []*Island
     // Data for each message in the chat
     //  Key (int) - Message ID
     //  Val (Message) - Message data
@@ -22,6 +25,8 @@ type Chat struct {
     MessagesBind    map[int]binding.String
     // Chat metadata
     Metadata        ChatMetadata
+    // Islands[RenderedIsland] = The island which contains messages currently being rendered
+    RenderedIsland  int
     ReplyingTo      []int
 }
 
@@ -49,6 +54,52 @@ type ChatMetadata struct {
 	Name                string
 	// Total number of messages in the chat. This should not be updated while the chat is loaded and instead should be calculated from the field `LastMessageID` when saving metadata
 	NumberOfMessages    int
+}
+
+// An island is one continuous line of loaded messages, defined by their earlier and later bounds. Two groups of loaded messages separated by unloaded messages between the former's later bound and the latter's earlier bound are two separate islands
+type Island struct {
+    // ID of the earliest message in the island
+    EarlierBound    int
+    // ID of the latest message in the island
+    LaterBound      int
+    // List of IDs of the messages in an island (earlier bound = MessageIDs[0], later bound = MessageIDs[len(MessageIDs)-1])
+    MessageIDs      []int
+}
+
+func MergeIslands(earlierIsland *Island, bridgingMsgID int, laterIsland *Island) *Island {}
+
+// Organizes the IDs of msgsRaw into islands
+func (chat *Chat) SortIntoIslands(msgsRaw []prot.MessageRaw) {
+    for _, msgRaw := range msgsRaw {
+        // Move to next message if the message is already in cache
+        if _, ok := chat.Messages[msgRaw.ID]; ok { continue }
+
+        // For each island do...
+        for i, island := range chat.Islands {
+            // If message ID is one less than this island's earlier bound...
+            if msgRaw.ID == island.EarlierBound - 1 {
+                // And is also one more than previous island's later bound, merge these two islands with the message ID as the bridge
+                if i != 0 { if chat.Islands[i-1].LaterBound == msgRaw.ID + 1 {
+                    // Replace one of the halves of the new islands with the merged one
+                    chat.Islands[i] = MergeIslands(chat.Islands[i-1], msgRaw.ID, island)
+                    // Remove the other half
+                    chat.Islands = slices.Delete(chat.Islands, i-1, i)
+                    if chat.RenderedIsland == i-1 {
+                        chat.RenderedIsland = i
+                    }
+                // Otherwise, add this message ID to the early end of the island
+                }} else {
+                    island.EarlierBound--
+                    island.MessageIDs = slices.Concat([]int{ msgRaw.ID }, island.MessageIDs)
+                }
+                break
+            // At the last island, if the message ID is one more than the last island's later bound, add it to the late end of the island
+            } else if msgRaw.ID == island.LaterBound + 1 && i == len(chat.Islands)-1 {
+                island.LaterBound++
+                island.MessageIDs = append(island.MessageIDs, msgRaw.ID)
+            }
+        }
+    }
 }
 
 type Message struct {
