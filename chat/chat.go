@@ -66,7 +66,14 @@ type Island struct {
     MessageIDs      []int
 }
 
-func MergeIslands(earlierIsland *Island, bridgingMsgID int, laterIsland *Island) *Island {}
+// Merges earlierIsland and laterIsland into one island by connecting them with bridgeMsgID. bridgeMsgID should be one more than earlierIsland's later bound and one less than laterIsland's earlier bound
+func MergeIslands(earlierIsland *Island, bridgeMsgID int, laterIsland *Island) *Island {
+    return &Island{
+        EarlierBound:   earlierIsland.EarlierBound,
+        LaterBound:     laterIsland.LaterBound,
+        MessageIDs:     slices.Concat(earlierIsland.MessageIDs, []int{ bridgeMsgID }, laterIsland.MessageIDs),
+    }
+}
 
 // Organizes the IDs of msgsRaw into islands
 func (chat *Chat) SortIntoIslands(msgsRaw []prot.MessageRaw) {
@@ -151,9 +158,11 @@ func NewChat(metadataRaw *prot.ChatMetadataRaw) *Chat {
 
     return &Chat{
         Attachments:        make([]io.Reader, 0),
+        Islands:            make([]*Island, 0),
         Messages:           make(map[int]*Message),
         MessagesBind:       make(map[int]binding.String),
         Metadata:           metadata,
+        RenderedIsland:     prot.NO_ID,
         ReplyingTo:         make([]int, 0),
     }
 }
