@@ -81,12 +81,18 @@ func (chat *Chat) SortIntoIslands(msgsRaw []prot.MessageRaw) {
         // Move to next message if the message is already in cache
         if _, ok := chat.Messages[msgRaw.ID]; ok { continue }
 
+        earliestMsgID := chat.Islands[0].EarlierBound
+        latestMsgID := chat.Islands[len(chat.Islands)-1].LaterBound
+
+        if msgRaw.ID < earliestMsgID && msgRaw.ID != earliestMsgID - 1 {
+        }
+
         // For each island do...
         for i, island := range chat.Islands {
             // If message ID is one less than this island's earlier bound...
             if msgRaw.ID == island.EarlierBound - 1 {
                 // And is also one more than previous island's later bound, merge these two islands with the message ID as the bridge
-                if i != 0 { if chat.Islands[i-1].LaterBound == msgRaw.ID + 1 {
+                if i != 0 { if chat.Islands[i-1].LaterBound == msgRaw.ID - 1 {
                     // Replace one of the halves of the new islands with the merged one
                     chat.Islands[i] = MergeIslands(chat.Islands[i-1], msgRaw.ID, island)
                     // Remove the other half
@@ -100,10 +106,30 @@ func (chat *Chat) SortIntoIslands(msgsRaw []prot.MessageRaw) {
                     island.MessageIDs = slices.Concat([]int{ msgRaw.ID }, island.MessageIDs)
                 }
                 break
-            // At the last island, if the message ID is one more than the last island's later bound, add it to the late end of the island
-            } else if msgRaw.ID == island.LaterBound + 1 && i == len(chat.Islands)-1 {
-                island.LaterBound++
-                island.MessageIDs = append(island.MessageIDs, msgRaw.ID)
+            // If the message ID is one more than this island's later bound...
+            } else if msgRaw.ID == island.LaterBound + 1 {
+                // And is also one less than the next island's earlier bound, merge the two island with the message ID as the bridge
+                if i != len(chat.Islands) - 1 { if chat.Islands[i+1].EarlierBound == msgRaw.ID + 1 {
+                    // Replace this island with new merged island
+                    chat.Islands[i] = MergeIslands(island, msgRaw.ID, chat.Islands[i+1])
+                    // Remove the old next island
+                    chat.Islands = slices.Delete(chat.Islands, i+1, i+2)
+                    if chat.RenderedIsland == i+1 {
+                        chat.RenderedIsland = i
+                    }
+                // Otherwise, add this message ID to the late end of the island
+                }} else {
+                    island.LaterBound++
+                    island.MessageIDs = append(island.MessageIDs, msgRaw.ID)
+                }
+            // If the message ID is between this island and the next, but cannot belong to either, create a new island for it between them
+            } else if msgRaw.ID > island.LaterBound && msgRaw.ID < chat.Islands[i+1].EarlierBound {
+                newIsland := &Island{
+                    EarlierBound:   msgRaw.ID,
+                    LaterBound:     msgRaw.ID,
+                    MessageIDs:     []int{ msgRaw.ID },
+                }
+                chat.Islands = slices.Insert(chat.Islands, i+1, newIsland)
             }
         }
     }
