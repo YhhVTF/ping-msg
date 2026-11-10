@@ -1,0 +1,44 @@
+{
+    "button_attach": { "label": "Attach" },
+    "button_create_chat": { "label": "Create" },
+    "button_join_chat": { "label": "Araka" },
+    "button_send": { "label": "Evkyi" },
+    "dialog_connection_issues": {
+        "buttons": [{ "label": "Asa" }],
+        "prompt": "Kosoratay eve kiaki eve rysamyra. Dia rysamyra pen de ess eme ryir internet kiakirat payim de namaryrat.",
+        "title": "Connection Issues"
+    },
+    "dialog_join_chat": {
+        "buttons": [{ "label": "Araka" }, { "label": "Cancel" }],
+        "prompt": "Enter the ID of the chat you want to join",
+        "title": "Araka fosta"
+    },
+    "dialog_join_chat_altprompt": "Not a valid chat ID, try again",
+    "dialog_login": {
+        "buttons": [{ "label": "Logyet" }],
+        "prompt": "Chale a sankikasakra eve",
+        "title": "Logyet"
+    },
+    "dialog_login_altprompt": "Hias sankikasakra tiksor de koreko oksa a sortum oia.",
+    "entry_message": { "label": "Basce a akita..." },
+    "entry_username": { "label": "Chale a sankikasakra" },
+    "greeting": { 
+        "placeholder_deleted": "Message deleted",
+        "placeholder_noload": "Could not load message"
+    },
+    "label_chats": "Fostas",
+    "label_dms": "Marka Akitas",
+    "optioncard_language": { "subtitle": "Akasite" },
+    "optioncard_audio": {
+        "card_title": "Saralak Delastasi",
+        "card_subtitle": "Configure client sound effects",
+        "check_enabled": "Enable Sound Effects",
+        "label_volume": "Sagrilak"
+    },
+    "tabs": {
+        "general": "General",
+        "audio": "Saralak"
+    },
+    "window": { "title": "Ping" },
+    "window_options": { "title": "Options" }
+}
