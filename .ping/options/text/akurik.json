@@ -1,19 +1,19 @@
 {
-    "button_attach": { "label": "Attach" },
-    "button_create_chat": { "label": "Create" },
+    "button_attach": { "label": "Kioil" },
+    "button_create_chat": { "label": "Wana" },
     "button_join_chat": { "label": "Araka" },
     "button_send": { "label": "Evkyi" },
     "dialog_connection_issues": {
         "buttons": [{ "label": "Asa" }],
-        "prompt": "Kosoratay eve kiaki eve rysamyra. Dia rysamyra pen de ess eme ryir internet kiakirat payim de namaryrat.",
-        "title": "Connection Issues"
+        "prompt": "Kosoratay eve kiaki eve rysamyra. Dia rysamyra pen de ess eme ryir internet kiakirat payim de namaryser.",
+        "title": "Kiakirat Solts"
     },
     "dialog_join_chat": {
-        "buttons": [{ "label": "Araka" }, { "label": "Cancel" }],
-        "prompt": "Enter the ID of the chat you want to join",
+        "buttons": [{ "label": "Araka" }, { "label": "Trasolm" }],
+        "prompt": "Chale dia sakairat (SKI) ti dia fosta ryi vaz eve araka",
         "title": "Araka fosta"
     },
-    "dialog_join_chat_altprompt": "Not a valid chat ID, try again",
+    "dialog_join_chat_altprompt": "Sor a sorfav sakairat (SKI), oksa pais",
     "dialog_login": {
         "buttons": [{ "label": "Logyet" }],
         "prompt": "Chale a sankikasakra eve",
@@ -23,22 +23,22 @@
     "entry_message": { "label": "Basce a akita..." },
     "entry_username": { "label": "Chale a sankikasakra" },
     "greeting": { 
-        "placeholder_deleted": "Message deleted",
-        "placeholder_noload": "Could not load message"
+        "placeholder_deleted": "Akita kozekai",
+        "placeholder_noload": "Payim sor marelce akita"
     },
     "label_chats": "Fostas",
     "label_dms": "Marka Akitas",
     "optioncard_language": { "subtitle": "Akasite" },
     "optioncard_audio": {
         "card_title": "Saralak Delastasi",
-        "card_subtitle": "Configure client sound effects",
-        "check_enabled": "Enable Sound Effects",
+        "card_subtitle": "Dellar rysama alak lopisk",
+        "check_enabled": "Wakes Alak Lopisk",
         "label_volume": "Sagrilak"
     },
     "tabs": {
-        "general": "General",
+        "general": "Chafst",
         "audio": "Saralak"
     },
     "window": { "title": "Ping" },
-    "window_options": { "title": "Options" }
+    "window_options": { "title": "Kikais" }
 }
