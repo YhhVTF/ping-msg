@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- "Islands" framework for managing disconnected clumps of loaded messages
 - Language akurik
 - Remembering previous chats the user was in based on their username
 
