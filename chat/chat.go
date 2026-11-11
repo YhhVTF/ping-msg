@@ -100,6 +100,8 @@ func (chat *Chat) SortIntoIslands(newMsgRaws []prot.MessageRaw) error {
             MessageIDs:     newMsgIDs,
         }
         chat.Islands = []*Island{ newIsland }
+        chat.RenderedIsland = 0
+
         log.Info.Printf("Chat %d: new island %d: %d\n", chat.Metadata.ID, 0, newIsland.MessageIDs)
         return nil
     }

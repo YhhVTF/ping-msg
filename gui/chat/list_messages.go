@@ -28,10 +28,10 @@ func createListMessages(chat *chat.Chat) *widget.List {
             card := o.(*fyne.Container).Objects[1].(*widget.Card)
             wTopOfMsg := card.Content.(*fyne.Container).Objects[0].(*fyne.Container)
 
-            wUsername := wTopOfMsg.Objects[2].(*widget.Label)
+            wUsername := wTopOfMsg.Objects[0].(*widget.Label)
             wUsername.SetText(*msg.Username)
 
-            wTime := wTopOfMsg.Objects[3].(*widget.Label)
+            wTime := wTopOfMsg.Objects[1].(*widget.Label)
             wTime.SetText(time.Unix(msg.Time, 0).Format("3:04 PM"))
 
             wContent := card.Content.(*fyne.Container).Objects[1].(*widget.RichText)

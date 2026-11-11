@@ -22,6 +22,9 @@ func (g *ScreenChat) RespAdd(
 		return
 	}
 
+    g.Widgets.MessagesList.Refresh()
+    g.Widgets.MessagesList.ScrollToBottom()
+
 	for _, msgRaw := range resp.Messages {
 		if msgRaw.Username != u.ThisUser.Username {
 			audio.PlaySound("msgin.wav")

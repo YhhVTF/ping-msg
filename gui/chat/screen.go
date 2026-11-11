@@ -80,6 +80,8 @@ func InitScreenChat(
     // Set focus on message entry
     g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
+    g.Widgets.MessagesList = createListMessages(c.ThisChat)
+
 	// Initialize chat containers
 	g.Containers.Chat = NewChat()
 
@@ -92,7 +94,7 @@ func InitScreenChat(
 	// Initialize the base container and add the chat scroll container and bottom bar
 	g.Containers.Base = container.NewBorder(
 		// top, bottom, left, right, center
-		nil, g.Containers.BottomBar, nil, nil, g.Containers.Chat.Base,
+		nil, g.Containers.BottomBar, nil, nil, g.Widgets.MessagesList,
 	)
 	return g
 }
