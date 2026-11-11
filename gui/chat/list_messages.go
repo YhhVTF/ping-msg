@@ -5,16 +5,37 @@ import (
     "fyne.io/fyne/v2/container"
     "fyne.io/fyne/v2/widget"
 
+    "time"
+
     "github.com/YhhVTF/ping-msg/chat"
 )
 
-func createListMessages(chatCache *chat.Chat) *widget.List {
+func createListMessages(chat *chat.Chat) *widget.List {
     return widget.NewList(
         func() int {
-            return len(chatCache.Messages)
+            if len(chat.Islands) == 0 {
+                return 0
+            }
+            return len(chat.Islands[chat.RenderedIsland].MessageIDs)
         },
         func() fyne.CanvasObject {
             return createMessageCardTemplate()
+        },
+        func(itemID widget.ListItemID, o fyne.CanvasObject) {
+            msgID := chat.Islands[chat.RenderedIsland].MessageIDs[itemID]
+            msg := chat.Messages[msgID]
+
+            card := o.(*fyne.Container).Objects[1].(*widget.Card)
+            wTopOfMsg := card.Content.(*fyne.Container).Objects[0].(*fyne.Container)
+
+            wUsername := wTopOfMsg.Objects[2].(*widget.Label)
+            wUsername.SetText(*msg.Username)
+
+            wTime := wTopOfMsg.Objects[3].(*widget.Label)
+            wTime.SetText(time.Unix(msg.Time, 0).Format("3:04 PM"))
+
+            wContent := card.Content.(*fyne.Container).Objects[1].(*widget.RichText)
+            wContent.ParseMarkdown(msg.Content)
         },
     )
 }
