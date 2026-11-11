@@ -169,6 +169,12 @@ type Message struct {
 }
 
 func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache) error {
+    // Sort new messages into islands
+    err := chat.SortIntoIslands(messagesRaw)
+    if err != nil {
+        return err
+    }
+
     // Go through each raw message provided
     for _, msgRaw := range messagesRaw {
         if _, exists := u.Users[msgRaw.Username]; !exists {
