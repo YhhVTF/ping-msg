@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Islands" framework for managing disconnected clumps of loaded messages
 - Language akurik
+- Message caching
 - Remembering previous chats the user was in based on their username
 
 ### Changed
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - No longer crashes upon clicking the chats tab when logged in as a username that has previously joined chats
+- No longer lags at a higher number of messages in chat
 
 ## [0.5.2] - 2026-11-06
 
