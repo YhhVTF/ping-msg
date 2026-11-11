@@ -8,6 +8,7 @@ import (
     "io"
     "slices"
 
+    "github.com/YhhVTF/ping-msg/log"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
@@ -99,6 +100,7 @@ func (chat *Chat) SortIntoIslands(newMsgRaws []prot.MessageRaw) error {
             MessageIDs:     newMsgIDs,
         }
         chat.Islands = []*Island{ newIsland }
+        log.Info.Printf("Chat %d: new island %d: %d\n", chat.Metadata.ID, 0, newIsland.MessageIDs)
         return nil
     }
 
@@ -120,11 +122,14 @@ func (chat *Chat) SortIntoIslands(newMsgRaws []prot.MessageRaw) error {
                 chat.Islands[i] = mergedIsland
                 chat.Islands = slices.Delete(chat.Islands, i+1, i+2)
 
+                log.Info.Printf("Chat %d: new merged island %d: %d\n", chat.Metadata.ID, i, mergedIsland.MessageIDs)
                 break
             }}
             // Otherwise, add the new message IDs to the later end of this island
             island.LaterBound = msgRawsLaterBound
             island.MessageIDs = slices.Concat(island.MessageIDs, newMsgIDs)
+            
+            log.Info.Printf("Chat %d: expanded island %d: %d\n", chat.Metadata.ID, i, island.MessageIDs)
             break
         // Or if not, and the earlier bound of newMsgRaws is still more than the later bound of this island, and the later bound is still less than the next island's earlier bound, create a new island for the new IDs between them
         } else if msgRawsEarlierBound > island.LaterBound {
@@ -135,9 +140,13 @@ func (chat *Chat) SortIntoIslands(newMsgRaws []prot.MessageRaw) error {
             }
             if i != len(chat.Islands)-1 { if msgRawsLaterBound < nextIsland.EarlierBound {
                 chat.Islands = slices.Insert(chat.Islands, i+1, newIsland)
+
+                log.Info.Printf("Chat %d: new island %d: %d\n", chat.Metadata.ID, i+1, newIsland.MessageIDs)
                 break
             }}
             chat.Islands = append(chat.Islands, newIsland)
+
+            log.Info.Printf("Chat %d: new island %d: %d\n", chat.Metadata.ID, i+1, newIsland.MessageIDs)
             break
         }
 
@@ -145,6 +154,8 @@ func (chat *Chat) SortIntoIslands(newMsgRaws []prot.MessageRaw) error {
         if msgRawsLaterBound == island.EarlierBound - 1 {
             island.EarlierBound = msgRawsEarlierBound
             island.MessageIDs = slices.Concat(newMsgIDs, island.MessageIDs)
+
+            log.Info.Printf("Chat %d: expanded island %d: %d\n", chat.Metadata.ID, i, island.MessageIDs)
             break
         // If not, but the later bound of newMsgRaws is still less than the earlier bound of this island, create a new island earlier than this one for the new message IDs
         } else if i == 0 && msgRawsLaterBound < island.EarlierBound {
@@ -154,6 +165,8 @@ func (chat *Chat) SortIntoIslands(newMsgRaws []prot.MessageRaw) error {
                 MessageIDs:     newMsgIDs,
             }
             chat.Islands = slices.Concat([]*Island{ newIsland }, chat.Islands)
+
+            log.Info.Printf("Chat %d: new island %d: %d\n", chat.Metadata.ID, i, newIsland.MessageIDs)
             break
         }
     }
