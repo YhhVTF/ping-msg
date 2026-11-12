@@ -17,6 +17,8 @@ import (
 type Chat struct {
     // Readers for files to be attached to the next message the client sends in this chat
     Attachments     []io.Reader
+    // ID of the message currently being edited. Is prot.NO_ID if not message is being edited
+    Editing         int
     // List of all islands. Earlier islands are earlier in the last and so for later ones
     Islands         []*Island
     // Data for each message in the chat
@@ -29,6 +31,8 @@ type Chat struct {
     // Islands[RenderedIsland] = The island which contains messages currently being rendered
     RenderedIsland  int
     ReplyingTo      []int
+    // Data for which messages are being selected for what
+    Selections      *SelectData
 }
 
 type ChatCache struct {
@@ -183,6 +187,16 @@ type Message struct {
     Username    *string
 }
 
+// Data pertaining to what in a chat has been selected for various purposes
+type SelectData struct {
+    // ID of the message currently selected for editting. Is prot.NO_ID if not message is being edited
+    Editing             int
+    // ID of the message currently selected without specific intent
+    GeneralSelection    int
+    // IDs of the messages currently selected for replying. When the next message is sent, it will be replying to the messages whose IDs are present here
+    ReplyingTo          []int
+}
+
 func (chat *Chat) CacheMessages(messagesRaw []prot.MessageRaw, u *user.UserCache) error {
     // Sort new messages into islands
     err := chat.SortIntoIslands(messagesRaw)
@@ -228,14 +242,22 @@ func NewChat(metadataRaw *prot.ChatMetadataRaw) *Chat {
         NumberOfMessages:   metadataRaw.NumberOfMessages,
     }
 
+    selections := &SelectData{
+        Editing:            prot.NO_ID,
+        GeneralSelection:   prot.NO_ID,
+        ReplyingTo:         make([]int, 0),
+    }
+
     return &Chat{
         Attachments:        make([]io.Reader, 0),
+        Editing:            prot.NO_ID,
         Islands:            make([]*Island, 0),
         Messages:           make(map[int]*Message),
         MessagesBind:       make(map[int]binding.String),
         Metadata:           metadata,
         RenderedIsland:     prot.NO_ID,
         ReplyingTo:         make([]int, 0),
+        Selections:         selections,
     }
 }
 

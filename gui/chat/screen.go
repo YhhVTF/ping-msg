@@ -80,7 +80,7 @@ func InitScreenChat(
     // Set focus on message entry
     g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-    g.Widgets.MessagesList = createListMessages(c.ThisChat)
+    g.Widgets.MessagesList = createListMessages(g, c.ThisChat, c, u)
 
 	// Initialize chat containers
 	g.Containers.Chat = NewChat()
