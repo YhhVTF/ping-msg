@@ -76,7 +76,7 @@ func createListMessages(g *ScreenChat, chat *chat.Chat, c *chat.ChatCache, u *us
 
 
             if len(hbox.Objects) > 1 {
-                wTime = hbox.Objects[3].(*widget.Label)
+                wTime = hbox.Objects[4].(*widget.Label)
             // If it hasn't already been done...
             } else {
                 wTime = hbox.Objects[0].(*widget.Label)
@@ -86,6 +86,7 @@ func createListMessages(g *ScreenChat, chat *chat.Chat, c *chat.ChatCache, u *us
                     hbox.RemoveAll()
 
                     // Create and add the action buttons (edit, copy, etc.) beside the time label
+                    hbox.Add(createButtonReply(g, msgID, chat))
                     hbox.Add(createButtonCopy(g, itemID, chat))
                     hbox.Add(createButtonEdit(g, itemID, chat))
                     hbox.Add(createButtonDelete(g, msgID, c, u))

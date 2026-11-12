@@ -16,8 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Buttons copy, edit and delete are now icon buttons
-- Buttons copy, edit and delete now appear only when hovering on a message
+- Buttons reply, copy, edit and delete are now icon buttons
+- Buttons reply, copy, edit and delete now appear only when hovering on a message
 - Updated language gakotolo
 
 ### Fixed
