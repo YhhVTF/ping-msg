@@ -28,7 +28,7 @@ type RepliedMessage struct {
 }
 
 func createRepliedMessage(
-	repliedMsg *chat.Message, repliedID int, chat *chat.Chat, u *user.UserCache, opt *options.Options,
+    repliedID int, chat *chat.Chat, u *user.UserCache, opt *options.Options,
 ) *RepliedMessage {
 	log.Info.Printf("Creating replied message widget for message %d\n", repliedID)
 
@@ -41,14 +41,15 @@ func createRepliedMessage(
 		return "**" + strings.TrimSpace(cleanedContent) + "**"
 	}
 
-	var usernameStr, contentStr string
-	if repliedMsg == nil {
-		usernameStr = ""
-		contentStr = opt.GUIText.Greeting.PlaceholderUnloaded
-	} else {
-		usernameStr = fmt.Sprintf("%s:", *repliedMsg.Username)
-		contentStr = formatContent(repliedMsg.Content)
-	}
+    var usernameStr, contentStr string
+    repliedMsg, exists := chat.Messages[repliedID]
+    if !exists {
+        usernameStr = ""
+        contentStr = opt.GUIText.Greeting.PlaceholderUnloaded
+    } else {
+        usernameStr = fmt.Sprintf("%s:", *repliedMsg.Username)
+        contentStr = formatContent(repliedMsg.Content)
+    }
 
 	repliedMsgWidget.Icon = widget.NewIcon(theme.Current().Icon(theme.IconNameMailReply))
 
@@ -60,16 +61,16 @@ func createRepliedMessage(
 	repliedMsgWidget.Text = widget.NewRichTextFromMarkdown(contentStr)
 	repliedMsgWidget.Text.Wrapping = fyne.TextWrapWord
 
-	if chat != nil && chat.MessagesBind[repliedID] != nil {
-		chat.MessagesBind[repliedID].AddListener(binding.NewDataListener(func() {
-			updatedContent, _ := chat.MessagesBind[repliedID].Get()
+	//if chat != nil && chat.MessagesBind[repliedID] != nil {
+	//	chat.MessagesBind[repliedID].AddListener(binding.NewDataListener(func() {
+	//		updatedContent, _ := chat.MessagesBind[repliedID].Get()
 
-			formattedUpdate := formatContent(updatedContent)
+	//		formattedUpdate := formatContent(updatedContent)
 
-			repliedMsgWidget.Text.ParseMarkdown(formattedUpdate)
-			repliedMsgWidget.Text.Refresh()
-		}))
-	}
+	//		repliedMsgWidget.Text.ParseMarkdown(formattedUpdate)
+	//		repliedMsgWidget.Text.Refresh()
+	//	}))
+	//}
 
 	repliedMsgWidget.Base = container.NewHBox(
 		repliedMsgWidget.Icon,
