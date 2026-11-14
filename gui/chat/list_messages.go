@@ -26,7 +26,11 @@ func createListMessages(g *ScreenChat, chat *chat.Chat, c *chat.ChatCache, u *us
         },
         func(itemID widget.ListItemID, o fyne.CanvasObject) {
             msgID := chat.Islands[chat.RenderedIsland].MessageIDs[itemID]
-            msg := chat.Messages[msgID]
+            msg, exists := chat.Messages[msgID]
+            if !exists {
+                o.(*fyne.Container).Hide()
+                return
+            }
 
             card := o.(*fyne.Container).Objects[1].(*widget.Card)
             wTopOfMsg := card.Content.(*fyne.Container).Objects[0].(*fyne.Container)

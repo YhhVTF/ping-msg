@@ -6,7 +6,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 
@@ -28,7 +27,7 @@ type RepliedMessage struct {
 }
 
 func createRepliedMessage(
-    repliedID int, chat *chat.Chat, u *user.UserCache, opt *options.Options,
+    _ *chat.Message, repliedID int, chat *chat.Chat, u *user.UserCache, opt *options.Options,
 ) *RepliedMessage {
 	log.Info.Printf("Creating replied message widget for message %d\n", repliedID)
 

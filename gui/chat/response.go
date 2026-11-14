@@ -52,20 +52,20 @@ func (g *ScreenChat) RespAdd(
 }
 
 func (g *ScreenChat) RespDel(resp *prot.ChatResponse, c *chat.ChatCache, opt *options.Options) {
-	// Delete corresponding message widget if it exists
-	if msgWidget, exists := g.Widgets.Messages[resp.MessageID]; exists &&
-		resp.ChatID == c.ThisChat.Metadata.ID {
-		// Replace replied message widget text using ParseMarkdown and Refresh
-		if repliedMsg, exists := g.Widgets.RepliedMessages[resp.MessageID]; exists {
-			repliedMsg.UsernameLbl.SetText("")
-			repliedMsg.Text.ParseMarkdown(opt.GUIText.Greeting.PlaceholderDeleted)
-			repliedMsg.Text.Refresh()
-		}
-		// Deallocate message widget
-		msgWidget.Base.Hide()
-		delete(g.Widgets.Messages, resp.MessageID)
-		g.Containers.Chat.VScroll.Refresh()
-	}
+	//// Delete corresponding message widget if it exists
+	//if msgWidget, exists := g.Widgets.Messages[resp.MessageID]; exists &&
+	//	resp.ChatID == c.ThisChat.Metadata.ID {
+	//	// Replace replied message widget text using ParseMarkdown and Refresh
+	//	if repliedMsg, exists := g.Widgets.RepliedMessages[resp.MessageID]; exists {
+	//		repliedMsg.UsernameLbl.SetText("")
+	//		repliedMsg.Text.ParseMarkdown(opt.GUIText.Greeting.PlaceholderDeleted)
+	//		repliedMsg.Text.Refresh()
+	//	}
+	//	// Deallocate message widget
+	//	msgWidget.Base.Hide()
+	//	delete(g.Widgets.Messages, resp.MessageID)
+	//	g.Containers.Chat.VScroll.Refresh()
+	//}
 	log.Info.Printf("Updating message %d cache (%s)\n", resp.MessageID, resp.Type)
 	// Delete message in cache
 	chat := c.Chats[resp.ChatID]
