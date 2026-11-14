@@ -1,8 +1,6 @@
 package schat
 
 import (
-	"fmt"
-
 	"github.com/YhhVTF/ping-msg/audio"
 	"github.com/YhhVTF/ping-msg/chat"
 	"github.com/YhhVTF/ping-msg/log"
@@ -77,13 +75,17 @@ func (g *ScreenChat) RespEdit(resp *prot.ChatResponse, c *chat.ChatCache, u *use
 	log.Info.Printf("Updating message %d cache (%s)\n", resp.MessageID, resp.Type)
 	// Edit message in cache
 	chat := c.Chats[resp.ChatID]
+    chat.Messages[resp.MessageID].Content = resp.Messages[0].Content
 	chat.MessagesBind[resp.MessageID].Set(resp.Messages[0].Content)
 
-	// Update replied message widget for message if there is one
-	if repliedMsgWidget, exists := g.Widgets.RepliedMessages[resp.MessageID]; exists && resp.ChatID == c.ThisChat.Metadata.ID {
+    // Refresh messages list
+    g.Widgets.MessagesList.Refresh()
 
-		repliedMsgWidget.UsernameLbl.SetText(fmt.Sprintf("%s:", u.Users[resp.Messages[0].Username].Username))
-		repliedMsgWidget.Text.ParseMarkdown(chat.Messages[resp.MessageID].Content)
-		repliedMsgWidget.Text.Refresh()
-	}
+	//// Update replied message widget for message if there is one
+	//if repliedMsgWidget, exists := g.Widgets.RepliedMessages[resp.MessageID]; exists && resp.ChatID == c.ThisChat.Metadata.ID {
+
+	//	repliedMsgWidget.UsernameLbl.SetText(fmt.Sprintf("%s:", u.Users[resp.Messages[0].Username].Username))
+	//	repliedMsgWidget.Text.ParseMarkdown(chat.Messages[resp.MessageID].Content)
+	//	repliedMsgWidget.Text.Refresh()
+	//}
 }
