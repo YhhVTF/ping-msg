@@ -9,11 +9,12 @@ import (
 
     "github.com/YhhVTF/ping-msg/chat"
     "github.com/YhhVTF/ping-msg/log"
+    "github.com/YhhVTF/ping-msg/opt"
     "github.com/YhhVTF/ping-msg/protocol"
     "github.com/YhhVTF/ping-msg/user"
 )
 
-func createListMessages(g *ScreenChat, chat *chat.Chat, c *chat.ChatCache, u *user.UserCache) *widget.List {
+func createListMessages(g *ScreenChat, chat *chat.Chat, c *chat.ChatCache, u *user.UserCache, opt *options.Options) *widget.List {
     list := widget.NewList(
         func() int {
             if len(chat.Islands) == 0 {
@@ -30,6 +31,27 @@ func createListMessages(g *ScreenChat, chat *chat.Chat, c *chat.ChatCache, u *us
             if !exists {
                 o.(*fyne.Container).Hide()
                 return
+            }
+
+            // Handle replied messages
+            for i, repliedID := range msg.RepliedIDs {
+                repliedVBox := o.(*fyne.Container).Objects[0].(*fyne.Container)
+
+                // If the widgets for displaying replied message haven't been created, create them
+                if len(repliedVBox.Objects) < len(msg.RepliedIDs) {
+                    repliedVBox.Add(createRepliedMessage(msg, repliedID, chat, u, opt).Base)
+                // If the have, update them
+                } else {
+                    repliedMsg, exists := chat.Messages[repliedID]
+                    if exists {
+                        wRepliedMsg := repliedVBox.Objects[i].(*fyne.Container)
+                        wRepliedUsername := wRepliedMsg.Objects[1].(*widget.Label)
+                        wRepliedContent := wRepliedMsg.Objects[2].(*widget.RichText)
+
+                        wRepliedUsername.SetText(*repliedMsg.Username)
+                        wRepliedContent.ParseMarkdown(repliedMsg.Content)
+                    }
+                }
             }
 
             card := o.(*fyne.Container).Objects[1].(*widget.Card)

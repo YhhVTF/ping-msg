@@ -21,8 +21,8 @@ func entryMessageOnSubmitted(g *ScreenChat, text string, c *chat.ChatCache, u *u
 
     // Clear the entry
 	g.Widgets.EntryMessage.SetText("")
-    // Reset ScreenChat.ReplyingTo
-    c.ThisChat.ReplyingTo = make([]int, 0)
+    // Reset ScreenChat.Selections.ReplyingTo
+    c.ThisChat.Selections.ReplyingTo = make([]int, 0)
 }
 
 func createEntryMessage(g *ScreenChat, u *user.UserCache, opt *options.Options) *widget.Entry {

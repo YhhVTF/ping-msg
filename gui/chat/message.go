@@ -179,13 +179,13 @@ func messageOnReply(g *ScreenChat, msgID int, chatCache *chat.Chat) {
 	// Give focus back to the message entry when done
 	defer g.Window.Canvas().Focus(g.Widgets.EntryMessage)
 
-	// Add the message ID to chatCache.ReplyingTo if it isn't already there or remove it from there if it is
-	if slices.Contains(chatCache.ReplyingTo, msgID) {
-		i := slices.Index(chatCache.ReplyingTo, msgID)
-		chatCache.ReplyingTo = slices.Delete(chatCache.ReplyingTo, i, i+1)
+	// Add the message ID to chatCache.Selections.ReplyingTo if it isn't already there or remove it from there if it is
+	if slices.Contains(chatCache.Selections.ReplyingTo, msgID) {
+		i := slices.Index(chatCache.Selections.ReplyingTo, msgID)
+		chatCache.Selections.ReplyingTo = slices.Delete(chatCache.Selections.ReplyingTo, i, i+1)
 	} else {
-		chatCache.ReplyingTo = append(chatCache.ReplyingTo, msgID)
+		chatCache.Selections.ReplyingTo = append(chatCache.Selections.ReplyingTo, msgID)
 	}
 
-	log.Info.Printf("The next message sent will reply to messages %d\n", chatCache.ReplyingTo)
+	log.Info.Printf("The next message sent will reply to messages %d\n", chatCache.Selections.ReplyingTo)
 }

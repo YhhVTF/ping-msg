@@ -24,8 +24,8 @@ func buttonSendOnPressed(g *ScreenChat, c *chat.ChatCache, u *user.UserCache) {
 
     // Clear the text in the message entry
 	g.Widgets.EntryMessage.SetText("")
-    // Reset ScreenChat.ReplyingTo
-    c.ThisChat.ReplyingTo = make([]int, 0)
+    // Reset ScreenChat.Selections.ReplyingTo
+    c.ThisChat.Selections.ReplyingTo = make([]int, 0)
 }
 
 func createButtonSend(g *ScreenChat, u *user.UserCache, opt *options.Options) *widget.Button {

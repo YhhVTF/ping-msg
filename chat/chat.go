@@ -30,7 +30,6 @@ type Chat struct {
     Metadata        ChatMetadata
     // Islands[RenderedIsland] = The island which contains messages currently being rendered
     RenderedIsland  int
-    ReplyingTo      []int
     // Data for which messages are being selected for what
     Selections      *SelectData
 }
@@ -256,7 +255,6 @@ func NewChat(metadataRaw *prot.ChatMetadataRaw) *Chat {
         MessagesBind:       make(map[int]binding.String),
         Metadata:           metadata,
         RenderedIsland:     prot.NO_ID,
-        ReplyingTo:         make([]int, 0),
         Selections:         selections,
     }
 }

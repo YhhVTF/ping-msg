@@ -11,7 +11,7 @@ func (g *ScreenChat) ChatRequestAdd(msgContent string, c *chat.ChatCache, u *use
         ChatID:         c.ThisChat.Metadata.ID,
         MessageContent: msgContent,
         MessageID:      prot.NO_ID,
-        RepliedIDs:     c.ThisChat.ReplyingTo,
+        RepliedIDs:     c.ThisChat.Selections.ReplyingTo,
         Type:           prot.ChatRequestAdd,
         Username:       u.ThisUser.Username,
     }
